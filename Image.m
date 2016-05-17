@@ -14,6 +14,12 @@ classdef Image
         image;
         colorMap;
         bwImage;
+        bwImageremoved;
+        medImage;
+        fftImage;
+        fftbwImage;
+        cArray;
+        metaImage;
         
         
     end
