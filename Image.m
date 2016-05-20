@@ -20,6 +20,7 @@ classdef Image
         fftbwImage;
         cArray;
         metaImage;
+        complementImage;
         
         
     end
