@@ -1,11 +1,21 @@
 
+if( strcmp(getenv('OS'),'Windows_NT'))
+    
+    addpath(genpath('..\pictures'));
+    currentImageDir = '..\pictures\p_Wildtyp\*.tif';
+    
+else
+    addpath(genpath('../pictures'));
+    currentImageDir = '../pictures/_Wildtyp/*.tif';
+end
+        
+    
 cpuCores = 4;
 
 running = gcp('nocreate');
 if running == 0;
     parpool('local', cpuCores);
 end
-currentImageDir = '..\pictures\p_Wildtyp\*.tif';
 imageFolderObj = dir(currentImageDir);
 imageCount = size(dir(currentImageDir),1);
 imageList = cell(1,imageCount);
