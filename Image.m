@@ -14,6 +14,7 @@ classdef Image
         image;
         colorMap;
         bwImage;
+        bwImage1;
         bwImageremoved;
         medImage;
         fftImage;
@@ -21,6 +22,8 @@ classdef Image
         cArray;
         metaImage;
         complementImage;
+        cleanImage;
+        background;
         
         
     end
