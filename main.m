@@ -1,7 +1,7 @@
 
 if( strcmp(getenv('OS'),'Windows_NT'))
     
-    addpath(genpath('..\pictures'));
+%     addpath(genpath('..\pictures'));
     currentImageDir = '..\pictures\p_Wildtyp\*.tif';
     
 else
@@ -20,7 +20,7 @@ imageFolderObj = dir(currentImageDir);
 imageCount = size(dir(currentImageDir),1);
 imageList = cell(1,imageCount);
 threshAlgo = 'otsu';
-threshAlgo1 = 'intermeans';
+threshAlgo1 = 'otsu';
 
 
 
@@ -32,8 +32,8 @@ parfor index = 1:imageCount
 
     imageList{index}.medImage = medfilt2(imageList{index}.image,[3 3]);
     
-    background = imopen(imageList{index}.medImage, strel('disk',15));
-    imageList{index}.medImage = imageList{index}.medImage - background;
+    imageList{index}.background = imopen(imageList{index}.medImage, strel('disk',15));
+    imageList{index}.medImage = imageList{index}.medImage - imageList{index}.background;
     thresh = threshold(threshAlgo, imageList{index}.medImage);
     imageList{index}.bwImage = im2bw(imageList{index}.medImage,thresh);
     
@@ -52,9 +52,27 @@ parfor index = 1:imageCount
     imageList{index}.bwImageremoved = bwareafilt(imageList{index}.bwImage, [300,900]);
     imageList{index}.bwImageremoved = imageList{index}.bwImage - imageList{index}.bwImageremoved;
     imageList{index}.complementImage = imcomplement(imageList{index}.bwImageremoved);
-    imageList{index}.cleanImage = uint8(imageList{index}.bwImageremoved) * uint8(floor(thresh *255*0.8)) + imageList{index}.medImage .* uint8(imageList{index}.complementImage);
+    imageList{index}.cleanImage = uint8(imageList{index}.bwImageremoved) * uint8(floor(thresh *255*0.8)) + uint8(imageList{index}.medImage) .* uint8(imageList{index}.complementImage);
     t = threshold(threshAlgo , imageList{index}.cleanImage);
     imageList{index}.bwImage1 = im2bw(imageList{index}.cleanImage,t);
     imageList{index}.bwImageremoved = bwareafilt(imageList{index}.bwImage, [300,900]);
+    
+    if( strcmp(getenv('OS'),'Windows_NT'))
+        
+    imwrite(imageList{index}.medImage , ['..\pictures\medImage\' 'med' imageFolderObj(index).name ]);
+    imwrite(imageList{index}.complementImage , ['..\pictures\complementImage\'  'com' imageFolderObj(index).name ]);
+    imwrite(imageList{index}.cleanImage , ['..\pictures\cleanImage\' 'clean' imageFolderObj(index).name ]);
+    imwrite(imageList{index}.bwImageremoved , ['..\pictures\bwImageremoved\' 'bwremoved' imageFolderObj(index).name ]);
+    imwrite(imageList{index}.bwImage1 , ['..\pictures\bwImage1\' 'bw1' imageFolderObj(index).name ]);
+    imwrite(imageList{index}.bwImage , ['..\pictures\bwImage\' 'bw' imageFolderObj(index).name ]);
+    imwrite(imageList{index}.background , ['..\pictures\background\' 'bckground' imageFolderObj(index).name ]);
+    
+    cd('..\biomedizinischebildanalyse') ;   
+        addpath(genpath('..\pictures\'));
+
+    
+    else
+    end
+    
     
 end
