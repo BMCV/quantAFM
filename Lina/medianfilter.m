@@ -2,7 +2,7 @@ function im_f = medianfilter(im)
     %im_f = medfilt2(im);
     % http://stackoverflow.com/questions/27535535/matlab-median-filter-code
     im_pad = padarray(im, [1 1]);
-    im_col = im2col(im_pad, [1 1], 'sliding');
+    im_col = im2col(im_pad, [3 3], 'sliding');
     sorted_cols = sort(im_col, 1, 'ascend');
     im_f = col2im(sorted_cols(5, :), [3 3], size(im_pad), 'sliding');
     im_f = mat2gray(im_f);

@@ -1,12 +1,11 @@
 
 if( strcmp(getenv('OS'),'Windows_NT'))
-    
-%     addpath(genpath('..\pictures'));
+    addpath(genpath('..\pictures'));    
     currentImageDir = '..\pictures\p_Wildtyp\*.tif';
     
 else
     addpath(genpath('../pictures'));
-    currentImageDir = '../pictures/_Wildtyp/*.tif';
+    currentImageDir = '../pictures/p_Wildtyp/*.tif';
 end
         
     
@@ -16,6 +15,7 @@ running = gcp('nocreate');
 if running == 0;
     parpool('local', cpuCores);
 end
+
 imageFolderObj = dir(currentImageDir);
 imageCount = size(dir(currentImageDir),1);
 imageList = cell(1,imageCount);
@@ -24,8 +24,11 @@ threshAlgo1 = 'moments';
 
 
 
-parfor index = 1:imageCount
-    [image,colorMap] = imread(imageFolderObj(index).name);
+for index = 1:imageCount
+    if or( strcmp(imageFolderObj(index).name , '.'), strcmp(imageFolderObj(index).name, '..') )
+        continue
+    end
+    [image,colorMap] = imread(strcat(currentImageDir, imageFolderObj(index).name));
 %     imageList{index}.metaImage = imfinfo(imageFolderObj(index).name);
     imageList{index} = Image(image, colorMap);
     % Use some kind of threshhold algorithm

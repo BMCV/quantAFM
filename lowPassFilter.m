@@ -15,11 +15,17 @@ function [ image ] = lowPassFilter( image )
     bwimage = imfill(bwimage, 'holes');
     % delete the pixels in every row that has less than 75 white pixels
 %     image(sum(image) < 75, :) = 0;
-    for i = 1:size(bwimage,1)
-        if(sum(bwimage(i,:)) < 75)
-            bwimage(i,:) = 0;
-        end
-    end
+%    for i = 1:size(bwimage,1)
+%        if(sum(bwimage(i,:)) < 75)
+%            bwimage(i,:) = 0;
+%        end
+%    end
+    % faster:
+    % sum(img, 2) sums rows, returns [1,n] array
+    % ~(sum(img,2) >= 75) returns inverted binary mask of where that array
+    %   is larger than 75
+    % find(a) returns indices of non-zero elements
+    bwimage(find(~(sum(bwimage, 2)>=75)), :) = 0;
     
     SE = strel('disk', 80, 8);
     bwimage = imdilate(bwimage, SE); 
