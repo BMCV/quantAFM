@@ -25,7 +25,8 @@ classdef Image
         cleanImage;
         background;
         thinImage;
-        
+        centers,
+        radii;
         
         
     end

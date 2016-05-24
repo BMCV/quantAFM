@@ -25,11 +25,12 @@ threshAlgo1 = 'moments';
 
 
 for index = 1:imageCount
-    if or( strcmp(imageFolderObj(index).name , '.'), strcmp(imageFolderObj(index).name, '..') )
-        continue
-    end
-    [image,colorMap] = imread(strcat(currentImageDir, imageFolderObj(index).name));
+%     if or( strcmp(imageFolderObj(index).name , '.'), strcmp(imageFolderObj(index).name, '..') )
+%         continue
+%     end
+%     [image,colorMap] = imread(strcat(currentImageDir, imageFolderObj(index).name));
 %     imageList{index}.metaImage = imfinfo(imageFolderObj(index).name);
+    [image,colorMap] = imread(imageFolderObj(index).name);
     imageList{index} = Image(image, colorMap);
     % Use some kind of threshhold algorithm
 
@@ -64,6 +65,9 @@ for index = 1:imageCount
     imageList{index}.bwImage1 = im2bw(imageList{index}.cleanImage,t);
     imageList{index}.bwImageremoved = bwareafilt(imageList{index}.bwImage, [150,900]);
     imageList{index}.thinImage = bwmorph(imageList{index}.bwImageremoved,'thin',Inf);
+    [centers, radii] = findNukleii(imageList{index}.bwImageremoved, imageList{index}.medImage);
+    imageList{index}.centers = centers;
+    imageList{index}.radii = radii;
     
     if( strcmp(getenv('OS'),'Windows_NT'))
         
@@ -77,8 +81,8 @@ for index = 1:imageCount
 %     imwrite(imageList{index}.fftImage , ['..\pictures\fftImage\' 'fftImage' imageFolderObj(index).name ]);
     imwrite(imageList{index}.thinImage , ['..\pictures\thinImage\' 'thin' imageFolderObj(index).name ]);
     
-    cd('..\biomedizinischebildanalyse') ;   
-        addpath(genpath('..\pictures\'));
+%     cd('..\biomedizinischebildanalyse') ;   
+%         addpath(genpath('..\pictures\'));
 
     
     else
