@@ -53,14 +53,14 @@ parfor index = 1:imageCount
     imageList{index}.connected =  bwconncomp(imageList{index}.bwImage);
     imageList{index}.region = regionprops(imageList{index}.connected);
     
-    imageList{index}.bwImageremoved = bwareafilt(imageList{index}.bwImage, [150,900]);
+    imageList{index}.bwImageremoved = bwareafilt(imageList{index}.bwImage, [250,900]);
     imageList{index}.bwImageremoved = imageList{index}.bwImage - imageList{index}.bwImageremoved;
     imageList{index}.complementImage = imcomplement(imageList{index}.bwImageremoved);
     imageList{index}.cleanImage = uint8(imageList{index}.bwImageremoved) * uint8(floor(thresh *255*0.8)) + uint8(imageList{index}.medImage) .* uint8(imageList{index}.complementImage);
     t = threshold(threshAlgo1 , imageList{index}.cleanImage);
     imageList{index}.bwImage1 = im2bw(imageList{index}.cleanImage,t);
-    imageList{index}.bwImageremoved = bwareafilt(imageList{index}.bwImage, [150,900]);
-    imageList{index}.thinImage = bwmorph(imageList{index}.bwImageremoved,'thin',Inf);
+    imageList{index}.bwImageremoved = bwareafilt(imageList{index}.bwImage, [250,900]);
+    imageList{index}.t
     
     if( strcmp(getenv('OS'),'Windows_NT'))
         
@@ -72,7 +72,6 @@ parfor index = 1:imageCount
     imwrite(imageList{index}.bwImage , ['..\pictures\bwImage\' 'bw' imageFolderObj(index).name ]);
     imwrite(imageList{index}.background , ['..\pictures\background\' 'bckground' imageFolderObj(index).name ]);
 %     imwrite(imageList{index}.fftImage , ['..\pictures\fftImage\' 'fftImage' imageFolderObj(index).name ]);
-    imwrite(imageList{index}.thinImage , ['..\pictures\thinImage\' 'thin' imageFolderObj(index).name ]);
     
     cd('..\biomedizinischebildanalyse') ;   
         addpath(genpath('..\pictures\'));

@@ -24,6 +24,8 @@ classdef Image
         complementImage;
         cleanImage;
         background;
+        thinImage;
+        
         
         
     end

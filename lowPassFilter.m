@@ -25,7 +25,9 @@ function [ image ] = lowPassFilter( image )
     bwimage = imdilate(bwimage, SE); 
     cc = regionprops(bwimage, 'Centroid', 'MajorAxisLength', 'MinorAxisLength');
     rad = (0.55 * cc.MajorAxisLength + 0.45 * cc.MinorAxisLength)/2;
-   
+%    imshow(bwimage);
+%    hold on;
+%    viscircles(cc.Centroid, rad);
     xcoord = (1:size(bwimage, 1)) - cc.Centroid(1);
     ycoord = (1:size(bwimage, 2)) - cc.Centroid(2);
     
@@ -33,6 +35,7 @@ function [ image ] = lowPassFilter( image )
     myZeros = zeros(size(bwimage));
     myZeros((x.^2 + y.^2 < rad^2)) = 1;
     image = myZeros .* image;
-    image = ifft2(ifftshift(image));
+    image = uint8(real(ifft2(ifftshift(image))));
+    
 end
 
