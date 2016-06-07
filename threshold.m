@@ -5,24 +5,24 @@ function  t  = threshold( method , img )
     
     switch method
         case 'otsu'
-            t = graythresh(img); % Matlab implementation
-        case 'intermeans'
+            t = graythresh(img); % Matlab implementation, works
+        case 'intermeans' %% works
             t = intermeansThresh(img)/255;
-        case 'moments'
+        case 'moments' %% works
             t = momentsThresh(ihist)/255;
-        case 'concavity'
+        case 'concavity' %% uses hconhull, which uses atan2, which does not work
             t = concavity(img)/255;
-        case 'intermodes'
+        case 'intermodes' %% works
             t = intermodes(ihist)/255;
-        case 'maxentropy'
+        case 'maxentropy' %% works
             t = maxentropy(ihist)/255;
-        case 'maxlikelihood'
+        case 'maxlikelihood' %% doesn't work yet because relies on minimum alg.
             t = maxlikelihood(ihist)/255;
-        case 'minerror'
-            t = minerror_iter(ihist)/255;
-        case 'minimum'
+        case 'minerror' %% works
+            t = minerror_iter(ihist, floor (mean (img (:))) )/255;
+        case 'minimum' %% takes really long, in Octave crash
             t = minimum(img)/255;
-        case 'percentile'
+        case 'percentile' %% works
             t = percentile(ihist)/255;
         otherwise 
             t = 0;
@@ -151,8 +151,6 @@ end
 %      ImageJ
 
 
-
-
 %% Concavity thresholding
 function T = concavity (h)
   n = numel (h) - 1;
@@ -203,7 +201,7 @@ function Tout = intermeansThresh (img)
 end
 
 %% Intermodes thresholding
-function [T] = intermodes (y)
+function T = intermodes (y)
   % checked with ImageJ and is slightly different but not by much
   n = numel (y) - 1;
 
@@ -215,7 +213,7 @@ function [T] = intermodes (y)
     iter = iter+1;
     % If the histogram turns out not to be bimodal, set T to zero.
     if iter > 10000;
-      T{1} = 0;
+      T = 0;
       return
     end
   end
@@ -228,7 +226,7 @@ function [T] = intermodes (y)
       TT(ind) = k-1;
     end
   end
-  T{1} = floor(mean(TT));
+  T = floor(mean(TT));
 end
 
 %% Moments thresholding algorithm
@@ -259,7 +257,7 @@ end
 function T = maxentropy(y)
   n = numel (y) - 1;
 
-  warning ('off', 'Octave:divide-by-zero', 'local');
+  warning ('off', 'all');
 
   % The threshold is chosen such that the following expression is minimized.
   sumY = sum (y);
@@ -345,7 +343,7 @@ function Tout = maxlikelihood (y)
   % If the threshold would be imaginary, return with threshold set to zero
   sqterm = w1^2-w0*w2;
   if (sqterm < 0)
-    Tout{1} = 0;
+    Tout = 0;
     return
   end
 
@@ -364,31 +362,37 @@ function T = minimum(y)
     y = conv2(y,h,'same');
     iter = iter+1;
     % If the histogram turns out not to be bimodal, set T to zero.
+    if iter > 50 && iter < 52;
+        disp(iter);
+    end
+    if iter>5000 
+        disp(iter);
+    end
     if iter > 10000;
-      T{1} = 0;
+      T = 0;
       return
     end
   end
-
+  disp('after first while loop');
   peakfound = false;
   for k = 2:n
     if y(k-1) < y(k) && y(k+1) < y(k)
       peakfound = true;
     end
     if peakfound && y(k-1) >= y(k) && y(k+1) >= y(k)
-      T{1} = k-1;
+      T = k-1;
       return
     end
   end
 end
 
-%% Minimum error
-function [Tout] = minerror_iter (y, T)
+%% Minimum error iterations
+function Tout = minerror_iter (y, T)
   n = numel (y) - 1;
 
   Tprev = NaN;
 
-  warning ('off', 'Octave:divide-by-zero', 'local');
+  warning ('off','all');
 
   sumA = partial_sumA (y, n);
   sumB = partial_sumB (y, n);
@@ -437,11 +441,11 @@ end
 %% Percentile
 % The threshold is chosen such that 50% (in case of p = 0.5) of
 % pixels lie in each category.
-function [T] = percentile (y)
+function T = percentile (y)
   p = 0.5;
   Avec = cumsum (y) / sum (y);
   [~, ind] = min (abs (Avec - p));
-  T{1} = ind -1;
+  T = ind -1;
 end
 
 
@@ -552,7 +556,7 @@ function H = hconvhull(h)
     for i = K(k)+1:len
       x = i-K(k);
       y = h(i)-h(K(k));
-      theta(i-K(k)) = atan2(y,x);
+      theta(i-K(k)) = atan2(double(y),double(x));%%PROBLEM: octave's atan2 might work differently
     end
 
     maximum = max(theta);
