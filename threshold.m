@@ -151,8 +151,6 @@ end
 %      ImageJ
 
 
-
-
 %% Concavity thresholding
 function T = concavity (h)
   n = numel (h) - 1;
@@ -345,7 +343,7 @@ function Tout = maxlikelihood (y)
   % If the threshold would be imaginary, return with threshold set to zero
   sqterm = w1^2-w0*w2;
   if (sqterm < 0)
-    Tout{1} = 0;
+    Tout = 0;
     return
   end
 
@@ -382,7 +380,7 @@ function T = minimum(y)
   end
 end
 
-%% Minimum error
+%% Minimum error iterations
 function [Tout] = minerror_iter (y, T)
   n = numel (y) - 1;
 
