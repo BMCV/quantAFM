@@ -24,7 +24,7 @@ threshAlgo1 = 'moments';
 
 
 
-for index = 1:imageCount
+parfor index = 1:imageCount
     %% this is required for Archlinux
     if or( strcmp(imageFolderObj(index).name , '.'), strcmp(imageFolderObj(index).name, '..') )
         continue
@@ -123,15 +123,55 @@ for index = 1:imageCount
     
     % finally, remove any objects that might not be in the expected size
     % range of [150, 900]
-    imageList{index}.bwImgThickDna = bwareafilt(imageList{index}.bwImgThickDna, [0,900]);
+    imageList{index}.bwImgThickDna = bwareafilt(imageList{index}.bwImgThickDna, [100,900]);
+    
     
     %% Generate 1 pixel thin objects for length calculation
     imageList{index}.bwImgThinnedDna = bwmorph(imageList{index}.bwImgThickDna,'thin',Inf);
     
-    % 
-    %[centers, radii] = findNukleii(imageList{index}.bwImgThickDna, imageList{index}.preprocImg);
-    %imageList{index}.centers = centers;
-    %imageList{index}.radii = radii;
+    
+    %find circles, nuklei, centers, and radi
+    [ imageList{index}.centers,imageList{index}.radii] = findNukleii(imageList{index}.bwImgThickDna, imageList{index}.preprocImg);
+    
+       
+    %get properties of all objects on the ThickDnaBwImage and
+    %ThinnedDnaBwImage
+    imageList{index}.connectedThickDna = bwconncomp(imageList{index}.bwImgThickDna);
+    imageList{index}.connectedThinnedDna = bwconncomp(imageList{index}.bwImgThinnedDna);
+    region =  regionprops(imageList{index}.connectedThickDna, 'Centroid');
+    imageList{index}.region = cat(1,region.Centroid);
+    %create clasobject for all fragments found on the image
+    dnaCount = max(imageList{index}.connectedThickDna.NumObjects, imageList{index}.connectedThinnedDna.NumObjects);
+    imageList{index}.dnaList =  cell(1,dnaCount);
+    % calculate centers in int coord.
+    centers = round(imageList{index}.centers);
+
+    % convert centers from Point to index 
+    [m,n] =  size(imageList{index}.bwImgThickDna);
+    if ~isempty(centers)
+        imageList{index}.indexcenters = centers(:,1) + (centers(:,2) -1)* m ; 
+        
+    end
+    for dnaIndex = 1:dnaCount
+        if ~isempty(centers)
+        imageList{index}.contains = ismember(imageList{index}.indexcenters,imageList{index}.connectedThickDna.PixelIdxList{dnaIndex});
+        
+        end
+        if sum(imageList{index}.contains)~= 0
+            nukleoIndecies = find(imageList{index}.contains);
+            nukleos = cell(1,numel(nukleoIndecies));
+            for i=1:numel(nukleoIndecies)
+                nukleos{i} = nukleo(imageList{index}.centers(nukleoIndecies(i),:), ... 
+                    imageList{index}.radii(nukleoIndecies(i),:));   
+            end
+            
+            imageList{index}.dnaList{dnaIndex} = DnaBound(imageList{index}.connectedThickDna.PixelIdxList{dnaIndex}, ...
+            imageList{index}.connectedThinnedDna.PixelIdxList{dnaIndex},imageList{index}.region(dnaIndex,:),'normal',nukleos);
+        else
+            imageList{index}.dnaList{dnaIndex} = DnaFree(imageList{index}.connectedThickDna.PixelIdxList{dnaIndex}, ...
+            imageList{index}.connectedThinnedDna.PixelIdxList{dnaIndex},imageList{index}.region(dnaIndex,:));
+        end
+    end
     
     if( strcmp(getenv('OS'),'Windows_NT'))
         

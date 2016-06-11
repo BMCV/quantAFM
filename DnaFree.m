@@ -6,11 +6,12 @@ classdef DnaFree < DNA
     end
     
     methods
-        function dnaObj = DNA(connected, region)
+        function dnaObj = DnaFree(connectedThick,connectedThinned, position)
             if nargin > 0
-                dnaObj.position = region.Centroid;
-                dnaObj.connected = connected;
-                dnaObj.region = region;
+                dnaObj.position = position;
+                dnaObj.connectedThick = connectedThick;
+                dnaObj.connectedThinned = connectedThinned;
+         
                  
                 dnaObj.type = 'free';
              
