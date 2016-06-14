@@ -30,7 +30,6 @@ function [ image ] = lowPassFilter( image )
     SE = strel('disk', 80, 8);
     bwImage = imdilate(bwImage, SE); 
     cc = regionprops(bwImage, 'Centroid', 'MajorAxisLength', 'MinorAxisLength');
-%    imshow(bwImage);
 %    hold on;
 %    viscircles(cc.Centroid, rad); 
     xcoord = (1:size(bwImage, 2)) - cc.Centroid(1);

@@ -4,7 +4,7 @@ function  t  = threshold( method , img )
     ihist = hist (img(:), 0:255) ;
     
     switch method
-        case 'otsu'
+        case 'otsu'    
             t = graythresh(img); % Matlab implementation, works
         case 'intermeans' %% works
             t = intermeansThresh(img)/255;

@@ -3,13 +3,13 @@ classdef (Abstract) DNA
     %   Detailed explanation goes here
     
     properties
-        number int;
-        length double;
+        number;
+        length ;
         
-        position double = zeros(1,2) ; %center of mass
+        position = zeros(1,2) ; %center of mass
         type char;
-        connected;
-        region;
+        connectedThick;
+        connectedThinned;
         
     end
     

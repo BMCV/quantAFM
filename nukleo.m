@@ -5,26 +5,21 @@ classdef nukleo
     
     properties
         rad double;
-        intensity double;   % max or mean
-        volume double;
-        position double = zeros(1,2);
+        center = zeros(1,2);
         armRatio double; % Short / Long
-        attachedTo DnaBound;  
+        attachedTo;  
     end
     
     methods
-        function nukleoObj = nukleo(rad, intensity, volume, position, armRatio, attachedTo)
+        function nukleoObj = nukleo(rad, center, attachedTo)
             if nargin > 0
                 nukleoObj.rad = rad;
-                nukleoObj.intensity = intensity;
-                nukleoObj.volume = volume;
-                nukleoObj.position = position;
-                nukleoObj.armRatio = armRatio;
+                nukleoObj.center = center;
                 
             end
-            if nargon > 5
-                nukleoObj.attachedTo = attachedTo;
-                attachedTo.nukleo = nukleoObj;
+            if nargin > 2
+%                 nukleoObj.attachedTo = attachedTo;
+%                 attachedTo.nukleo = nukleoObj;
             end
         end
         

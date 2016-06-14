@@ -24,7 +24,7 @@ threshAlgo1 = 'moments';
 
 
 
-for index = 1:imageCount
+parfor index = 1:imageCount
     %% this is required for Archlinux
     if or( strcmp(imageFolderObj(index).name , '.'), strcmp(imageFolderObj(index).name, '..') )
         continue
@@ -52,27 +52,31 @@ for index = 1:imageCount
     % Image.m. I only included it so that
     % we can see the differences in the outcome between both methods (with
     % and without this function).
-    imageList{index}.denoisedImg = ocvDenoise(imageList{index}.rawImage);
-    imageList{index}.denoisedImg = lowPassFilter(imageList{index}.denoisedImg);
-    imageList{index}.denoisedImg = medfilt2(imageList{index}.denoisedImg,[3 3]);
-    imageList{index}.background = imopen(imageList{index}.denoisedImg, strel('disk',15));
-    imageList{index}.denoisedImg = imageList{index}.denoisedImg - imageList{index}.background;
-    thresh = threshold(threshAlgo, imageList{index}.denoisedImg);
-    imageList{index}.bwImgDen = im2bw(imageList{index}.denoisedImg,thresh);
-    bwImageremoved = bwareafilt(imageList{index}.bwImgDen, [150,900]);
-    bwImageremoved = imageList{index}.bwImgDen - bwImageremoved;
-    complement = imcomplement(bwImageremoved);
-    cleanImage = uint8(bwImageremoved) * uint8(floor(thresh *255*0.8)) + ...
-        uint8(imageList{index}.denoisedImg) .* uint8(complement);
-    t = threshold(threshAlgo1 , cleanImage);
-    imageList{index}.bwImgDen = im2bw(cleanImage,t);
-    imageList{index}.bwImgDen = bwareafilt(imageList{index}.bwImgDen, [0, 900]);
-    imageList{index}.bwImgDenThinned = bwmorph(imageList{index}.bwImgDen,'thin',Inf);
+    
+    
+%     imageList{index}.denoisedImg = ocvDenoise(imageList{index}.rawImage);
+%     imageList{index}.denoisedImg =imageList{index}.rawImage;
+%     imageList{index}.denoisedImg = lowPassFilter(imageList{index}.denoisedImg);
+%     imageList{index}.denoisedImg = medfilt2(imageList{index}.denoisedImg,[3 3]);
+%     imageList{index}.background = imopen(imageList{index}.denoisedImg, strel('disk',15));
+%     imageList{index}.denoisedImg = imageList{index}.denoisedImg - imageList{index}.background;
+%     thresh = threshold(threshAlgo, imageList{index}.denoisedImg);
+%     imageList{index}.bwImgDen = im2bw(imageList{index}.denoisedImg,thresh);
+%     bwImageremoved = bwareafilt(imageList{index}.bwImgDen, [150,900]);
+%     bwImageremoved = imageList{index}.bwImgDen - bwImageremoved;
+%     complement = imcomplement(bwImageremoved);
+%     cleanImage = uint8(imageList{index}.denoisedImg) .* uint8(complement);
+%     t = threshold(threshAlgo1 , cleanImage);
+%     imageList{index}.bwImgDen = im2bw(cleanImage,t);
+%     imageList{index}.bwImgDen = bwareafilt(imageList{index}.bwImgDen, [0, 900]);
+%     imageList{index}.bwImgDenThinned = bwmorph(imageList{index}.bwImgDen,'thin',Inf);
     
     %% Initial preprocessing step.
     % The image is lowpass filtered on its frequency domain, then median 
     % filtered. Afterwards, its background is auto-calculated and 
     % substracted. This image will be the basis for further processing.
+    
+    
     imageList{index}.preprocImg = lowPassFilter(imageList{index}.rawImage);
     imageList{index}.preprocImg = medfilt2(imageList{index}.preprocImg,[3 3]); 
     imageList{index}.background = imopen(imageList{index}.preprocImg, strel('disk',15));
@@ -87,40 +91,87 @@ for index = 1:imageCount
     % -  are smaller than 150 px or larger than 900 px
     % and replace their pixel values with a value that is below an optimal
     % threshold so that they will be filtered out later on.
+    
     thresh = threshold(threshAlgo, imageList{index}.preprocImg);
     imageList{index}.bwImage = im2bw(imageList{index}.preprocImg, thresh);
+    
     % (*) see below
     % remove objects from bwImage with pixelsize in [150, 900]
+    
     imageList{index}.bwFilteredImage = ...
         imageList{index}.bwImage - bwareafilt(imageList{index}.bwImage, [150,900]);
+    
     % generate complement image that is 1 where there are NO artifacts and 
     % 0 otherwise 
+    
     complementImage = imcomplement(imageList{index}.bwFilteredImage);
+    
     % generate new uint8 image by
     % - setting the intensity of all previously identified artifacts to 80%
     %   of the initially calculated threshold, and
     % - combining this with those pixels from the preprocessed image that
     %   are no artifacts
+    
     imageList{index}.filteredImage = ... 
-        uint8(imageList{index}.bwFilteredImage) * uint8(floor(thresh *255*0.8)) ...
-        + uint8(imageList{index}.preprocImg) .* uint8(complementImage);
+        uint8(imageList{index}.preprocImg) .* uint8(complementImage);
    
     % use this cleaned image to calculate a more accurate threshold and
     % compute a bw image from that contains mostly DNA fragments/nucleosomes.
+    
     t = threshold(threshAlgo1 , imageList{index}.filteredImage);
     imageList{index}.bwImgThickDna = im2bw(imageList{index}.filteredImage, t);
     
     % finally, remove any objects that might not be in the expected size
     % range of [150, 900]
-    imageList{index}.bwImgThickDna = bwareafilt(imageList{index}.bwImgThickDna, [0,900]);
+    imageList{index}.bwImgThickDna = bwareafilt(imageList{index}.bwImgThickDna, [100,900]);
+    
     
     %% Generate 1 pixel thin objects for length calculation
     imageList{index}.bwImgThinnedDna = bwmorph(imageList{index}.bwImgThickDna,'thin',Inf);
     
-    % 
-    %[centers, radii] = findNukleii(imageList{index}.bwImgThickDna, imageList{index}.preprocImg);
-    %imageList{index}.centers = centers;
-    %imageList{index}.radii = radii;
+    
+    %find circles, nuklei, centers, and radi
+    [ imageList{index}.centers,imageList{index}.radii] = findNukleii(imageList{index}.bwImgThickDna, imageList{index}.preprocImg);
+    
+       
+    %get properties of all objects on the ThickDnaBwImage and
+    %ThinnedDnaBwImage
+    imageList{index}.connectedThickDna = bwconncomp(imageList{index}.bwImgThickDna);
+    imageList{index}.connectedThinnedDna = bwconncomp(imageList{index}.bwImgThinnedDna);
+    region =  regionprops(imageList{index}.connectedThickDna, 'Centroid');
+    imageList{index}.region = cat(1,region.Centroid);
+    %create clasobject for all fragments found on the image
+    dnaCount = max(imageList{index}.connectedThickDna.NumObjects, imageList{index}.connectedThinnedDna.NumObjects);
+    imageList{index}.dnaList =  cell(1,dnaCount);
+    % calculate centers in int coord.
+    centers = round(imageList{index}.centers);
+
+    % convert centers from Point to index 
+    [m,n] =  size(imageList{index}.bwImgThickDna);
+    if ~isempty(centers)
+        imageList{index}.indexcenters = centers(:,1) + (centers(:,2) -1)* m ; 
+        
+    end
+    for dnaIndex = 1:dnaCount
+        if ~isempty(centers)
+        imageList{index}.contains = ismember(imageList{index}.indexcenters,imageList{index}.connectedThickDna.PixelIdxList{dnaIndex});
+        
+        end
+        if sum(imageList{index}.contains)~= 0
+            nukleoIndecies = find(imageList{index}.contains);
+            nukleos = cell(1,numel(nukleoIndecies));
+            for i=1:numel(nukleoIndecies)
+                nukleos{i} = nukleo(imageList{index}.centers(nukleoIndecies(i),:), ... 
+                    imageList{index}.radii(nukleoIndecies(i),:));   
+            end
+            
+            imageList{index}.dnaList{dnaIndex} = DnaBound(imageList{index}.connectedThickDna.PixelIdxList{dnaIndex}, ...
+            imageList{index}.connectedThinnedDna.PixelIdxList{dnaIndex},imageList{index}.region(dnaIndex,:),'normal',nukleos);
+        else
+            imageList{index}.dnaList{dnaIndex} = DnaFree(imageList{index}.connectedThickDna.PixelIdxList{dnaIndex}, ...
+            imageList{index}.connectedThinnedDna.PixelIdxList{dnaIndex},imageList{index}.region(dnaIndex,:));
+        end
+    end
     
     if( strcmp(getenv('OS'),'Windows_NT'))
         
@@ -130,7 +181,7 @@ for index = 1:imageCount
     imwrite(imageList{index}.bwFilteredImage , ['..\pictures\bwFilteredImage\' 'bwFiltered' imageFolderObj(index).name ]);
     imwrite(imageList{index}.filteredImage , ['..\pictures\filteredImage\' 'filtered' imageFolderObj(index).name ]);
     imwrite(imageList{index}.bwImgThickDna , ['..\pictures\bwImgThickDna\' 'bwThickDna' imageFolderObj(index).name ]);
-%     imwrite(imageList{index}.fftImage , ['..\pictures\fftImage\' 'fftImage' imageFolderObj(index).name ]);
+%     imwrite(imageList{index}.bwImgDen , ['..\pictures\bwImgDen\' 'bwImgDen' imageFolderObj(index).name ]);
     imwrite(imageList{index}.bwImgThinnedDna , ['..\pictures\bwImgThinnedDna\' 'thinnedDna' imageFolderObj(index).name ]);
     
 %     cd('..\biomedizinischebildanalyse') ;   

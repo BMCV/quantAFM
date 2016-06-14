@@ -6,9 +6,10 @@ classdef Image
         freeDnaCount int32;
         mutantDnaCount int32;
         normalDnaCount int32;
-        DnaMap = containers.Map
+        dnaList;
         
-        connected;
+        connectedThickDna;
+        connectedThinnedDna;
         region;
 
         % original image as read
@@ -44,6 +45,8 @@ classdef Image
         centers;
         radii;
         
+        contains;
+        indexcenters;
         
     end
     
@@ -56,10 +59,6 @@ classdef Image
                 imageObj.rawImage = image;
                 imageObj.colorMap = colorMap;
             end
-        end
-        function addMapPair(dna)
-            key = strcat(num2hex(dna.position(1)), num2hex(dna.positon(2)));
-            this.DnaMap(key) = dna;
         end
     end
     
