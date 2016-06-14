@@ -149,30 +149,48 @@ parfor index = 1:imageCount
 
     % convert centers from Point to index 
     imageList{index}.imgSize =  size(imageList{index}.bwImgThickDna);
+    [m,n] = size(imageList{index}.bwImgThickDna);
     if ~isempty(centers)
-        imageList{index}.indexcenters = centers(:,1) + (centers(:,2) -1)* imageList{index}.imgSize(1) ; 
+        imageList{index}.indexcenters = centers(:,1) + (centers(:,2) -1)* m ; 
         
     end
+%     Go through all objects within the connected Components and create DNA
+%     Objects for them. DNABound if it is connected to a Nukleii and
+%     DNAFree if not
     for dnaIndex = 1:dnaCount
+%         Check if there are any Nukleii detected on the bwThinnedDNAImg
         if ~isempty(centers)
+%             Check whether any of the Nukleii are attached to the current
+%             DNA strand(connected Component)
         imageList{index}.contains = ismember(imageList{index}.indexcenters,imageList{index}.connectedThickDna.PixelIdxList{dnaIndex});
         
         end
+%         Check if there was a Nukleii found that is attached to this
+%         connectedComponent
         if sum(imageList{index}.contains)~= 0
+%             find all Nukleii that are attached to this connected
+%             Component
             nukleoIndecies = find(imageList{index}.contains);
+%             create a Nukleii Object for all Nukleii found
             nukleos = cell(1,numel(nukleoIndecies));
             for i=1:numel(nukleoIndecies)
+%                 Save all Nukleii found in a Cell
                 nukleos{i} = nukleo(imageList{index}.centers(nukleoIndecies(i),:), ... 
                     imageList{index}.radii(nukleoIndecies(i),:));   
             end
-            
+%             create DNABound Object for every Object detected in the Image
+%             Set Type,ConnectedComponents, position 
             imageList{index}.dnaList{dnaIndex} = DnaBound(imageList{index}.connectedThickDna.PixelIdxList{dnaIndex}, ...
             imageList{index}.connectedThinnedDna.PixelIdxList{dnaIndex},imageList{index}.region(dnaIndex,:),'normal',nukleos);
-            imageList{index}.dnaList{dnaIndex}.angle = measure_angle(imageList{index}.dnaList{dnaIndex},imageList{index}.imgSize,0);
+%          Calculate angle between the Nukleii and the arms(the DNA Arms
+%             imageList{index}.dnaList{dnaIndex}.angle = measure_angle(imageList{index}.dnaList{dnaIndex},imageList{index}.imgSize,0);
         else
+%             When no Nukleii is attached, Create DNAFree Object and set
+%             Type, ConnectedComponents and position 
             imageList{index}.dnaList{dnaIndex} = DnaFree(imageList{index}.connectedThickDna.PixelIdxList{dnaIndex}, ...
             imageList{index}.connectedThinnedDna.PixelIdxList{dnaIndex},imageList{index}.region(dnaIndex,:));
         end
+%         
         imageList{index}.dnaList{dnaIndex}.number = dnaIndex;
     end
     

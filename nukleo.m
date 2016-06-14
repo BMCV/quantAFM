@@ -13,7 +13,7 @@ classdef nukleo
     end
     
     methods
-        function nukleoObj = nukleo(rad, center, attachedTo)
+        function nukleoObj = nukleo(center, rad, attachedTo)
             if nargin > 0
                 nukleoObj.rad = rad;
                 nukleoObj.center = center;

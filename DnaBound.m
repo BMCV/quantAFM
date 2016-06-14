@@ -3,7 +3,7 @@ classdef DnaBound < DNA
     %   Detailed explanation goes here
     
     properties
-%          List of attached Nukleos
+%          List of attached Nukleos Objects
         attachedNukleo;
         angle double;
     end
