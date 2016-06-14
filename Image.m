@@ -56,6 +56,9 @@ classdef Image
         
 %         x,y Dimensions of the original Image
         imgSize;
+%         Array of DNA indices
+        dnaNumbers
+%         Array of Center of Masses of all DNA Objects, Free and Bound
 
         
     end
