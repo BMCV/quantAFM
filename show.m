@@ -1,6 +1,6 @@
 
  
-    imshowpair(imageList{index}.rawImage, imageList{index}.bwImgThickDna,'diff');
+    imshowpair(imageList{index}.rawImage, imageList{index}.bwImgThickDna);
     hold on
     viscircles(imageList{index}.centers, imageList{index}.radii);
     hold on

@@ -8,7 +8,7 @@ function level = momentsThresh (img)
   %% The threshold is chosen such that partial_sumA(y,t)/partial_sumA(y,n)
   %% is closest to x0.
   sumY = sum (y);
-  Avec = cumsum (y) / sumY;
+  Avec = (cumsum (y)- y(1)) / sumY;
 
   sumB = partial_sumB (y,n);
   sumC = partial_sumC (y,n);

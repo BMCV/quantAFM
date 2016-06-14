@@ -168,7 +168,6 @@ parfor index = 1:imageCount
             
             imageList{index}.dnaList{dnaIndex} = DnaBound(imageList{index}.connectedThickDna.PixelIdxList{dnaIndex}, ...
             imageList{index}.connectedThinnedDna.PixelIdxList{dnaIndex},imageList{index}.region(dnaIndex,:),'normal',nukleos);
-            imageList{index}.dnaList{dnaIndex}.angle = measure_angle(imageList{index}.dnaList{dnaIndex},imageList{index}.imgSize,0);
         else
             imageList{index}.dnaList{dnaIndex} = DnaFree(imageList{index}.connectedThickDna.PixelIdxList{dnaIndex}, ...
             imageList{index}.connectedThinnedDna.PixelIdxList{dnaIndex},imageList{index}.region(dnaIndex,:));

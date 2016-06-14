@@ -4,7 +4,9 @@ classdef nukleo
     %   Detailed explanation goes here
     
     properties
+%         Radius of the nukleo fittedcircle
         rad double;
+%         center of the fitted circle
         center = zeros(1,2);
         armRatio double; % Short / Long
         attachedTo;  

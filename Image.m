@@ -42,11 +42,21 @@ classdef Image
         % no nucleosomes visible anymore 
         bwImgThinnedDna; 
         
+%        Array of Points where the centers of the Nukleii are, in respect
+%        to the tupper left corner
         centers;
+%         linear index of centers
+        indexcenters;
+%         Array of Radi of the Nukleii
         radii;
         
+%         array of bool values if the Nukleo I is inside the I's
+%         ConnectedComponent
         contains;
-        indexcenters;
+        
+%         x,y Dimensions of the original Image
+        imgSize;
+
         
     end
     

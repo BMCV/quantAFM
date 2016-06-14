@@ -12,7 +12,6 @@ classdef DnaFree < DNA
                 dnaObj.connectedThick = connectedThick;
                 dnaObj.connectedThinned = connectedThinned;
          
-                 
                 dnaObj.type = 'free';
              
                  %   disp([type,' is not a valid DNA-type, please use: free, normal or mutant']);
