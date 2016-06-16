@@ -189,8 +189,8 @@ for index = 1:imageCount
             imageList{index}.dnaList{dnaIndex} = DnaBound(imageList{index}.connectedThickDna.PixelIdxList{dnaIndex}, ...
             imageList{index}.connectedThinnedDna.PixelIdxList{dnaIndex},imageList{index}.region(dnaIndex,:),'normal',nukleos);
 %          Calculate angle between the Nukleii and the arms(the DNA Arms
-               [ imageList{index}.dnaList{dnaIndex}.angle1, imageList{index}.dnaList{dnaIndex}.angle2] = ...
-                   measure_angle(imageList{index}.dnaList{dnaIndex},imageList{index}.imgSize);
+%                [ imageList{index}.dnaList{dnaIndex}.angle1, imageList{index}.dnaList{dnaIndex}.angle2] = ...
+%                    measure_angle(imageList{index}.dnaList{dnaIndex},imageList{index}.imgSize);
                     
         else
 %             When no Nukleii is attached, Create DNAFree Object and set
