@@ -1,7 +1,7 @@
 function [centers, radii] = findNukleii(img_bin, img)
 
 warning off
-[centers,radii,metric] = imfindcircles(img,[3 6],'ObjectPolarity','bright','Sensitivity',0.98,'EdgeThreshold',0.3);
+[centers,radii,metric] = imfindcircles(img,[4 6],'ObjectPolarity','bright','Sensitivity',0.98,'EdgeThreshold',0.3);
 warning on
 if numel(centers)~=0
     centers1 = round(centers);
@@ -15,4 +15,5 @@ if numel(centers)~=0
     end
     centers(centers(:,1) == 0,:) = [];
     radii(radii==0) =[];
+end
 end

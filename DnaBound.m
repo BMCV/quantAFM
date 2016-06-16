@@ -5,7 +5,8 @@ classdef DnaBound < DNA
     properties
 %          List of attached Nukleos Objects
         attachedNukleo;
-        angle double;
+        angle1 double;
+        angle2 double;
     end
     
 %     If attached Nukleo are provided(More than 4 inout arguments), Set them.

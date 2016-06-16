@@ -60,6 +60,8 @@ classdef Image
         dnaNumbers
 %         Array of Center of Masses of all DNA Objects, Free and Bound
 
+        coordConnected;
+
         
     end
     

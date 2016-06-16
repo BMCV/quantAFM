@@ -5,7 +5,7 @@ function [angle1,angle2] = measure_angle(dna, imsize)
 angle1 = 0;
 angle2 = 0;
 
-if numel(dna.attachedNukleo) > 2
+if numel(dna.attachedNukleo) > 1
     % more than one center!
     return
 elseif numel(dna.attachedNukleo) == 0
