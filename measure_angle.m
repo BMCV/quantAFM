@@ -1,4 +1,4 @@
-function [angle1,angle2] = measure_angle(dna, imsize)
+function [angle1,angle2] = measure_angle(dna, imsize,index)
 %% 
 % dna: dna_bound, dna.attachedNukleo, dna.attachedNukleo.rad, center
 % imsize: size of the original image. used to convert linear indices
@@ -16,30 +16,41 @@ end
 [x,y] = ind2sub(imsize,dna.connectedThinned);
 coords = [x,y];
 
+image = false(imsize);
+image(sub2ind(imsize, x, y)) = true;
+figure
+imshow(image)
+hold on
+scatter(y,x,'.','r')
+scatter(dna.attachedNukleo{1}.center(1), dna.attachedNukleo{1}.center(2))
+hold off
+
 % Distance of each DNA pixel to center of nukleus
 D = pdist2(coords,dna.attachedNukleo{1}.center);
-
+D1 = D;
 
 %% case 1: angle between intersecting pixel and centerpoint
 
-    coords(D<dna.attachedNukleo{1}.rad,:) = [];
-    D(D<dna.attachedNukleo{1}.rad) = [];
-    [~,idx_min] = sort(D);
-    % interesecting points
-    p = coords(idx_min(1:2),:);
+    coords(D1<dna.attachedNukleo{1}.rad,:) = [];
+    D1(D1<dna.attachedNukleo{1}.rad) = [];
+    if size(coords,1) >1
+        [~,idx_min] = sort(D1);
+        % interesecting points
+        p = coords(idx_min(1:2),:);
 
-    angle1 = atan2d(abs(det([p(1,:)-dna.attachedNukleo{1}.center;p(2,:)-dna.attachedNukleo{1}.center])),dot(p(1,:)-dna.attachedNukleo{1}.center,p(2,:)-dna.attachedNukleo{1}.center));
-
+        angle1 = atan2d(abs(det([p(1,:)-dna.attachedNukleo{1}.center;p(2,:)-dna.attachedNukleo{1}.center])),dot(p(1,:)-dna.attachedNukleo{1}.center,p(2,:)-dna.attachedNukleo{1}.center));
+    end
 
 %% case 2: angle between lines fitted on arms
-
+    x1 = x;
+    y1 = y;
     % Delete everything inside of nukleus and outside of "outside circle"
-    x(D<dna.attachedNukleo{1}.rad|D>dna.attachedNukleo{1}.rad+5) = [];
-    y(D<dna.attachedNukleo{1}.rad|D>dna.attachedNukleo{1}.rad+5) = [];
+    x1(D<dna.attachedNukleo{1}.rad|D>dna.attachedNukleo{1}.rad+5) = [];
+    y1(D<dna.attachedNukleo{1}.rad|D>dna.attachedNukleo{1}.rad+5) = [];
 
     % Create image with two (or unfortunately more) DNA strings to fit line to
     arms = false(imsize);
-    arms(sub2ind(imsize, y, x)) = true;
+    arms(sub2ind(imsize, y1, x1)) = true;
 
     % workaround more than one arm
     arms_ = bwconncomp(arms);
@@ -50,7 +61,7 @@ D = pdist2(coords,dna.attachedNukleo{1}.center);
 %         arms( arms_.PixelIdxList{idx(3:end)}) = 0;
 %         arms_ = bwconncomp(arms);
     end
-    if numel(arms_.PixelIdxList) ==2
+    if numel(arms_.PixelIdxList) ==2 && size(arms_.PixelIdxList{1},1)>1 && size(arms_.PixelIdxList{2},1)>1
         % get coordinates of arms
         [x1,y1] = ind2sub(imsize,arms_.PixelIdxList{1});
         [x2,y2] = ind2sub(imsize,arms_.PixelIdxList{2});
@@ -61,6 +72,7 @@ D = pdist2(coords,dna.attachedNukleo{1}.center);
         y_intersect = polyval(p1,x_intersect);
         centers = [x_intersect, y_intersect];
         angle2 = atan2d(abs(det([p(1,:)-centers;p(2,:)-centers])),dot(p(1,:)-centers,p(2,:)-centers));
+
     end
 
 
