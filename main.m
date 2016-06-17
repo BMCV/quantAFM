@@ -4,32 +4,35 @@ if( strcmp(getenv('OS'),'Windows_NT'))
     currentImageDir = '..\pictures\p_Wildtyp\*.tif';
     
 else
-    addpath(genpath('../pictures'));
-    currentImageDir = '../pictures/p_Wildtyp/';
+    addpath(genpath('../denoised_imgs'));
+    currentImageDir = '../denoised_imgs/p_Wildtyp/';
 end
 
 
-cpuCores = 4;
-
 running = gcp('nocreate');
 if running == 0;
-    parpool('local', cpuCores);
+    parpool('local');
 end
 
 imageFolderObj = dir(currentImageDir);
 imageCount = size(dir(currentImageDir),1);
 imageList = cell(1,imageCount);
-threshAlgo = 'moments';
-threshAlgo1 = 'moments';
+
+threshAlgo = 'otsu';
+%maxentropy - no good
+%intermodes - better than maxentropy, but still bad
+%minerror - no good
+threshAlgo1 = 'moments'; 
 
 
 
-parfor index = 1:imageCount
+for index = 1:imageCount
     %% this is required for Archlinux
     if or( strcmp(imageFolderObj(index).name , '.'), strcmp(imageFolderObj(index).name, '..') )
         continue
     end
-    %    [image,colorMap] = imread(strcat(currentImageDir, imageFolderObj(index).name));
+    
+    %[image,colorMap] = imread(strcat(currentImageDir, imageFolderObj(index).name));
     %% until here
     
     %    imageList{index}.metaImage = imfinfo(imageFolderObj(index).name);
@@ -54,23 +57,7 @@ parfor index = 1:imageCount
     % and without this function).
     
     
-    %     imageList{index}.denoisedImg = ocvDenoise(imageList{index}.rawImage);
-    %     imageList{index}.denoisedImg =imageList{index}.rawImage;
-    %     imageList{index}.denoisedImg = lowPassFilter(imageList{index}.denoisedImg);
-    %     imageList{index}.denoisedImg = medfilt2(imageList{index}.denoisedImg,[3 3]);
-    %     imageList{index}.background = imopen(imageList{index}.denoisedImg, strel('disk',15));
-    %     imageList{index}.denoisedImg = imageList{index}.denoisedImg - imageList{index}.background;
-    %     thresh = threshold(threshAlgo, imageList{index}.denoisedImg);
-    %     imageList{index}.bwImgDen = im2bw(imageList{index}.denoisedImg,thresh);
-    %     bwImageremoved = bwareafilt(imageList{index}.bwImgDen, [150,900]);
-    %     bwImageremoved = imageList{index}.bwImgDen - bwImageremoved;
-    %     complement = imcomplement(bwImageremoved);
-    %     cleanImage = uint8(imageList{index}.denoisedImg) .* uint8(complement);
-    %     t = threshold(threshAlgo1 , cleanImage);
-    %     imageList{index}.bwImgDen = im2bw(cleanImage,t);
-    %     imageList{index}.bwImgDen = bwareafilt(imageList{index}.bwImgDen, [0, 900]);
-    %     imageList{index}.bwImgDenThinned = bwmorph(imageList{index}.bwImgDen,'thin',Inf);
-    
+
     %% Initial preprocessing step.
     % The image is lowpass filtered on its frequency domain, then median
     % filtered. Afterwards, its background is auto-calculated and
@@ -95,7 +82,6 @@ parfor index = 1:imageCount
     thresh = threshold(threshAlgo, imageList{index}.preprocImg);
     imageList{index}.bwImage = im2bw(imageList{index}.preprocImg, thresh);
     
-    % (*) see below
     % remove objects from bwImage with pixelsize in [150, 900]
     
     imageList{index}.bwFilteredImage = ...
@@ -122,7 +108,7 @@ parfor index = 1:imageCount
     imageList{index}.bwImgThickDna = im2bw(imageList{index}.filteredImage, t);
     
     % finally, remove any objects that might not be in the expected size
-    % range of [150, 900]
+    % range of [100, 900]
     imageList{index}.bwImgThickDna = bwareafilt(imageList{index}.bwImgThickDna, [100,900]);
     
     
@@ -131,7 +117,8 @@ parfor index = 1:imageCount
     
     
     %find circles, nuklei, centers, and radi
-    [ imageList{index}.centers,imageList{index}.radii] = findNukleii(imageList{index}.bwImgThickDna, imageList{index}.preprocImg);
+    [ imageList{index}.centers,imageList{index}.radii] = ...
+        findNukleii(imageList{index}.bwImgThickDna, imageList{index}.preprocImg);
     
     
     %get properties of all objects on the ThickDnaBwImage and
@@ -142,8 +129,11 @@ parfor index = 1:imageCount
     %     Concat the all Centers of mass of the objects to a 2-1 Cell Array
     %     with x and y values.
     imageList{index}.region = cat(1,region.Centroid);
-    %create classobject for all fragments found on the image
-    dnaCount = max(imageList{index}.connectedThickDna.NumObjects, imageList{index}.connectedThinnedDna.NumObjects);
+
+    %create clasobject for all fragments found on the image
+    dnaCount = max(imageList{index}.connectedThickDna.NumObjects, ... 
+        imageList{index}.connectedThinnedDna.NumObjects);
+
     imageList{index}.dnaList =  cell(1,dnaCount);
     % calculate centers in int coord.
     centers = round(imageList{index}.centers);
@@ -190,8 +180,9 @@ parfor index = 1:imageCount
                 nukleos{i} = nukleo(imageList{index}.centers(nukleoIndecies(i),:), ...
                     imageList{index}.radii(nukleoIndecies(i),:), dnaIndex);
             end
-            %             create DNABound Object for every Object detected in the Image
-            %             Set Type,ConnectedComponents, position
+
+%             create DNABound Object for every Object detected in the Image
+%             Set Type,ConnectedComponents, position 
             imageList{index}.dnaList{dnaIndex} = DnaBound(imageList{index}.connectedThickDna.PixelIdxList{dnaIndex}, ...
                 imageList{index}.connectedThinnedDna.PixelIdxList{dnaIndex},imageList{index}.region(dnaIndex,:),'normal',nukleos);
             %          Calculate angle between the Nukleii and the arms(the DNA Arms
@@ -207,7 +198,7 @@ parfor index = 1:imageCount
         %         Set the dnaIndex as Number for the DNA strand object
         imageList{index}.dnaList{dnaIndex}.number = dnaIndex;
     end
-    
+
     if( strcmp(getenv('OS'),'Windows_NT'))
         
         imwrite(imageList{index}.preprocImg , ['..\pictures\preprocImg\' 'preproc' imageFolderObj(index).name ]);
@@ -219,20 +210,17 @@ parfor index = 1:imageCount
         %     imwrite(imageList{index}.bwImgDen , ['..\pictures\bwImgDen\' 'bwImgDen' imageFolderObj(index).name ]);
         imwrite(imageList{index}.bwImgThinnedDna , ['..\pictures\bwImgThinnedDna\' 'thinnedDna' imageFolderObj(index).name ]);
         
-        %     cd('..\biomedizinischebildanalyse') ;
-        %         addpath(genpath('..\pictures\'));
-        
-        
     else
+        imwrite(imageList{index}.preprocImg , ['../pictures/preprocImg/' 'me_preproc' imageFolderObj(index).name ]);
+        imwrite(imageList{index}.background , ['../pictures/background/' 'me_bckground' imageFolderObj(index).name ]);
+        imwrite(imageList{index}.bwImage , ['../pictures/bwImage/' 'me_bw' imageFolderObj(index).name ]);
+        imwrite(imageList{index}.bwFilteredImage , ['../pictures/bwFilteredImage/' 'me_bwFiltered' imageFolderObj(index).name ]);
+        imwrite(imageList{index}.filteredImage , ['../pictures/filteredImage/' 'me_filtered' imageFolderObj(index).name ]);
+        imwrite(imageList{index}.bwImgThickDna , ['../pictures/bwImgThickDna/' 'me_bwThickDna' imageFolderObj(index).name ]);
+    %     imwrite(imageList{index}.bwImgDen , ['..\pictures\bwImgDen\' 'bwImgDen' imageFolderObj(index).name ]);
+        imwrite(imageList{index}.bwImgThinnedDna , ['../pictures/bwImgThinnedDna/' 'me_thinnedDna' imageFolderObj(index).name ]);
+        imwrite(imfuse(imageList{index}.rawImage , imageList{index}.bwImgThinnedDna), ['../pictures/overlays_thin/' 'overlay_' imageFolderObj(index).name ]);
+            imwrite(imfuse(imageList{index}.rawImage , imageList{index}.bwImgThickDna), ['../pictures/overlays_thick/' 'overlay__' imageFolderObj(index).name ]);
     end
-    
-    %% this was removed from (*). if we don't need it anymore, let's delete it
-    %     fftImage = fftshift(fft2(imageList{index}.medImage));
-    %     imageList{index}.fftImage = mat2gray(log(abs(fftImage)));
-    %     t = threshold(threshAlgo,imageList{index}.fftImage);
-    %     imageList{index}.fftbwImage = im2bw(imageList{index}.fftImage,t);
-    %     [imageList{index}.cArray.center, imageList{index}.cArray.rad] = imfindcircles(imageList{index}.fftImage,500);
-    %    imageList{index}.connected =  bwconncomp(imageList{index}.bwImage);
-    %    imageList{index}.region = regionprops(imageList{index}.connected);
     
 end
