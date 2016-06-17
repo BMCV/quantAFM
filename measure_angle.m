@@ -16,14 +16,14 @@ end
 [x,y] = ind2sub(imsize,dna.connectedThinned);
 coords = [x,y];
 
-image = false(imsize);
-image(sub2ind(imsize, x, y)) = true;
-figure
-imshow(image)
-hold on
-scatter(y,x,'.','r')
-scatter(dna.attachedNukleo{1}.center(1), dna.attachedNukleo{1}.center(2))
-hold off
+%image = false(imsize);
+%image(sub2ind(imsize, x, y)) = true;
+%figure
+%imshow(image)
+%hold on
+%scatter(y,x,'.','r')
+%scatter(dna.attachedNukleo{1}.center(1), dna.attachedNukleo{1}.center(2))
+%hold off
 
 % Distance of each DNA pixel to center of nukleus
 D = pdist2(coords,dna.attachedNukleo{1}.center);

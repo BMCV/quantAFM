@@ -10,19 +10,19 @@ classdef nukleo
         center = zeros(1,2);
         armRatio double; % Short / Long
         attachedTo;  
+%         Number of DNA strand it is attached to
+        number;
     end
     
     methods
-        function nukleoObj = nukleo(center, rad, attachedTo)
+        function nukleoObj = nukleo(center, rad, number)
             if nargin > 0
                 nukleoObj.rad = rad;
                 nukleoObj.center = center;
+                nukleoObj.number = number;
                 
             end
-            if nargin > 2
-%                 nukleoObj.attachedTo = attachedTo;
-%                 attachedTo.nukleo = nukleoObj;
-            end
+            
         end
         
        

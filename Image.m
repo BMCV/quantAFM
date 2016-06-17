@@ -59,8 +59,9 @@ classdef Image
 %         Array of DNA indices
         dnaNumbers
 %         Array of Center of Masses of all DNA Objects, Free and Bound
-
         coordConnected;
+%         Array of numbers of connected DNA strand for Nukleo at position i
+        attachedDNA
 
         
     end
