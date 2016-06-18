@@ -20,6 +20,8 @@ classdef (Abstract) DNA
         bwImage;
 %         BWimage Thin DNA
         bwImageThinned;
+%         bwImage with removes arms
+        bwImageThinnedRemoved
 %         size of the subImage/bwImage
         sizeImg
 %         Bounding Box struct
