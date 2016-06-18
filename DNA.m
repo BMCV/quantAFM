@@ -17,8 +17,13 @@ classdef (Abstract) DNA
 %        Array of linear indices of the DNA strand in the bwDnaThinImg
         connectedThinned;
 %         Array of linear indices of the DNA strandwith removed arms
-        connectedThinnedRemoved
-        
+        connectedThinnedRemoved;
+%         BW Image
+        bwImage;
+%         BWimage Thin DNA
+        bwImageThinned;
+%         size of the subImage/bwImage
+        sizeImg
     end
     
     methods

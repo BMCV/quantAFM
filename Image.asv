@@ -62,8 +62,8 @@ classdef Image
         coordConnected;
 %         Array of numbers of connected DNA strand for Nukleo at position i
         attachedDNA
-%         array of bounding box of every DNA strand
-        boundingBoxDna
+%          DNA Bounding b
+
         
     end
     

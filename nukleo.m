@@ -12,6 +12,8 @@ classdef nukleo
         attachedTo;  
 %         Number of DNA strand it is attached to
         number;
+%       cocal center, given left upper corner of DNA bounding box
+        localCenter;
     end
     
     methods

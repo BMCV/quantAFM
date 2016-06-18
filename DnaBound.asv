@@ -24,17 +24,12 @@ classdef DnaBound < DNA
                 end
 %                 delete all other objects on the subImage besides the Dna
 %                 strand
-                CC = bwconncomp(subImage);
-                numPixels = cellfun(@numel, CC.PixelIdxList);
-                [largestObj, idx] = max(numPixels);
-                dnaObj.bwImage = false(size(dnaObj.bwImage));
-                dnaObj.bwImage(CC.PixelIdxList{idx}) = true;
+                numPixels = cellfun(@numel, connectedThick);
+                [largestOb]
 %               Thinn the subImage
-                dnaObj.bwImageThinned = bwmorph(dnaObj.bwImage,'thin',Inf);
+                dnaObj.bwImageThinned = bwmorph(subImage,'thin',Inf);
 %               Calculate connected Components PixelIdxList
-                connectedThinned = bwconncomp(dnaObj.bwImageThinned);
-                dnaObj.connectedThinned = connectedThinned.PixelIdxList{1};
-                dnaObj.sizeImg = size(subImage);
+                dnaObj.connectedThinned = bwconncomp(dnaObj.bwImageThinned);
                
             end
 %             set Reference to attached Nukeo
