@@ -17,11 +17,12 @@ classdef nukleo
     end
     
     methods
-        function nukleoObj = nukleo(center, rad, number)
+        function nukleoObj = nukleo(center, rad, number, localCenter)
             if nargin > 0
                 nukleoObj.rad = rad;
                 nukleoObj.center = center;
                 nukleoObj.number = number;
+                nukleoObj.localCenter = localCenter;
                 
             end
             

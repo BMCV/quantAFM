@@ -16,14 +16,14 @@ classdef (Abstract) DNA
         connectedThick;
 %        Array of linear indices of the DNA strand in the bwDnaThinImg
         connectedThinned;
-%         Array of linear indices of the DNA strandwith removed arms
-        connectedThinnedRemoved;
 %         BW Image
         bwImage;
 %         BWimage Thin DNA
         bwImageThinned;
 %         size of the subImage/bwImage
         sizeImg
+%         Bounding Box struct
+        bBox;
     end
     
     methods

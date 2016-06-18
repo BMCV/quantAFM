@@ -163,8 +163,13 @@ for index = 1:1
             imageList{index}.contains = uint8(ismember(imageList{index}.indexcenters,...
                 imageList{index}.connectedThickDna.PixelIdxList{dnaIndex}));     
         end
+%         Calculate Bounding Box for DNA strand.
+        bBox = imageList{index}.boundingBoxDna(dnaIndex);
+        bBox.BoundingBox(2) = round(bBox.BoundingBox(2));
+        bBox.BoundingBox(1) = round(bBox.BoundingBox(1));
         %         Check if there was a Nukleii found that is attached to this
         %         connectedComponent
+        
         if sum(imageList{index}.contains)~= 0
             %             find all Nukleii that are attached to this connected
             %             Component
@@ -177,7 +182,8 @@ for index = 1:1
             for i=1:numel(nukleoIndecies)
                 %                 Save all Nukleii found in a Cell
                 nukleos{i} = nukleo(imageList{index}.centers(nukleoIndecies(i),:), ...
-                    imageList{index}.radii(nukleoIndecies(i),:), dnaIndex);
+                    imageList{index}.radii(nukleoIndecies(i),:), dnaIndex, ...
+                    imageList{index}.centers(nukleoIndecies(i),:) - bBox.BoundingBox(1:2));
             end
 
 %             create DNABound Object for every Object detected in the Image
@@ -196,7 +202,7 @@ for index = 1:1
                 bBoxImage,imageList{index}.region(dnaIndex,:),'normal',nukleos);
             %          Calculate angle between the Nukleii and the arms(the DNA Arms
              [ imageList{index}.dnaList{dnaIndex}.angle1, imageList{index}.dnaList{dnaIndex}.angle2] = ...
-                 measure_angle(imageList{index}.dnaList{dnaIndex},imageList{index}.imgSize);
+                 measure_angle(imageList{index}.dnaList{dnaIndex});
             
         else
             %             When no Nukleii is attached, Create DNAFree Object and set
@@ -214,6 +220,8 @@ for index = 1:1
         end
         %         Set the dnaIndex as Number for the DNA strand object
         imageList{index}.dnaList{dnaIndex}.number = dnaIndex;
+        imageList{index}.dnaList{dnaIndex}.bBox = bBox;
+        
     end
 
     if( strcmp(getenv('OS'),'Windows_NT'))
