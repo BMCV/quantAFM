@@ -4,8 +4,8 @@ if( strcmp(getenv('OS'),'Windows_NT'))
     currentImageDir = '..\denoised_imgs\p_Wildtyp\*.tif';
     
 else
-    addpath(genpath('../denoised_imgs'));
-    currentImageDir = '../denoised_imgs/p_Wildtyp/';
+    addpath(genpath('../pictures'));
+    currentImageDir = '../pictures/p_Wildtyp/*.tif';
 end
 
 
@@ -119,7 +119,10 @@ for index = 1:1
     %find circles, nuklei, centers, and radi
     [ imageList{index}.centers,imageList{index}.radii] = ...
         findNukleii(imageList{index}.bwImgThickDna, imageList{index}.preprocImg);
-    
+    imshow(imageList{index}.rawImage);
+    hold on
+    viscircles(imageList{index}.centers, imageList{index}.radii);
+    hold on
     
     %get properties of all objects on the ThickDnaBwImage and
     %ThinnedDnaBwImage
