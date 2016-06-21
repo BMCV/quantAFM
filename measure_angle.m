@@ -5,6 +5,7 @@ function [angle1,angle2] = measure_angle(dna)
 angle1 = 0;
 angle2 = 0;
 
+
 if numel(dna.attachedNukleo) > 1
     % more than one center!
     return
@@ -61,14 +62,30 @@ D1 = D;
         [x2,y2] = ind2sub(dna.sizeImg,arms_.PixelIdxList{2});
         p1 = polyfit(x1,y1,1);
         p2 = polyfit(x2,y2,1);
-        p = [polyval(p1,x1(1)), x1(1); polyval(p2,x2(2)),x2(2)];
-        x_intersect = fzero(@(x) polyval(p1-p2,x),3);
-        y_intersect = polyval(p1,x_intersect);
-        centers = [x_intersect, y_intersect];
-        angle2 = atan2d(abs(det([p(1,:)-centers;p(2,:)-centers])),dot(p(1,:)-centers,p(2,:)-centers));
-
+        if p1(1) == p2(1)
+            angle2 = 180;
+        else
+            p = [x1(1),polyval(p1,x1(1));x2(end), polyval(p2,x2(end))];
+            x_intersect = fzero(@(x) polyval(p1-p2,x),3);
+            y_intersect = polyval(p1,x_intersect);
+            centers = [x_intersect, y_intersect];
+            angle2 = atan2d(abs(det([p(1,:)-centers;p(2,:)-centers])),dot(p(1,:)-centers,p(2,:)-centers));            
+%             close all
+%             imshow(arms);
+%             hold on;
+%             scatter(p(:,2),p(:,1), 'o','red')
+%             plot(polyval(p1,x1),x1);
+%             plot(polyval(p2,x2),x2);
+%             scatter(centers(2),centers(1),'x','cyan')
+%             scatter(dna.attachedNukleo{1}.localCenter(2),dna.attachedNukleo{1}.localCenter(1),'o','blue')
+%              disp('---')
+%              disp(angle1)
+%              disp(angle2)
+%             pause
+        end
     end
     warning on
+
 end
 
 
