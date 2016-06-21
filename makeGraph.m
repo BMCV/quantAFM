@@ -1,6 +1,6 @@
-function [gr, singlePath ]= makeGraph(pxlIdxList, bwImg)
+function [gr, singlePath ]= makeGraph(pxlIdxList, bwImg, bwThick)
     % a is shorter than pxlIdxList... :-)
-    a = pxlIdxList;
+    a = pxlIdxList;    
     imgSize = size(bwImg);
 %    gr = diag(ones(1,size(a,1)));
     % future upper adjacency matrix
@@ -48,4 +48,42 @@ function [gr, singlePath ]= makeGraph(pxlIdxList, bwImg)
         V2(size(V2,1)), ...
         'Method','Acyclic', ... % we have to ensure that it is acyclic!
         'directed',false);
-    singlePath = a(path);
+    mask2 = [-imgSize(1)-1, -imgSize(1), -imgSize(1)+1, -1, ...
+              1, imgSize(1)-1, imgSize(1), imgSize(1)+1 ];
+    newBeginning = [];
+    newEnd = [];
+    if ~(size(a,1) < 2)
+        endPixel1 = a(path(1));
+        endPixel2 = a(path(size(path,2))); 
+        % elongate path with missing pixels at one end
+        mask_end1 = mask2;
+        mask_end1(endPixel1+mask_end1 < 1 | mask_end1+endPixel1 > imgSize(1)*imgSize(2) ) = [];
+        nextNeighbour1 = mask_end1+endPixel1 == ones(size(mask_end1))*a(path(2));
+        nextNeighbour1 = fliplr(nextNeighbour1);
+        nextNeighbourDifference = mask_end1(find(nextNeighbour1));
+        nextNeighbourIdx = endPixel1+nextNeighbourDifference;
+    %    if ( ~(nextNeighbourIdx < 1) && ~(nextNeighbourIdx > imgSize(1)*imgSize(2)) )
+            while (bwThick(nextNeighbourIdx))
+                newBeginning = [nextNeighbourIdx; newBeginning];
+                nextNeighbourIdx = nextNeighbourIdx+nextNeighbourDifference;
+                if ( (nextNeighbourIdx < 1) | (nextNeighbourIdx > imgSize(1)*imgSize(2)) )
+                    break;
+                end
+            end
+    %    end
+        mask_end2 = mask2;
+        mask_end2(endPixel2+mask_end2 < 1 | mask_end2+endPixel2 > imgSize(1)*imgSize(2) ) = [];
+    %    nextNeighbour2 = bwImg(endPixel2+mask_end2);
+        nextNeighbour2 = mask_end2+endPixel2 == ones(size(mask_end2))*a(path(size(path,2)-1));
+        nextNeighbour2 = fliplr(nextNeighbour2);
+        nextNeighbourDifference = mask_end2(find(nextNeighbour2));
+        nextNeighbourIdx = endPixel2+nextNeighbourDifference;
+        while (bwThick(nextNeighbourIdx))
+            newEnd = [nextNeighbourIdx; newEnd];
+            nextNeighbourIdx = nextNeighbourIdx+nextNeighbourDifference;
+            if ( (nextNeighbourIdx < 1) | (nextNeighbourIdx > imgSize(1)*imgSize(2)) )
+                break;
+            end
+        end
+    end
+    singlePath =  [ newBeginning; a(path); newEnd];
