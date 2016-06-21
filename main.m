@@ -4,8 +4,8 @@ if( strcmp(getenv('OS'),'Windows_NT'))
     currentImageDir = '..\denoised_imgs\p_Wildtyp\*.tif';
     
 else
-    addpath(genpath('../pictures'));
-    currentImageDir = '../pictures/p_Wildtyp/*.tif';
+    addpath(genpath('../denoised_imgs'));
+    currentImageDir = '../denoised_imgs/p_Wildtyp/*.tif';
 end
 
 
@@ -26,7 +26,7 @@ threshAlgo1 = 'moments';
 
 
 
-for index = 1:1
+for index = 1:5
     %% this is required for Archlinux
     if or( strcmp(imageFolderObj(index).name , '.'), strcmp(imageFolderObj(index).name, '..') )
         continue
@@ -119,10 +119,10 @@ for index = 1:1
     %find circles, nuklei, centers, and radi
     [ imageList{index}.centers,imageList{index}.radii] = ...
         findNukleii(imageList{index}.bwImgThickDna, imageList{index}.preprocImg);
-    imshow(imageList{index}.rawImage);
-    hold on
-    viscircles(imageList{index}.centers, imageList{index}.radii);
-    hold on
+    %imshow(imageList{index}.rawImage);
+    %hold on
+    %viscircles(imageList{index}.centers, imageList{index}.radii);
+    %hold on
     
     %get properties of all objects on the ThickDnaBwImage and
     %ThinnedDnaBwImage
@@ -239,16 +239,16 @@ for index = 1:1
         imwrite(imageList{index}.bwImgThinnedDna , ['..\pictures\bwImgThinnedDna\' 'thinnedDna' imageFolderObj(index).name ]);
         
     else
-        imwrite(imageList{index}.preprocImg , ['../pictures/preprocImg/' 'me_preproc' imageFolderObj(index).name ]);
-        imwrite(imageList{index}.background , ['../pictures/background/' 'me_bckground' imageFolderObj(index).name ]);
-        imwrite(imageList{index}.bwImage , ['../pictures/bwImage/' 'me_bw' imageFolderObj(index).name ]);
-        imwrite(imageList{index}.bwFilteredImage , ['../pictures/bwFilteredImage/' 'me_bwFiltered' imageFolderObj(index).name ]);
-        imwrite(imageList{index}.filteredImage , ['../pictures/filteredImage/' 'me_filtered' imageFolderObj(index).name ]);
-        imwrite(imageList{index}.bwImgThickDna , ['../pictures/bwImgThickDna/' 'me_bwThickDna' imageFolderObj(index).name ]);
-    %     imwrite(imageList{index}.bwImgDen , ['..\pictures\bwImgDen\' 'bwImgDen' imageFolderObj(index).name ]);
-        imwrite(imageList{index}.bwImgThinnedDna , ['../pictures/bwImgThinnedDna/' 'me_thinnedDna' imageFolderObj(index).name ]);
-        imwrite(imfuse(imageList{index}.rawImage , imageList{index}.bwImgThinnedDna), ['../pictures/overlays_thin/' 'overlay_' imageFolderObj(index).name ]);
-            imwrite(imfuse(imageList{index}.rawImage , imageList{index}.bwImgThickDna), ['../pictures/overlays_thick/' 'overlay__' imageFolderObj(index).name ]);
+%         imwrite(imageList{index}.preprocImg , ['../pictures/preprocImg/' 'me_preproc' imageFolderObj(index).name ]);
+%         imwrite(imageList{index}.background , ['../pictures/background/' 'me_bckground' imageFolderObj(index).name ]);
+%         imwrite(imageList{index}.bwImage , ['../pictures/bwImage/' 'me_bw' imageFolderObj(index).name ]);
+%         imwrite(imageList{index}.bwFilteredImage , ['../pictures/bwFilteredImage/' 'me_bwFiltered' imageFolderObj(index).name ]);
+%         imwrite(imageList{index}.filteredImage , ['../pictures/filteredImage/' 'me_filtered' imageFolderObj(index).name ]);
+%         imwrite(imageList{index}.bwImgThickDna , ['../pictures/bwImgThickDna/' 'me_bwThickDna' imageFolderObj(index).name ]);
+%     %     imwrite(imageList{index}.bwImgDen , ['..\pictures\bwImgDen\' 'bwImgDen' imageFolderObj(index).name ]);
+%         imwrite(imageList{index}.bwImgThinnedDna , ['../pictures/bwImgThinnedDna/' 'me_thinnedDna' imageFolderObj(index).name ]);
+%         imwrite(imfuse(imageList{index}.rawImage , imageList{index}.bwImgThinnedDna), ['../pictures/overlays_thin/' 'overlay_' imageFolderObj(index).name ]);
+%             imwrite(imfuse(imageList{index}.rawImage , imageList{index}.bwImgThickDna), ['../pictures/overlays_thick/' 'overlay__' imageFolderObj(index).name ]);
     end
     
 end
