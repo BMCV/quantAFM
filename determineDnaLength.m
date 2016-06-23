@@ -4,6 +4,10 @@ function length = determineDnaLength(PixelIdxList, bwImgThin, bwImgThick)
     % for each DNA fragment in bwImgThin:
     for i= 1:len
         currPxlList = PixelIdxList{i};
+        % if fragment too small, don't compute the rest
+        if( size(currPxlList,1) < 3)
+            continue
+        end
         % create graph from its PixelIdxList and, from that, get the
         % fragment backbone
         [gr, singlePath] = getDnaBackbone(currPxlList, bwImgThin);
@@ -13,6 +17,9 @@ function length = determineDnaLength(PixelIdxList, bwImgThin, bwImgThick)
             elongateDnaBackbone(singlePath, currPxlList, bwImgThick);
         % ... and add the respective pixels to the DNA backbone
         singlePath = [newBeginning; currPxlList(singlePath); newEnd];
+        % calculate cubic splines for current backbone
+        [row col]= ind2sub(size(res),singlePath');
+        spline = csapi(col, row);
         
         res(singlePath) = 1;
     end
@@ -97,8 +104,9 @@ function [newBeginning, newEnd] = elongateDnaBackbone(path, PixelIdxList, bwThic
         endPixel2 = a(path(size(path,2))); 
         %% first, we check whether there are any pixels BEFORE endPixel1
         mask_end1 = mask2;
-        % remove those entries from 8-neighborhood mask that are out of bounds
-        mask_end1(endPixel1+mask_end1 < 1 | mask_end1+endPixel1 > imgSize(1)*imgSize(2) ) = [];
+        % set those entries from 8-neighborhood mask that are out of bounds
+        % to zero
+        mask_end1(endPixel1+mask_end1 < 1 | mask_end1+endPixel1 > imgSize(1)*imgSize(2) ) = 0;
         % now, we check the location of the center pixel's neighbor in the
         % 8-neighborhood to get the direction we have to check for "new"
         % pixels. It could look like this
@@ -119,32 +127,38 @@ function [newBeginning, newEnd] = elongateDnaBackbone(path, PixelIdxList, bwThic
         % many
         nextNeighbour1 = fliplr(nextNeighbour1);
         nextNeighbourDifference = mask_end1(find(nextNeighbour1));
-        nextNeighbourIdx = endPixel1+nextNeighbourDifference;
-        % we repeat the above steps as long as there are white pixels in
-        % the direction we are going (in bwImgThickDna)
-        while (bwThick(nextNeighbourIdx))
-            newBeginning = [nextNeighbourIdx; newBeginning];
-            nextNeighbourIdx = nextNeighbourIdx+nextNeighbourDifference;
-            if ( (nextNeighbourIdx < 1) || (nextNeighbourIdx > imgSize(1)*imgSize(2)) )
-                break;
+        % if we end up at an out-of-bounds-index, the difference is 0 and
+        % we don't have anything to do at this end
+        if( nextNeighbourDifference ~= 0 )
+            nextNeighbourIdx = endPixel1+nextNeighbourDifference;
+            % we repeat the above steps as long as there are white pixels in
+            % the direction we are going (in bwImgThickDna)
+            while (bwThick(nextNeighbourIdx))
+                newBeginning = [nextNeighbourIdx; newBeginning];
+                nextNeighbourIdx = nextNeighbourIdx+nextNeighbourDifference;
+                if ( (nextNeighbourIdx < 1) || (nextNeighbourIdx > imgSize(1)*imgSize(2)) )
+                    break;
+                end
             end
         end
         %% next, we check whether there are any pixels AFTER endPixel2
         % we do the same as above for endPixel1
         mask_end2 = mask2;
         mask_end2(endPixel2+mask_end2 < 1 | ...
-            mask_end2+endPixel2 > imgSize(1)*imgSize(2) ) = [];
+            mask_end2+endPixel2 > imgSize(1)*imgSize(2) ) = 0;
         nextNeighbour2 = mask_end2+endPixel2 == ...
             ones(size(mask_end2))*a(path(size(path,2)-1));
         nextNeighbour2 = fliplr(nextNeighbour2);
         nextNeighbourDifference = mask_end2(find(nextNeighbour2));
-        nextNeighbourIdx = endPixel2+nextNeighbourDifference;
-        while (bwThick(nextNeighbourIdx))
-            newEnd = [nextNeighbourIdx; newEnd];
-            nextNeighbourIdx = nextNeighbourIdx+nextNeighbourDifference;
-            if ( (nextNeighbourIdx < 1) || ...
-                    (nextNeighbourIdx > imgSize(1)*imgSize(2)) )
-                break;
+        if( nextNeighbourDifference ~= 0)
+            nextNeighbourIdx = endPixel2+nextNeighbourDifference;
+            while (bwThick(nextNeighbourIdx))
+                newEnd = [nextNeighbourIdx; newEnd];
+                nextNeighbourIdx = nextNeighbourIdx+nextNeighbourDifference;
+                if ( (nextNeighbourIdx < 1) || ...
+                        (nextNeighbourIdx > imgSize(1)*imgSize(2)) )
+                    break;
+                end
             end
         end
     end
