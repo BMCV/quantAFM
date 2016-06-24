@@ -23,19 +23,43 @@ function [lengths, backboneIdxList] = determineDnaLength(PixelIdxList, bwImgThin
         % ... and add the respective pixels to the DNA backbone
         singlePath = [newBeginning; currPxlList(singlePath); newEnd];
         % calculate cubic splines for current backbone
-        [row col]= ind2sub(size(res),singlePath');
-        %spline = csapi(col, row);
-        spline = cscvn([col; row]);
+%        [row, col]= ind2sub(size(res),singlePath');
+%        spline = cscvn([col; row]);
 %        fnplt(spline, 2);
- %       plot(col, row);
-        s = fnplt(spline);
+%        plot(col, row);
+%        s = fnplt(spline);
         % calculate length of spline
         %[~, s1] = unique(round(s/1e-15),'rows','stable');
         %s2 = s(s1);
         %sqrt(sum(diff(s,[],1).^2,2))
-        
         % the above is equal to: 
-        length(1,i)= pdist(s);
+        %lengths(1,i)= pdist(s);
+        
+        %% calculate length with Kulpa Estimator
+        % Length = 0.948*Ne + 1.343*No
+        % with:     Ne - number of even pixels
+        %           No - number of odd pixels
+        % Here, even pixels are those that are, in their 8-neighourhood
+        % connected along the even axes, and odd pixels are those connected
+        % along the uneven axes.
+        %   3   2   1        0   1   1      would have:
+        %   4  pxl  0   =>   0   1   0  =>  2 odd pixels
+        %   5   6   7        1   0   0      2 even pixel
+        [row, col]= ind2sub(size(res),singlePath');
+        evenOdds = zeros(size(col));
+        % calculate differences between neighbouring entries in column and
+        % in row indices, respectively. Even pixels should have difference
+        % "0" between their row and col indices, resp.
+        diff_col = diff(col');
+        diff_row = diff(row');
+        % now, create vector that has "1" for even and "0" for odd pixels
+        evenOdds(find(~(diff_col))) = 1; 
+        evenOdds(find(~(diff_row))) = 1;
+        numberOfEvenPixels = sum(evenOdds);
+        numberOfOddPixels = size(col, 2) - numberOfEvenPixels;
+        % apply Kulpa Estimator
+        fragmentLength = 0.948*numberOfEvenPixels + 1.343 * numberOfOddPixels;
+        lengths(1,i) = fragmentLength;
         backboneIdxList{i} = singlePath;
         
         res(singlePath) = 1; %can be deleted later, only for visualization
