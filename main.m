@@ -152,13 +152,20 @@ for index = 1:5
         imageList{index}.indexcenters = (centers(:,1)-1)*m + centers(:,2) ;
         
         %           imageList{index}.indexcenters = sub2ind(imageList{index}.imgSize, centers);
-        
     end
+    % determine DNA fragment backbones and their lengths, and store them as
+    % property of connectedThinnedDna
+    [imageList{index}.connectedThinnedDna.fragmentLengths, ...
+     imageList{index}.connectedThinnedDna.backboneIdxList ] ...
+    = determineDnaLength(...
+         imageList{index}.connectedThinnedDna.PixelIdxList, ...
+         imageList{index}.bwImgThinnedDna, ...
+         imageList{index}.bwImgThickDna);
+    
     %     Go through all objects within the connected Components and create DNA
     %     Objects for them. DNABound if it is connected to a Nukleii and
     %     DNAFree if not
     for dnaIndex = 1:dnaCount
-        
         %         Check if there are any Nukleii detected on the bwThinnedDNAImg
         if ~isempty(centers)
             %             Check whether any of the Nukleii are attached to the current
@@ -204,8 +211,8 @@ for index = 1:5
             imageList{index}.dnaList{dnaIndex} = DnaBound(imageList{index}.connectedThickDna.PixelIdxList{dnaIndex}, ...
                 bBoxImage,imageList{index}.region(dnaIndex,:),'normal',nukleos);
             %          Calculate angle between the Nukleii and the arms(the DNA Arms
-             [ imageList{index}.dnaList{dnaIndex}.angle1, imageList{index}.dnaList{dnaIndex}.angle2] = ...
-                 measure_angle(imageList{index}.dnaList{dnaIndex});
+ %            [ imageList{index}.dnaList{dnaIndex}.angle1, imageList{index}.dnaList{dnaIndex}.angle2] = ...
+ %                measure_angle(imageList{index}.dnaList{dnaIndex});
             
         else
             %             When no Nukleii is attached, Create DNAFree Object and set

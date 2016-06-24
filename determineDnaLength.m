@@ -1,6 +1,11 @@
-function length = determineDnaLength(PixelIdxList, bwImgThin, bwImgThick)
+function [lengths, backboneIdxList] = determineDnaLength(PixelIdxList, bwImgThin, bwImgThick)
     len = size(PixelIdxList,2);
-    res = zeros(size(bwImgThin));
+    res = zeros(size(bwImgThin)); %can be deleted later, only for visualization
+    lengths = zeros(size(PixelIdxList));
+    backboneIdxList = {};
+    
+%    imshow(res);
+%    hold on;
     % for each DNA fragment in bwImgThin:
     for i= 1:len
         currPxlList = PixelIdxList{i};
@@ -19,12 +24,24 @@ function length = determineDnaLength(PixelIdxList, bwImgThin, bwImgThick)
         singlePath = [newBeginning; currPxlList(singlePath); newEnd];
         % calculate cubic splines for current backbone
         [row col]= ind2sub(size(res),singlePath');
-        spline = csapi(col, row);
+        %spline = csapi(col, row);
+        spline = cscvn([col; row]);
+%        fnplt(spline, 2);
+ %       plot(col, row);
+        s = fnplt(spline);
+        % calculate length of spline
+        %[~, s1] = unique(round(s/1e-15),'rows','stable');
+        %s2 = s(s1);
+        %sqrt(sum(diff(s,[],1).^2,2))
         
-        res(singlePath) = 1;
+        % the above is equal to: 
+        length(1,i)= pdist(s);
+        backboneIdxList{i} = singlePath;
+        
+        res(singlePath) = 1; %can be deleted later, only for visualization
     end
-    imshow(imfuse(bwImgThick, res));
-    imwrite(imfuse(bwImgThick, res) , '../pictures/DNA_spine_thickDna_overlay.tif');
+%    imshow(imfuse(bwImgThick, res));
+%    imwrite(imfuse(bwImgThick, res) , '../pictures/DNA_spine_thickDna_overlay.tif');
 end
 
 function [gr, singlePath ]= getDnaBackbone(pxlIdxList, bwImg)
@@ -45,8 +62,13 @@ function [gr, singlePath ]= getDnaBackbone(pxlIdxList, bwImg)
     mask = [1, imgSize(1)-1, imgSize(1), imgSize(1)+1 ];
     % iterate over each entry in pixelIdxList
     for i = 1:size(a,1)
+        tmp_mask = mask;
+        % we have to check that we don't index out of bounds; so
+        % respective mask values are removed
+        tmp_mask(tmp_mask+a(i) > imgSize(1)*imgSize(2) ) = [];
+        tmp_mask = tmp_mask + a(i);
         % apply mask and get indices where mask is true
-        res = bwImg(a(i)+mask).*(mask+a(i));
+        res = bwImg(tmp_mask).*(tmp_mask);
         % we need to exclude border cases; so, we test whether 
         % the found indices really occur in pixelIdxList 
         % ismemeber returns 0 and 1, respectively. So, we can
