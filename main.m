@@ -181,26 +181,26 @@ for index = 1:5
         %         connectedComponent
         
         if sum(imageList{index}.contains)~= 0
-            %             find all Nukleii that are attached to this connected
-            %             Component
+            % find all Nukleii that are attached to this connected
+            % Component
             nukleoIndecies = find(imageList{index}.contains);
-            %             create a Nukleii Object for all Nukleii found
+            % create a Nukleii Object for all Nukleii found
             nukleos = cell(1,numel(nukleoIndecies));
             
-            %             Set all numbers of current DNA to all nukleos attached
+            % Set all numbers of current DNA to all nukleos attached
             imageList{index}.attachedDNA(nukleoIndecies) = dnaIndex;
             for i=1:numel(nukleoIndecies)
-                %                 Save all Nukleii found in a Cell
+                % Save all Nukleii found in a Cell
                 nukleos{i} = nukleo(imageList{index}.centers(nukleoIndecies(i),:), ...
                     imageList{index}.radii(nukleoIndecies(i),:), dnaIndex, ...
                     imageList{index}.centers(nukleoIndecies(i),:) - bBox.BoundingBox(1:2));
             end
 
-%             create DNABound Object for every Object detected in the Image
-%             Set Type,ConnectedComponents, position and subImage from
-%             Bounding box
-%             Create subimage from the BwImageThickDNA with the borders of
-%             the bounding box.
+            % create DNABound Object for every Object detected in the Image
+            % Set Type,ConnectedComponents, position and subImage from
+            % Bounding box
+            % Create subimage from the BwImageThickDNA with the borders of
+            % the bounding box.
             bBoxImage = imageList{index}.bwImgThickDna(round(imageList{index}.boundingBoxDna(dnaIndex).BoundingBox(2))...
                 : floor(imageList{index}.boundingBoxDna(dnaIndex).BoundingBox(2) + ... 
                 imageList{index}.boundingBoxDna(dnaIndex).BoundingBox(4)),...
@@ -210,15 +210,15 @@ for index = 1:5
             
             imageList{index}.dnaList{dnaIndex} = DnaBound(imageList{index}.connectedThickDna.PixelIdxList{dnaIndex}, ...
                 bBoxImage,imageList{index}.region(dnaIndex,:),'normal',nukleos);
-            %          Calculate angle between the Nukleii and the arms(the DNA Arms
+            % Calculate angle between the Nukleii and the arms(the DNA Arms
  %            [ imageList{index}.dnaList{dnaIndex}.angle1, imageList{index}.dnaList{dnaIndex}.angle2] = ...
  %                measure_angle(imageList{index}.dnaList{dnaIndex});
             
         else
-            %             When no Nukleii is attached, Create DNAFree Object and set
-            %             Type, ConnectedComponents and position 
+            % When no Nukleii is attached, Create DNAFree Object and set
+            % Type, ConnectedComponents and position 
             
-                  bBoxImage = imageList{index}.bwImgThickDna(round(imageList{index}.boundingBoxDna(dnaIndex).BoundingBox(2))...
+            bBoxImage = imageList{index}.bwImgThickDna(round(imageList{index}.boundingBoxDna(dnaIndex).BoundingBox(2))...
                 : floor(imageList{index}.boundingBoxDna(dnaIndex).BoundingBox(2) + ... 
                 imageList{index}.boundingBoxDna(dnaIndex).BoundingBox(4)),...
                 round(imageList{index}.boundingBoxDna(dnaIndex).BoundingBox(1))...
@@ -228,7 +228,9 @@ for index = 1:5
             imageList{index}.dnaList{dnaIndex} = DnaFree(imageList{index}.connectedThickDna.PixelIdxList{dnaIndex}, ...
                 bBoxImage ,imageList{index}.region(dnaIndex,:));
         end
-        %         Set the dnaIndex as Number for the DNA strand object
+        imageList{index}.dnaList{dnaIndex}.length = ...
+            imageList{index}.connectedThinnedDna.fragmentLengths(dnaIndex);
+        % Set the dnaIndex as Number for the DNA strand object
         imageList{index}.dnaList{dnaIndex}.number = dnaIndex;
         imageList{index}.dnaList{dnaIndex}.bBox = bBox;
         
