@@ -22,11 +22,16 @@ threshAlgo = 'otsu';
 %maxentropy - no good
 %intermodes - better than maxentropy, but still bad
 %minerror - no good
-threshAlgo1 = 'moments'; 
+threshAlgo1 = 'otsu'; 
 
+manThresh = 95;
+thresh1 =  zeros(1,imageCount);
+thresh2 =  zeros(1,imageCount);
+% median and sigma over ALL threshold of ALL images
+medianTheshold = 0.4353;
+sigmaThreshold = 0.0124;
 
-
-for index = 1:5
+parfor index = 1:imageCount
     %% this is required for Archlinux
     if or( strcmp(imageFolderObj(index).name , '.'), strcmp(imageFolderObj(index).name, '..') )
         continue
@@ -64,11 +69,12 @@ for index = 1:5
     % substracted. This image will be the basis for further processing.
     
     
-    imageList{index}.preprocImg = lowPassFilter(imageList{index}.rawImage);
+     imageList{index}.preprocImg = lowPassFilter(imageList{index}.rawImage);
+%     imageList{index}.preprocImg = imageList{index}.rawImage;
     imageList{index}.preprocImg = medfilt2(imageList{index}.preprocImg,[3 3]);
     imageList{index}.background = imopen(imageList{index}.preprocImg, strel('disk',15));
-    imageList{index}.preprocImg = imageList{index}.preprocImg - imageList{index}.background;
-    
+%     imageList{index}.preprocImg = imageList{index}.preprocImg - imageList{index}.background;
+      imageList{index}.preprocImg(imageList{index}.preprocImg< manThresh) = manThresh;
     %% Replace image artifacts
     % Here, an initial bw image is generated using a global thresholding
     % algorithm. In this phase of the image processing, the threshold's
@@ -80,13 +86,15 @@ for index = 1:5
     % threshold so that they will be filtered out later on.
     
     thresh = threshold(threshAlgo, imageList{index}.preprocImg);
+    imageList{index}.thresh = thresh;
+    thresh1(index) = thresh;
     imageList{index}.bwImage = im2bw(imageList{index}.preprocImg, thresh);
-    
+    imageList{index}.bwImage = bwareafilt(imageList{index}.bwImage, [100,900]);
+
     % remove objects from bwImage with pixelsize in [150, 900]
     
     imageList{index}.bwFilteredImage = ...
-        imageList{index}.bwImage - bwareafilt(imageList{index}.bwImage, [100,800]);
-    
+        imageList{index}.bwImage - bwareafilt(imageList{index}.bwImage, [100,900]);
     % generate complement image that is 1 where there are NO artifacts and
     % 0 otherwise
     
@@ -100,11 +108,16 @@ for index = 1:5
     
     imageList{index}.filteredImage = ...
         uint8(imageList{index}.preprocImg) .* uint8(complementImage);
+    imageList{index}.filteredImage(imageList{index}.filteredImage< manThresh) = manThresh;
     
     % use this cleaned image to calculate a more accurate threshold and
     % compute a bw image from that contains mostly DNA fragments/nucleosomes.
     
     t = threshold(threshAlgo1 , imageList{index}.filteredImage);
+    thresh2(index)= t;
+    if ((t < medianTheshold-sigmaThreshold) || (t > medianTheshold+sigmaThreshold))
+        t = medianTheshold;
+    end
     imageList{index}.bwImgThickDna = im2bw(imageList{index}.filteredImage, t);
     
     % finally, remove any objects that might not be in the expected size
@@ -211,8 +224,8 @@ for index = 1:5
             imageList{index}.dnaList{dnaIndex} = DnaBound(imageList{index}.connectedThickDna.PixelIdxList{dnaIndex}, ...
                 bBoxImage,imageList{index}.region(dnaIndex,:),'normal',nukleos);
             %          Calculate angle between the Nukleii and the arms(the DNA Arms
- %            [ imageList{index}.dnaList{dnaIndex}.angle1, imageList{index}.dnaList{dnaIndex}.angle2] = ...
- %                measure_angle(imageList{index}.dnaList{dnaIndex});
+%                 [ imageList{index}.dnaList{dnaIndex}.angle1, imageList{index}.dnaList{dnaIndex}.angle2] = ...
+%                 measure_angle(imageList{index}.dnaList{dnaIndex});
             
         else
             %             When no Nukleii is attached, Create DNAFree Object and set

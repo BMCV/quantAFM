@@ -64,7 +64,9 @@ classdef Image
         attachedDNA
 %         array of bounding box of every DNA strand
         boundingBoxDna
-        
+%         Threshold of the first Threshhold Algo.
+        thresh;
+        thresh1;
     end
     
     methods

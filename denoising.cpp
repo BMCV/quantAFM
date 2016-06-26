@@ -6,7 +6,7 @@
 
 #include "opencv2/core/core.hpp"
 #include "opencv2/imgproc/imgproc.hpp"
-#include "opencv2/photo.hpp"
+#include "opencv2/photo/photo.hpp"
 #include "opencv2/opencv.hpp"
 #include <iostream>
 #include <sstream>
@@ -23,7 +23,8 @@ char srcName[20] = "original";
 
 int main(int argc, char** argv) 
 {
-  src = cv::imread(argv[1]);
+  //src = cv::imread(argv[1]);
+	src = cv::imread("102.tif");
   if( !src.data )
   {
     std::cout << "no img could be read" << std::endl;
