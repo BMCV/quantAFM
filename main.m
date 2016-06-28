@@ -117,6 +117,7 @@ parfor index = 1:imageCount
     thresh2(index)= t;
     if ((t < medianTheshold-sigmaThreshold) || (t > medianTheshold+sigmaThreshold))
         t = medianTheshold;
+        
     end
     imageList{index}.bwImgThickDna = im2bw(imageList{index}.filteredImage, t);
     
