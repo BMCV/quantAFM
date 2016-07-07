@@ -3,11 +3,20 @@ classdef (Abstract) DNA
     %   Detailed explanation goes here
     
     properties
+%         Upper boundary for DNA length
+        MAX_LENGTH = 200;
+%         Lower boundary for DNA length
+        MIN_LENGTH = 20;
 %  Number of DNA strand
         number;
 %  Length of Dna strand
-        length ;
-        
+        length;
+%        flag that identifies whether DNA object is valid or not;
+%        DNA object is invalid if it is
+%           - too short (< 20 pixel)
+%           - too long (> 200 pixel)
+%           - ... (more criteria?)
+        isValid;
 %         center of mass of DNA strand, respect to upper left corner
         position = zeros(1,2) ; %center of mass
 %        String Name of type
@@ -16,6 +25,8 @@ classdef (Abstract) DNA
         connectedThick;
 %        Array of linear indices of the DNA strand in the bwDnaThinImg
         connectedThinned;
+%        Array of linear indices of the DNA backbone in the bwDnaThinImg
+        connectedThinnedRemoved;
 %         BW Image
         bwImage;
 %         BWimage Thin DNA

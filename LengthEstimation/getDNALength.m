@@ -1,4 +1,4 @@
-function [ result, picture ] = getDNALength( picture )
+function [ dnaObj ] = getDNALength( dnaObj )
 % @author: Dennis Aumiller, Philip Hausner
 % This function evaluates the length of an DNA object in a picture clipping
 % The function needs a picture in which exactly one DNA string is visible
@@ -9,7 +9,7 @@ function [ result, picture ] = getDNALength( picture )
 
 % Around the picture a quad of 0s is inserted so we dont have to check if
 % a point is at the edge of the picture
-picture = logical(padarray(picture, [1 1]));
+picture = logical(padarray(dnaObj.bwImageThinned, [1 1]));
 [height, width] = size(picture);
 cc = bwconncomp(picture);
 % get all pixels that are 1
@@ -107,7 +107,7 @@ branches = find(sic);
 % constraint to differ between objects that have a circle in them and
 % objects we actually can use to determine the length
 constraint = 2;
-for i = 1:size(sum(sic(:)))
+for i = 1:sum(sic(:))
     if sum(adjMat(find(pixels == branches(1)), :)) == 4
         constraint = constraint + 1;
     end
@@ -206,10 +206,12 @@ odd = sum(sum(mod(cases,2))) / 2;
 even = (sum(sum(adjMat)) / 2) - odd;
 
 % evaluate the length using the Kulpa estimator
-result = 0.948 * even + 1.343 * odd;
+dnaObj.length = 0.948 * even + 1.343 * odd;
 
 % reverse padding
 picture = picture(2:height - 1, 2:width - 1);
+% picture is 'logical', might be problematic in any other function?
+dnaObj.bwImageThinnedRemoved = picture;
 
 end
 

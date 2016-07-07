@@ -1,19 +1,12 @@
-function [lengths, backboneIdxList] = determineDnaLength(PixelIdxList, bwImgThin, bwImgThick)
-    len = size(PixelIdxList,2);
-    res = zeros(size(bwImgThin)); %can be deleted later, only for visualization
-    lengths = zeros(size(PixelIdxList));
-    backboneIdxList = {};
-    
-%    imshow(res);
-    %imshow(bwImgThin);
-%    hold on;
-    % for each DNA fragment in bwImgThin:
-    for i= 1:len
-        currPxlList = PixelIdxList{i};
-        % if fragment too small, don't compute the rest
-        if( size(currPxlList,1) < 3)
-            continue
-        end
+function [dnaObj] = determineDnaLength2(dnaObj)
+    currPxlList = dnaObj.connectedThinned;
+    bwImgThin = dnaObj.bwImageThinned;
+    bwImgThick = dnaObj.bwImage;
+    bwImgThinnedRemoved = zeros(size(bwImgThin));   
+    % if fragment too small or too large don't compute the rest
+%     if( ~ (size(currPxlList,1) < 20) && ... 
+%         ~ (size(currPxlList,1) > 200))
+    if( ~(size(currPxlList,1) < 3) ) 
         % create graph from its PixelIdxList and, from that, get the
         % fragment backbone
         [gr, singlePath] = getDnaBackbone(currPxlList, bwImgThin);
@@ -24,18 +17,18 @@ function [lengths, backboneIdxList] = determineDnaLength(PixelIdxList, bwImgThin
         % ... and add the respective pixels to the DNA backbone
         singlePath = [newBeginning; currPxlList(singlePath); newEnd];
         % calculate cubic splines for current backbone
-        [row, col]= ind2sub(size(res),singlePath');
-%        spline = cscvn([col; row]);
-%        fnplt(spline, 2);
-%        plot(col, row);
-%        s = fnplt(spline);
+        [row, col]= ind2sub(size(bwImgThinnedRemoved),singlePath');
+    %        spline = cscvn([col; row]);
+    %        fnplt(spline, 2);
+    %        plot(col, row);
+    %        s = fnplt(spline);
         % calculate length of spline
         %[~, s1] = unique(round(s/1e-15),'rows','stable');
         %s2 = s(s1);
         %sqrt(sum(diff(s,[],1).^2,2))
         % the above is equal to: 
         %lengths(1,i)= pdist(s);
-        
+
         %% calculate length with Kulpa Estimator
         % Length = 0.948*Ne + 1.343*No
         % with:     Ne - number of even pixels
@@ -46,7 +39,7 @@ function [lengths, backboneIdxList] = determineDnaLength(PixelIdxList, bwImgThin
         %   3   2   1        0   1   1      would have:
         %   4  pxl  0   =>   0   1   0  =>  2 odd pixels
         %   5   6   7        1   0   0      2 even pixel
-        [row, col]= ind2sub(size(res),singlePath');
+        [row, col]= ind2sub(size(bwImgThinnedRemoved),singlePath');
         evenOdds = zeros(size(col));
         % calculate differences between neighbouring entries in column and
         % in row indices, respectively. Even pixels should have difference
@@ -58,16 +51,24 @@ function [lengths, backboneIdxList] = determineDnaLength(PixelIdxList, bwImgThin
         evenOdds(find(~(diff_row))) = 1;
         numberOfEvenPixels = sum(evenOdds);
         numberOfOddPixels = size(col, 2) - numberOfEvenPixels;
+        % create bw image of elongated DNA backbone
+        bwImgThinnedRemoved(singlePath) = 1; %can be deleted later, only for visualization
+
         % apply Kulpa Estimator
-        fragmentLength = 0.948*numberOfEvenPixels + 1.343 * numberOfOddPixels;
-        lengths(1,i) = fragmentLength;
-        backboneIdxList{i} = singlePath;
-        
-        res(singlePath) = 1; %can be deleted later, only for visualization
+        dnaObj.length = 0.948*numberOfEvenPixels + 1.343 * numberOfOddPixels;
+        dnaObj.connectedThinnedRemoved = singlePath;
+        dnaObj.bwImageThinnedRemoved = bwImgThinnedRemoved;
+        % set invalid flag if DNA object does not fit length criteria
+        if ((size(singlePath, 1) < dnaObj.MIN_LENGTH) || ...
+            (size(singlePath, 1) > dnaObj.MAX_LENGTH))
+            dnaObj.isValid = 0;
+        else
+            dnaObj.isValid = 1;
+        end
     end
-    'done'
-%    imshow(imfuse(bwImgThick, res));
-%    imwrite(imfuse(bwImgThick, res) , '../pictures/DNA_spine_thickDna_overlay.tif');
+    
+%    imshow(imfuse(bwImgThick, bwImgThinnedRemoved));
+%    imwrite(imfuse(bwImgThick, bwImgThinnedRemoved) , '../pictures/DNA_spine_thickDna_overlay.tif');
 end
 
 function [gr, singlePath ]= getDnaBackbone(pxlIdxList, bwImg)

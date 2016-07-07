@@ -27,17 +27,18 @@ threshAlgo1 = 'otsu';
 manThresh = 95;
 thresh1 =  zeros(1,imageCount);
 thresh2 =  zeros(1,imageCount);
-% median and sigma over ALL threshold of ALL images
+% median and sigma over ALL thresholds of ALL images
 medianTheshold = 0.4353;
 sigmaThreshold = 0.0124;
 
-parfor index = 1:imageCount
+
+for index = 23:23
     %% this is required for Archlinux
     if or( strcmp(imageFolderObj(index).name , '.'), strcmp(imageFolderObj(index).name, '..') )
         continue
     end
     
-    %[image,colorMap] = imread(strcat(currentImageDir, imageFolderObj(index).name));
+%    [image,colorMap] = imread(strcat(currentImageDir, imageFolderObj(index).name));
     %% until here
     
     %    imageList{index}.metaImage = imfinfo(imageFolderObj(index).name);
@@ -133,10 +134,6 @@ parfor index = 1:imageCount
     %find circles, nuklei, centers, and radi
     [ imageList{index}.centers,imageList{index}.radii] = ...
         findNukleii(imageList{index}.bwImgThickDna, imageList{index}.preprocImg);
-    %imshow(imageList{index}.rawImage);
-    %hold on
-    %viscircles(imageList{index}.centers, imageList{index}.radii);
-    %hold on
     
     %get properties of all objects on the ThickDnaBwImage and
     %ThinnedDnaBwImage
@@ -148,7 +145,7 @@ parfor index = 1:imageCount
     %     with x and y values.
     imageList{index}.region = cat(1,region.Centroid);
 
-    %create clasobject for all fragments found on the image
+    %create class object for all fragments found on the image
     dnaCount = max(imageList{index}.connectedThickDna.NumObjects, ... 
         imageList{index}.connectedThinnedDna.NumObjects);
 
@@ -164,18 +161,8 @@ parfor index = 1:imageCount
     [m,n] = size(imageList{index}.bwImgThickDna);
     if ~isempty(centers)
         imageList{index}.indexcenters = (centers(:,1)-1)*m + centers(:,2) ;
-        
-        %           imageList{index}.indexcenters = sub2ind(imageList{index}.imgSize, centers);
     end
-    % determine DNA fragment backbones and their lengths, and store them as
-    % property of connectedThinnedDna
-    [imageList{index}.connectedThinnedDna.fragmentLengths, ...
-     imageList{index}.connectedThinnedDna.backboneIdxList ] ...
-    = determineDnaLength(...
-         imageList{index}.connectedThinnedDna.PixelIdxList, ...
-         imageList{index}.bwImgThinnedDna, ...
-         imageList{index}.bwImgThickDna);
-    
+
     %     Go through all objects within the connected Components and create DNA
     %     Objects for them. DNABound if it is connected to a Nukleii and
     %     DNAFree if not
@@ -191,9 +178,9 @@ parfor index = 1:imageCount
         bBox = imageList{index}.boundingBoxDna(dnaIndex);
         bBox.BoundingBox(2) = round(bBox.BoundingBox(2));
         bBox.BoundingBox(1) = round(bBox.BoundingBox(1));
+        
         %         Check if there was a Nukleii found that is attached to this
         %         connectedComponent
-        
         if sum(imageList{index}.contains)~= 0
             %             find all Nukleii that are attached to this connected
             %             Component
@@ -224,30 +211,42 @@ parfor index = 1:imageCount
             
             imageList{index}.dnaList{dnaIndex} = DnaBound(imageList{index}.connectedThickDna.PixelIdxList{dnaIndex}, ...
                 bBoxImage,imageList{index}.region(dnaIndex,:),'normal',nukleos);
-            %          Calculate angle between the Nukleii and the arms(the DNA Arms
-%                 [ imageList{index}.dnaList{dnaIndex}.angle1, imageList{index}.dnaList{dnaIndex}.angle2] = ...
-%                 measure_angle(imageList{index}.dnaList{dnaIndex});
+            %%%%TODO%%%%
+            % Here, we could check the length of the dnaObject's
+            % pixelIdxList' length. If it is below a certain value or
+            % above, it is likely not a DNA fragment, so we should discard
+            % it and not compute anything for it.
+            %%%%CURRENTLY%%%%%%
+            % Currently, each DNA object has an isValid flag. This is set
+            % if after length determination the DNA backbone does not fit
+            % the generally specified DNA length criteria
             
+            %imageList{index}.dnaList{dnaIndex} = getDNALength(imageList{index}.dnaList{dnaIndex});
+            imageList{index}.dnaList{dnaIndex} = determineDnaLength2(imageList{index}.dnaList{dnaIndex});
+            %          Calculate angle between the Nukleii and the arms(the DNA Arms
+            [ imageList{index}.dnaList{dnaIndex}.angle1, imageList{index}.dnaList{dnaIndex}.angle2] = ...
+                 measure_angle(imageList{index}.dnaList{dnaIndex});
         else
             %             When no Nukleii is attached, Create DNAFree Object and set
             %             Type, ConnectedComponents and position 
             
-                  bBoxImage = imageList{index}.bwImgThickDna(round(imageList{index}.boundingBoxDna(dnaIndex).BoundingBox(2))...
+            bBoxImage = imageList{index}.bwImgThickDna(round(imageList{index}.boundingBoxDna(dnaIndex).BoundingBox(2))...
                 : floor(imageList{index}.boundingBoxDna(dnaIndex).BoundingBox(2) + ... 
                 imageList{index}.boundingBoxDna(dnaIndex).BoundingBox(4)),...
                 round(imageList{index}.boundingBoxDna(dnaIndex).BoundingBox(1))...
                 : floor(imageList{index}.boundingBoxDna(dnaIndex).BoundingBox(1)+ ...
                 imageList{index}.boundingBoxDna(dnaIndex).BoundingBox(3)));
-            
             imageList{index}.dnaList{dnaIndex} = DnaFree(imageList{index}.connectedThickDna.PixelIdxList{dnaIndex}, ...
                 bBoxImage ,imageList{index}.region(dnaIndex,:));
+            imageList{index}.dnaList{dnaIndex} = determineDnaLength2(imageList{index}.dnaList{dnaIndex});
+            %imageList{index}.dnaList{dnaIndex} = getDNALength(imageList{index}.dnaList{dnaIndex});
+            
         end
         %         Set the dnaIndex as Number for the DNA strand object
         imageList{index}.dnaList{dnaIndex}.number = dnaIndex;
         imageList{index}.dnaList{dnaIndex}.bBox = bBox;
-        
     end
-
+    
     if( strcmp(getenv('OS'),'Windows_NT'))
         
         imwrite(imageList{index}.preprocImg , ['..\pictures\preprocImg\' 'preproc' imageFolderObj(index).name ]);
@@ -260,16 +259,16 @@ parfor index = 1:imageCount
         imwrite(imageList{index}.bwImgThinnedDna , ['..\pictures\bwImgThinnedDna\' 'thinnedDna' imageFolderObj(index).name ]);
         
     else
-%         imwrite(imageList{index}.preprocImg , ['../pictures/preprocImg/' 'me_preproc' imageFolderObj(index).name ]);
-%         imwrite(imageList{index}.background , ['../pictures/background/' 'me_bckground' imageFolderObj(index).name ]);
-%         imwrite(imageList{index}.bwImage , ['../pictures/bwImage/' 'me_bw' imageFolderObj(index).name ]);
-%         imwrite(imageList{index}.bwFilteredImage , ['../pictures/bwFilteredImage/' 'me_bwFiltered' imageFolderObj(index).name ]);
-%         imwrite(imageList{index}.filteredImage , ['../pictures/filteredImage/' 'me_filtered' imageFolderObj(index).name ]);
-%         imwrite(imageList{index}.bwImgThickDna , ['../pictures/bwImgThickDna/' 'me_bwThickDna' imageFolderObj(index).name ]);
-%     %     imwrite(imageList{index}.bwImgDen , ['..\pictures\bwImgDen\' 'bwImgDen' imageFolderObj(index).name ]);
-%         imwrite(imageList{index}.bwImgThinnedDna , ['../pictures/bwImgThinnedDna/' 'me_thinnedDna' imageFolderObj(index).name ]);
-%         imwrite(imfuse(imageList{index}.rawImage , imageList{index}.bwImgThinnedDna), ['../pictures/overlays_thin/' 'overlay_' imageFolderObj(index).name ]);
-%             imwrite(imfuse(imageList{index}.rawImage , imageList{index}.bwImgThickDna), ['../pictures/overlays_thick/' 'overlay__' imageFolderObj(index).name ]);
+         imwrite(imageList{index}.preprocImg , ['../pictures/preprocImg/' 'me_preproc' imageFolderObj(index).name ]);
+         imwrite(imageList{index}.background , ['../pictures/background/' 'me_bckground' imageFolderObj(index).name ]);
+         imwrite(imageList{index}.bwImage , ['../pictures/bwImage/' 'me_bw' imageFolderObj(index).name ]);
+         imwrite(imageList{index}.bwFilteredImage , ['../pictures/bwFilteredImage/' 'me_bwFiltered' imageFolderObj(index).name ]);
+         imwrite(imageList{index}.filteredImage , ['../pictures/filteredImage/' 'me_filtered' imageFolderObj(index).name ]);
+         imwrite(imageList{index}.bwImgThickDna , ['../pictures/bwImgThickDna/' 'me_bwThickDna' imageFolderObj(index).name ]);
+%         imwrite(imageList{index}.bwImgDen , ['..\pictures\bwImgDen\' 'bwImgDen' imageFolderObj(index).name ]);
+         imwrite(imageList{index}.bwImgThinnedDna , ['../pictures/bwImgThinnedDna/' 'me_thinnedDna' imageFolderObj(index).name ]);
+         imwrite(imfuse(imageList{index}.rawImage , imageList{index}.bwImgThinnedDna), ['../pictures/overlays_thin/' 'overlay_' imageFolderObj(index).name ]);
+         imwrite(imfuse(imageList{index}.rawImage , imageList{index}.bwImgThickDna), ['../pictures/overlays_thick/' 'overlay__' imageFolderObj(index).name ]);
     end
     
 end

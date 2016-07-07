@@ -19,6 +19,8 @@ classdef Image
         bwImage;      
         % first final bw image containing mostly thick DNA fragments / nucleosomes
         bwImgThickDna;
+        % final image containing only DNA backbones
+        bwImgThinnedRemoved;
         % denoised and filtered bw image
         bwImgDen;
         % denoised, filtered and thinned bw image

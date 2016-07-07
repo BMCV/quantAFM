@@ -1,18 +1,19 @@
 function [angle1,angle2] = measure_angle(dna)
 %% 
 % dna: dna_bound, dna.attachedNukleo, dna.attachedNukleo.rad, center
-
+warning off;
 angle1 = 0;
 angle2 = 0;
 
-
-if numel(dna.attachedNukleo) ~= 1
-    % more than one center or no center!
+    % more than one center or no center 
+    % or no DNA backbone present!
+if ( numel(dna.attachedNukleo) ~= 1 || ...
+    size(dna.connectedThinnedRemoved,1) < 2 )
     return
 end
 
 % cut out nucleo
-dnaImgThinned = dna.bwImageThinned;
+dnaImgThinned = dna.bwImageThinnedRemoved;
 mask = bsxfun(@plus, ((1:dna.sizeImg(2)) - dna.attachedNukleo{1}.localCenter(1)).^2, ((transpose(1:dna.sizeImg(1)) - dna.attachedNukleo{1}.localCenter(2)).^2)) < dna.attachedNukleo{1}.rad^2;
 dnaImgThinned(mask) = 0;
 
@@ -62,6 +63,10 @@ if  size(arms.PixelIdxList{1},1)>1 && size(arms.PixelIdxList{2},1)>1
     p2 = polyfit(x2,y2,1);
     if p1(1) == p2(1)
         angle2 = 180;
+    elseif (isinf(p1(1)) || isinf(p2(1)) )
+        angle2 = 180;
+    elseif (isnan(p1(1)) || isnan(p2(1)) )
+        angle2 = 180;
     else
         p = [polyval(p1,x1(idx1)),x1(idx1); polyval(p2,x2(idx2)),x2(idx2)];
         % get intersection of the two lines
@@ -76,7 +81,7 @@ if  size(arms.PixelIdxList{1},1)>1 && size(arms.PixelIdxList{2},1)>1
         % showAngle2
     end
 end
-
+warning on;
 
 end
 
