@@ -6,27 +6,29 @@ classdef DnaFree < DNA
     end
     
     methods
-        function dnaObj = DnaFree(connectedThick,subImage, position)
+        function dnaObj = DnaFree(connectedThick,detail_thickDna, position)
             if nargin > 0
                 dnaObj.position = position;
                 dnaObj.connectedThick = connectedThick;
-                dnaObj.bwImage = subImage;
+                dnaObj.bwImage = detail_thickDna;
          
                 dnaObj.type = 'free';
                                 
 %                 delete all other objects on the subImage besides the Dna
 %                 strand
-                CC = bwconncomp(subImage);
+                CC = bwconncomp(detail_thickDna);
                 numPixels = cellfun(@numel, CC.PixelIdxList);
                 [largestObj, idx] = max(numPixels);
                 dnaObj.bwImage = false(size(dnaObj.bwImage));
                 dnaObj.bwImage(CC.PixelIdxList{idx}) = true;
-%               Thinn the subImage
+%%               Thin the subImage with Matlab function
                 dnaObj.bwImageThinned = bwmorph(dnaObj.bwImage,'thin',Inf);
+%%               ... using user-written implementation
+%                dnaObj.bwImageThinned = thinningZhangSuen(dnaObj.bwImage);
 %               Calculate connected Components PixelIdxList
                 connectedThinned = bwconncomp(dnaObj.bwImageThinned);
                 dnaObj.connectedThinned = connectedThinned.PixelIdxList{1};
-                dnaObj.sizeImg = size(subImage);
+                dnaObj.sizeImg = size(detail_thickDna);
                
             end
         end

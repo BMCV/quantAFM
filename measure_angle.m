@@ -36,7 +36,7 @@ p = [y1(idx1),x1(idx1); y2(idx2), x2(idx2)];
 a = dna.attachedNukleo{1}.localCenter-p(1,:);
 b = dna.attachedNukleo{1}.localCenter- p(2,:);
 % get angle
-angle1 = acosd(a*b'/(norm(a)*norm(b)));
+angle1 = real(acosd(a*b'/(norm(a)*norm(b))));
 % show angle
 % showAngle
 
@@ -63,10 +63,12 @@ if  size(arms.PixelIdxList{1},1)>1 && size(arms.PixelIdxList{2},1)>1
     p2 = polyfit(x2,y2,1);
     if p1(1) == p2(1)
         angle2 = 180;
-    elseif (isinf(p1(1)) || isinf(p2(1)) )
-        angle2 = 180;
+    elseif isinf(p1(1))
+        p1 = sign(p1(1))*1e10;
+    elseif isinf(p2(1))
+        p2(1) = sign(p2(1))*1e10;
     elseif (isnan(p1(1)) || isnan(p2(1)) )
-        angle2 = 180;
+        angle2 = 0;
     else
         p = [polyval(p1,x1(idx1)),x1(idx1); polyval(p2,x2(idx2)),x2(idx2)];
         % get intersection of the two lines

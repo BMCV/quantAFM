@@ -5,7 +5,7 @@ if( strcmp(getenv('OS'),'Windows_NT'))
     
 else
     addpath(genpath('../denoised_imgs'));
-    currentImageDir = '../denoised_imgs/p_Wildtyp/*.tif';
+    currentImageDir = '../denoised_imgs/p_Wildtyp/';
 end
 
 
@@ -38,7 +38,7 @@ parfor index = 1:imageCount
         continue
     end
     
-%    [image,colorMap] = imread(strcat(currentImageDir, imageFolderObj(index).name));
+    %[image,colorMap] = imread(strcat(currentImageDir, imageFolderObj(index).name));
     %% until here
     
     %    imageList{index}.metaImage = imfinfo(imageFolderObj(index).name);
@@ -70,12 +70,10 @@ parfor index = 1:imageCount
     % substracted. This image will be the basis for further processing.
     
     
-     imageList{index}.preprocImg = lowPassFilter(imageList{index}.rawImage);
-%     imageList{index}.preprocImg = imageList{index}.rawImage;
+    imageList{index}.preprocImg = lowPassFilter(imageList{index}.rawImage);
     imageList{index}.preprocImg = medfilt2(imageList{index}.preprocImg,[3 3]);
     imageList{index}.background = imopen(imageList{index}.preprocImg, strel('disk',15));
-%     imageList{index}.preprocImg = imageList{index}.preprocImg - imageList{index}.background;
-      imageList{index}.preprocImg(imageList{index}.preprocImg< manThresh) = manThresh;
+    imageList{index}.preprocImg(imageList{index}.preprocImg< manThresh) = manThresh;
     %% Replace image artifacts
     % Here, an initial bw image is generated using a global thresholding
     % algorithm. In this phase of the image processing, the threshold's
@@ -126,29 +124,20 @@ parfor index = 1:imageCount
     % range of [100, 900]
     imageList{index}.bwImgThickDna = bwareafilt(imageList{index}.bwImgThickDna, [100,900]);
     
-    
-    %% Generate 1 pixel thin objects for length calculation
-    imageList{index}.bwImgThinnedDna = bwmorph(imageList{index}.bwImgThickDna,'thin',Inf);
-    
-    
     %find circles, nuklei, centers, and radi
     [ imageList{index}.centers,imageList{index}.radii] = ...
         findNukleii(imageList{index}.bwImgThickDna, imageList{index}.preprocImg);
     
-    %get properties of all objects on the ThickDnaBwImage and
-    %ThinnedDnaBwImage
+    %get properties of all objects on the ThickDnaBwImage
     imageList{index}.connectedThickDna = bwconncomp(imageList{index}.bwImgThickDna);
-    imageList{index}.connectedThinnedDna = bwconncomp(imageList{index}.bwImgThinnedDna);
     region =  regionprops(imageList{index}.connectedThickDna, 'Centroid');
     imageList{index}.boundingBoxDna = regionprops(imageList{index}.connectedThickDna, 'BoundingBox');
     %     Concat the all Centers of mass of the objects to a 2-1 Cell Array
     %     with x and y values.
     imageList{index}.region = cat(1,region.Centroid);
-
-    %create class object for all fragments found on the image
-    dnaCount = max(imageList{index}.connectedThickDna.NumObjects, ... 
-        imageList{index}.connectedThinnedDna.NumObjects);
-
+    
+    dnaCount = imageList{index}.connectedThickDna.NumObjects;
+    
     imageList{index}.dnaList =  cell(1,dnaCount);
     % calculate centers in int coord.
     centers = round(imageList{index}.centers);
@@ -176,8 +165,14 @@ parfor index = 1:imageCount
         end
 %         Calculate Bounding Box for DNA strand.
         bBox = imageList{index}.boundingBoxDna(dnaIndex);
-        bBox.BoundingBox(2) = round(bBox.BoundingBox(2));
-        bBox.BoundingBox(1) = round(bBox.BoundingBox(1));
+
+%       create small detail image of current DNA fragment using the
+%       calculated bounding box
+        detail_thickDna = imageList{index}.bwImgThickDna(...
+            round(bBox.BoundingBox(2)): floor(bBox.BoundingBox(2)+bBox.BoundingBox(4)),...
+            round(bBox.BoundingBox(1)): floor(bBox.BoundingBox(1)+bBox.BoundingBox(3)));
+         bBox.BoundingBox(1) = round(bBox.BoundingBox(1));
+         bBox.BoundingBox(2) = round(bBox.BoundingBox(2));
         
         %         Check if there was a Nukleii found that is attached to this
         %         connectedComponent
@@ -200,17 +195,12 @@ parfor index = 1:imageCount
 %             create DNABound Object for every Object detected in the Image
 %             Set Type,ConnectedComponents, position and subImage from
 %             Bounding box
-%             Create subimage from the BwImageThickDNA with the borders of
-%             the bounding box.
-            bBoxImage = imageList{index}.bwImgThickDna(round(imageList{index}.boundingBoxDna(dnaIndex).BoundingBox(2))...
-                : floor(imageList{index}.boundingBoxDna(dnaIndex).BoundingBox(2) + ... 
-                imageList{index}.boundingBoxDna(dnaIndex).BoundingBox(4)),...
-                round(imageList{index}.boundingBoxDna(dnaIndex).BoundingBox(1))...
-                : floor(imageList{index}.boundingBoxDna(dnaIndex).BoundingBox(1)+ ...
-                imageList{index}.boundingBoxDna(dnaIndex).BoundingBox(3)));
-            
-            imageList{index}.dnaList{dnaIndex} = DnaBound(imageList{index}.connectedThickDna.PixelIdxList{dnaIndex}, ...
-                bBoxImage,imageList{index}.region(dnaIndex,:),'normal',nukleos);
+             imageList{index}.dnaList{dnaIndex} = DnaBound(...
+                 imageList{index}.connectedThickDna.PixelIdxList{dnaIndex}, ...
+                 detail_thickDna, ...
+                 imageList{index}.region(dnaIndex,:),...
+                 'normal',...
+                 nukleos);
             %%%%TODO%%%%
             % Here, we could check the length of the dnaObject's
             % pixelIdxList' length. If it is below a certain value or
@@ -229,15 +219,10 @@ parfor index = 1:imageCount
         else
             %             When no Nukleii is attached, Create DNAFree Object and set
             %             Type, ConnectedComponents and position 
-            
-            bBoxImage = imageList{index}.bwImgThickDna(round(imageList{index}.boundingBoxDna(dnaIndex).BoundingBox(2))...
-                : floor(imageList{index}.boundingBoxDna(dnaIndex).BoundingBox(2) + ... 
-                imageList{index}.boundingBoxDna(dnaIndex).BoundingBox(4)),...
-                round(imageList{index}.boundingBoxDna(dnaIndex).BoundingBox(1))...
-                : floor(imageList{index}.boundingBoxDna(dnaIndex).BoundingBox(1)+ ...
-                imageList{index}.boundingBoxDna(dnaIndex).BoundingBox(3)));
-            imageList{index}.dnaList{dnaIndex} = DnaFree(imageList{index}.connectedThickDna.PixelIdxList{dnaIndex}, ...
-                bBoxImage ,imageList{index}.region(dnaIndex,:));
+            imageList{index}.dnaList{dnaIndex} = DnaFree(...
+                imageList{index}.connectedThickDna.PixelIdxList{dnaIndex}, ...
+                detail_thickDna,...
+                imageList{index}.region(dnaIndex,:));
             imageList{index}.dnaList{dnaIndex} = determineDnaLength2(imageList{index}.dnaList{dnaIndex});
             %imageList{index}.dnaList{dnaIndex} = getDNALength(imageList{index}.dnaList{dnaIndex});
             
@@ -256,7 +241,7 @@ parfor index = 1:imageCount
         imwrite(imageList{index}.filteredImage , ['..\pictures\filteredImage\' 'filtered' imageFolderObj(index).name ]);
         imwrite(imageList{index}.bwImgThickDna , ['..\pictures\bwImgThickDna\' 'bwThickDna' imageFolderObj(index).name ]);
         %     imwrite(imageList{index}.bwImgDen , ['..\pictures\bwImgDen\' 'bwImgDen' imageFolderObj(index).name ]);
-        imwrite(imageList{index}.bwImgThinnedDna , ['..\pictures\bwImgThinnedDna\' 'thinnedDna' imageFolderObj(index).name ]);
+%         imwrite(imageList{index}.bwImgThinnedDna , ['..\pictures\bwImgThinnedDna\' 'thinnedDna' imageFolderObj(index).name ]);
         
     else
          imwrite(imageList{index}.preprocImg , ['../pictures/preprocImg/' 'me_preproc' imageFolderObj(index).name ]);
@@ -266,8 +251,8 @@ parfor index = 1:imageCount
          imwrite(imageList{index}.filteredImage , ['../pictures/filteredImage/' 'me_filtered' imageFolderObj(index).name ]);
          imwrite(imageList{index}.bwImgThickDna , ['../pictures/bwImgThickDna/' 'me_bwThickDna' imageFolderObj(index).name ]);
 %         imwrite(imageList{index}.bwImgDen , ['..\pictures\bwImgDen\' 'bwImgDen' imageFolderObj(index).name ]);
-         imwrite(imageList{index}.bwImgThinnedDna , ['../pictures/bwImgThinnedDna/' 'me_thinnedDna' imageFolderObj(index).name ]);
-         imwrite(imfuse(imageList{index}.rawImage , imageList{index}.bwImgThinnedDna), ['../pictures/overlays_thin/' 'overlay_' imageFolderObj(index).name ]);
+%          imwrite(imageList{index}.bwImgThinnedDna , ['../pictures/bwImgThinnedDna/' 'me_thinnedDna' imageFolderObj(index).name ]);
+%          imwrite(imfuse(imageList{index}.rawImage , imageList{index}.bwImgThinnedDna), ['../pictures/overlays_thin/' 'overlay_' imageFolderObj(index).name ]);
          imwrite(imfuse(imageList{index}.rawImage , imageList{index}.bwImgThickDna), ['../pictures/overlays_thick/' 'overlay__' imageFolderObj(index).name ]);
     end
     
