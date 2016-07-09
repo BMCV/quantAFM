@@ -32,7 +32,7 @@ medianTheshold = 0.4353;
 sigmaThreshold = 0.0124;
 
 
-for index = 23:23
+parfor index = 1:imageCount
     %% this is required for Archlinux
     if or( strcmp(imageFolderObj(index).name , '.'), strcmp(imageFolderObj(index).name, '..') )
         continue
@@ -90,7 +90,7 @@ for index = 23:23
     imageList{index}.thresh = thresh;
     thresh1(index) = thresh;
     imageList{index}.bwImage = im2bw(imageList{index}.preprocImg, thresh);
-    imageList{index}.bwImage = bwareafilt(imageList{index}.bwImage, [100,900]);
+%     imageList{index}.bwImage = bwareafilt(imageList{index}.bwImage, [100,900]);
 
     % remove objects from bwImage with pixelsize in [150, 900]
     
