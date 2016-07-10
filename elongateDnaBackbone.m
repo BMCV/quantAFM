@@ -52,8 +52,12 @@ function [newBeginning, newEnd] = elongateDnaBackbone(PixelIdxList, bwThick)
             % the direction we are going (in bwImgThickDna)
             while (bwThick(nextNeighbourIdx))
                 newBeginning = [nextNeighbourIdx; newBeginning];
+                oldIdx = nextNeighbourIdx;
                 nextNeighbourIdx = nextNeighbourIdx+nextNeighbourDifference;
-                if ( (nextNeighbourIdx < 1) || (nextNeighbourIdx > imgSize(1)*imgSize(2)) )
+                if ( (nextNeighbourIdx < 1) ||                      ... % outside left side of image
+                     (nextNeighbourIdx > imgSize(1)*imgSize(2)) ||  ... % outside right side of image
+                     (mod(oldIdx, imgSize(1)) == 0 && mod(nextNeighbourIdx, imgSize(1)) == 1) ||  ... % outside lower side of image
+                     (mod(oldIdx, imgSize(1)) == 1 && mod(nextNeighbourIdx, imgSize(1)) == 0) )       % outside upper side of image
                     break;
                 end
             end
@@ -71,9 +75,12 @@ function [newBeginning, newEnd] = elongateDnaBackbone(PixelIdxList, bwThick)
             nextNeighbourIdx = endPixel2+nextNeighbourDifference;
             while (bwThick(nextNeighbourIdx))
                 newEnd = [nextNeighbourIdx; newEnd];
+                oldIdx = nextNeighbourIdx;
                 nextNeighbourIdx = nextNeighbourIdx+nextNeighbourDifference;
-                if ( (nextNeighbourIdx < 1) || ...
-                        (nextNeighbourIdx > imgSize(1)*imgSize(2)) )
+                if ( (nextNeighbourIdx < 1) ||                      ... % outside left side of image
+                     (nextNeighbourIdx > imgSize(1)*imgSize(2)) ||  ... % outside right side of image
+                     (mod(oldIdx, imgSize(1)) == 0 && mod(nextNeighbourIdx, imgSize(1)) == 1) ||  ... % outside lower side of image
+                     (mod(oldIdx, imgSize(1)) == 1 && mod(nextNeighbourIdx, imgSize(1)) == 0) )       % outside upper side of image
                     break;
                 end
             end
