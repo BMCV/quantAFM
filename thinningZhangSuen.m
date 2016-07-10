@@ -4,9 +4,10 @@
 % Zhang-Suen Thinning Algorithm for skeletonization.
 
 function BW_Thinned = thinningZhangSuen(BW_Original)
+pad = 1;
 changing = 1;
-[rows, columns] = size(BW_Original);
-BW_Thinned = BW_Original;
+BW_Thinned = padarray(BW_Original,[pad,pad]);
+[rows, columns] = size(BW_Thinned);
 BW_Del = ones(rows, columns);
 while changing
     % BW_Del = ones(rows, columns);
@@ -51,7 +52,7 @@ while changing
     end
     BW_Thinned = BW_Thinned.*BW_Del;
 end%while
-
+BW_Thinned = BW_Thinned(1+pad:end-pad,1+pad:end-pad);
 %figure
 %subplot(1,2,1)
 %imshow(BW_Original)
