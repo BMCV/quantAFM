@@ -29,7 +29,7 @@ adjMat = logical(cases);
 for i = 1:length(pixels)
     % do not check points that are connected to more than two points or to
     % only 1 (endpoint)
-    if (sum(adjMat(i,:)) ~= 2 && sum(adjMat(1,:)) ~= 4)
+    if (sum(adjMat(i,:)) ~= 2)
         continue;
     end
     % take 2x2 clipping out of picture
@@ -106,6 +106,16 @@ branches = find(sic);
 % constraint to differ between objects that have a circle in them and
 % objects we actually can use to determine the length
 constraint = 2;
+
+% if two strands overlap the constraint is increased --> wont be processed
+for i = 1:sum(sic(:))
+    if sum(adjMat(find(pixels == branches(i)), :)) == 4
+        constraint = inf;
+    end
+end
+
+% bool to check if the DNA is processed
+correctDNA = 1;
 
 % only evaluate object that are valid. With the constraint we can differ
 % between valid objects and objects that have circles in them
@@ -206,20 +216,27 @@ if (sum(eic(:)) - sum(sic(:))) == constraint
             end
         clear p1 p2
     end
+else
+    correctDNA = 0;
 end
 clear i j tempIndex branches sic singleBranchPointMask minDistance
 
-% now calculate length via Kulpa estimation
-% sum up number of pixels that are connected diagonally
-odd = sum(sum(mod(cases,2))) / 2;
+% calculate length if DNA is a valid string
+if correctDNA
+    % now calculate length via Kulpa estimation
+    % sum up number of pixels that are connected diagonally
+    odd = sum(sum(mod(cases,2))) / 2;
 
-% even is the number of pixels that are connected horizontically or
-% vertically
-even = (sum(sum(adjMat)) / 2) - odd;
+    % even is the number of pixels that are connected horizontically or
+    % vertically
+    even = (sum(sum(adjMat)) / 2) - odd;
 
-% evaluate the length using the Kulpa estimator
-dnaObj.length = 0.948 * even + 1.343 * odd;
-
+    % evaluate the length using the Kulpa estimator
+    dnaObj.length = 0.948 * even + 1.343 * odd;
+else
+    dnaObj.length = -1;
+end
+disp(dnaObj.length);
 % reverse padding
 picture = picture(2:height - 1, 2:width - 1);
 % picture is 'logical', might be problematic in any other function?
