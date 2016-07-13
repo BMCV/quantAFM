@@ -1,7 +1,7 @@
 
 if( strcmp(getenv('OS'),'Windows_NT'))
     addpath(genpath('..\denoised_imgs'));
-    currentImageDir = '..\denoised_imgs\p_Wildtyp\*.tif';
+    currentImageDir = '..\denoised_imgs\all\*.tif';
     
 else
     addpath(genpath('../denoised_imgs'));
@@ -31,8 +31,10 @@ thresh2 =  zeros(1,imageCount);
 medianTheshold = 0.4353;
 sigmaThreshold = 0.0124;
 
+par = 0; %bool wether to use multiple cores or not
+gpu = 0; %bool wether to use gpu or not
 
-parfor index = 1:imageCount
+for index = 1:imageCount
     %% this is required for Archlinux
     if or( strcmp(imageFolderObj(index).name , '.'), strcmp(imageFolderObj(index).name, '..') )
         continue
@@ -223,8 +225,8 @@ parfor index = 1:imageCount
                 imageList{index}.connectedThickDna.PixelIdxList{dnaIndex}, ...
                 detail_thickDna,...
                 imageList{index}.region(dnaIndex,:));
-            imageList{index}.dnaList{dnaIndex} = determineDnaLength2(imageList{index}.dnaList{dnaIndex});
-            %imageList{index}.dnaList{dnaIndex} = getDNALength(imageList{index}.dnaList{dnaIndex});
+%             imageList{index}.dnaList{dnaIndex} = determineDnaLength2(imageList{index}.dnaList{dnaIndex});
+            imageList{index}.dnaList{dnaIndex} = getDNALength(imageList{index}.dnaList{dnaIndex});
             
         end
         %         Set the dnaIndex as Number for the DNA strand object

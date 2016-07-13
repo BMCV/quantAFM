@@ -100,7 +100,7 @@ function [gr, singlePath ]= getDnaBackbone(pxlIdxList, bwImg)
         % the found indices really occur in pixelIdxList 
         % ismemeber returns 0 and 1, respectively. So, we can
         % use its output as entry in adjacency matrix
-        gr(i,:) = ismember(a, res(find(res)));
+        gr(i,:) = ismember(a, res(res ~=0 ));
     end
     % alternative for for-loop ?:
     %c = bsxfun(@plus, a, mask);
