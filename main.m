@@ -5,7 +5,7 @@ if( strcmp(getenv('OS'),'Windows_NT'))
     
 else
     addpath(genpath('../denoised_imgs'));
-    currentImageDir = '../denoised_imgs/p_Wildtyp/';
+    currentImageDir = '../denoised_imgs/handausgewertet/';
 end
 
 
@@ -43,7 +43,6 @@ for index = 1:imageCount
     %[image,colorMap] = imread(strcat(currentImageDir, imageFolderObj(index).name));
     %% until here
     
-    %    imageList{index}.metaImage = imfinfo(imageFolderObj(index).name);
     [image,colorMap] = imread(imageFolderObj(index).name);
     imageList{index} = Image(image, colorMap);
     
@@ -173,9 +172,8 @@ for index = 1:imageCount
         detail_thickDna = imageList{index}.bwImgThickDna(...
             round(bBox.BoundingBox(2)): floor(bBox.BoundingBox(2)+bBox.BoundingBox(4)),...
             round(bBox.BoundingBox(1)): floor(bBox.BoundingBox(1)+bBox.BoundingBox(3)));
-         bBox.BoundingBox(1) = round(bBox.BoundingBox(1));
-         bBox.BoundingBox(2) = round(bBox.BoundingBox(2));
-        
+        bBox.BoundingBox(1) = round(bBox.BoundingBox(1));
+        bBox.BoundingBox(2) = round(bBox.BoundingBox(2));
         %         Check if there was a Nukleii found that is attached to this
         %         connectedComponent
         if sum(imageList{index}.contains)~= 0
@@ -193,7 +191,7 @@ for index = 1:imageCount
                     imageList{index}.radii(nukleoIndecies(i),:), dnaIndex, ...
                     imageList{index}.centers(nukleoIndecies(i),:) - bBox.BoundingBox(1:2));
             end
-
+            
 %             create DNABound Object for every Object detected in the Image
 %             Set Type,ConnectedComponents, position and subImage from
 %             Bounding box
@@ -201,7 +199,7 @@ for index = 1:imageCount
                  imageList{index}.connectedThickDna.PixelIdxList{dnaIndex}, ...
                  detail_thickDna, ...
                  imageList{index}.region(dnaIndex,:),...
-                 'normal',...
+                 1,...
                  nukleos);
             %%%%TODO%%%%
             % Here, we could check the length of the dnaObject's
@@ -212,12 +210,13 @@ for index = 1:imageCount
             % Currently, each DNA object has an isValid flag. This is set
             % if after length determination the DNA backbone does not fit
             % the generally specified DNA length criteria
-            
             %imageList{index}.dnaList{dnaIndex} = getDNALength(imageList{index}.dnaList{dnaIndex});
             imageList{index}.dnaList{dnaIndex} = determineDnaLength2(imageList{index}.dnaList{dnaIndex});
             %          Calculate angle between the Nukleii and the arms(the DNA Arms
-            [ imageList{index}.dnaList{dnaIndex}.angle1, imageList{index}.dnaList{dnaIndex}.angle2] = ...
-                 measure_angle(imageList{index}.dnaList{dnaIndex});
+            [ imageList{index}.dnaList{dnaIndex}.angle1, ...
+                imageList{index}.dnaList{dnaIndex}.angle2, ...
+                intersecting_pixels] = ...
+            measure_angle(imageList{index}.dnaList{dnaIndex});
         else
             %             When no Nukleii is attached, Create DNAFree Object and set
             %             Type, ConnectedComponents and position 
@@ -225,9 +224,9 @@ for index = 1:imageCount
                 imageList{index}.connectedThickDna.PixelIdxList{dnaIndex}, ...
                 detail_thickDna,...
                 imageList{index}.region(dnaIndex,:));
-%             imageList{index}.dnaList{dnaIndex} = determineDnaLength2(imageList{index}.dnaList{dnaIndex});
-            imageList{index}.dnaList{dnaIndex} = getDNALength(imageList{index}.dnaList{dnaIndex});
-            
+            %imageList{index}.dnaList{dnaIndex} = getDNALength(imageList{index}.dnaList{dnaIndex});
+            imageList{index}.dnaList{dnaIndex} = determineDnaLength2(imageList{index}.dnaList{dnaIndex});            
+
         end
         %         Set the dnaIndex as Number for the DNA strand object
         imageList{index}.dnaList{dnaIndex}.number = dnaIndex;
@@ -257,5 +256,8 @@ for index = 1:imageCount
 %          imwrite(imfuse(imageList{index}.rawImage , imageList{index}.bwImgThinnedDna), ['../pictures/overlays_thin/' 'overlay_' imageFolderObj(index).name ]);
          imwrite(imfuse(imageList{index}.rawImage , imageList{index}.bwImgThickDna), ['../pictures/overlays_thick/' 'overlay__' imageFolderObj(index).name ]);
     end
-    
+%     showImage(imageList{index});
+%     w = waitforbuttonpress;
+%     close;
+%     writeToCsvFile([imageFolderObj(index).name 'fast_ChrLen.csv'], imageList{index});
 end

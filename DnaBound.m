@@ -12,17 +12,13 @@ classdef DnaBound < DNA
 %     If attached Nukleo are provided(More than 4 inout arguments), Set them.
     methods
          function dnaObj = DnaBound(connectedThick,detail_thickDna, ...
-                 position, type, nukleo)
+                 position, hasNucleus, nukleo)
             if nargin > 0
                 dnaObj.connectedThick = connectedThick;
                 dnaObj.bwImage = detail_thickDna;
 
                 dnaObj.position = position;
-                if max(strcmp(type,{'normal', 'mutant'}))==1
-                   dnaObj.type = type;
-                else
-                   disp([type,' is not a valid DNA-type, please use: normal or mutant']);
-                end
+                dnaObj.hasNucleus = hasNucleus;
 %                 delete all other objects on the subImage besides the Dna
 %                 strand
                 CC = bwconncomp(detail_thickDna);

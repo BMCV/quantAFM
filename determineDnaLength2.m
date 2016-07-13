@@ -4,8 +4,6 @@ function [dnaObj] = determineDnaLength2(dnaObj)
     bwImgThick = dnaObj.bwImage;
     bwImgThinnedRemoved = zeros(size(bwImgThin));   
     % if fragment too small or too large don't compute the rest
-%     if( ~ (size(currPxlList,1) < 20) && ... 
-%         ~ (size(currPxlList,1) > 200))
     if( ~(size(currPxlList,1) < 3) ) 
         % create graph from its PixelIdxList and, from that, get the
         % fragment backbone
@@ -16,6 +14,7 @@ function [dnaObj] = determineDnaLength2(dnaObj)
             elongateDnaBackbone(currPxlList(singlePath), bwImgThick);
         % ... and add the respective pixels to the DNA backbone
         singlePath = [newBeginning; currPxlList(singlePath); newEnd];
+%        singlePath = currPxlList(singlePath);
         % calculate cubic splines for current backbone
         [row, col]= ind2sub(size(bwImgThinnedRemoved),singlePath');
     %        spline = cscvn([col; row]);

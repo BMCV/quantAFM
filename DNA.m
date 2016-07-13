@@ -19,8 +19,8 @@ classdef (Abstract) DNA
         isValid;
 %         center of mass of DNA strand, respect to upper left corner
         position = zeros(1,2) ; %center of mass
-%        String Name of type
-        type char;
+%        Boolean, is 1 if DNA has nucleus, else 0
+        hasNucleus;
 %       Array of linear Indices of the DNA strand in the bwDnaThickImg 
         connectedThick;
 %        Array of linear indices of the DNA strand in the bwDnaThinImg

@@ -12,7 +12,7 @@ classdef DnaFree < DNA
                 dnaObj.connectedThick = connectedThick;
                 dnaObj.bwImage = detail_thickDna;
          
-                dnaObj.type = 'free';
+                dnaObj.hasNucleus = 0;
                                 
 %                 delete all other objects on the subImage besides the Dna
 %                 strand

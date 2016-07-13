@@ -3,8 +3,11 @@ function done = writeToCsvFile(filename, imageObj)
     number = {};
     xm = {};
     ym = {};
+    radius = {};
     length = {};
-    type = {};
+    short_arm = {};
+    long_arm = {};
+    hasNucleus = {};
     isValid = {};
     angle1 = {};
     angle2 = {};
@@ -15,15 +18,17 @@ function done = writeToCsvFile(filename, imageObj)
         xm{dnaIndex} = curr.position(2);
         ym{dnaIndex} = curr.position(1);
         length{dnaIndex} = curr.length;
-        type{dnaIndex} = curr.type;
+        hasNucleus{dnaIndex} = curr.hasNucleus;
         isValid{dnaIndex} = curr.isValid;
-        if (strcmp(curr.type,'free'))
+        if (curr.hasNucleus == 0)
             angle1{dnaIndex} = 0;
             angle2{dnaIndex} = 0;
+            radius{dnaIndex} = 0;
             numNucleosomes{dnaIndex} = 0;
         else
            angle1{dnaIndex} = curr.angle1;
            angle2{dnaIndex} = curr.angle2;
+           radius{dnaIndex} = 9999;
            numNucleosomes{dnaIndex} = size(curr.attachedNukleo, 2); 
         end 
     end
@@ -31,12 +36,13 @@ function done = writeToCsvFile(filename, imageObj)
     xm = xm'; 
     ym = ym';
     length = length';
-    type = type';
+    hasNucleus = hasNucleus';
+    radius = radius';
     isValid = isValid';
     angle1 = angle1';
     angle2 = angle2';
     numNucleosomes = numNucleosomes';
-    T = table(number, xm, ym, length, type, isValid, angle1, angle2, numNucleosomes);
+    T = table(number, xm, ym, length, hasNucleus, radius, isValid, angle1, angle2, numNucleosomes);
     writetable(T, filename);
     done = 'done';
 end
