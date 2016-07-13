@@ -3,7 +3,7 @@
 %     imshowpair(imageList{index}.rawImage, imageList{index}.bwImgThickDna);
     %imshow(label2rgb(labelmatrix(imageList{index}.connectedThinnedDna));
 figure;
-imshow(imfuse(imageList{index}.rawImage, imageList{index}.bwImgThinnedDna));
+imshow(imfuse(imageList{index}.rawImage, imageList{index}.bwImgThickDna));
 hold on
 viscircles(imageList{index}.centers, imageList{index}.radii, ...
     'LineWidth', 0.5, 'EnhanceVisibility', false);

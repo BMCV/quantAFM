@@ -29,7 +29,7 @@ adjMat = logical(cases);
 for i = 1:length(pixels)
     % do not check points that are connected to more than two points or to
     % only 1 (endpoint)
-    if (sum(adjMat(i,:)) ~= 2 && sum(adjMat(1,:)) ~= 4)
+    if (sum(adjMat(i,:)) ~= 2)
         continue;
     end
     % take 2x2 clipping out of picture
@@ -107,6 +107,14 @@ branches = find(sic);
 % objects we actually can use to determine the length
 constraint = 2;
 
+% if two strands overlap the constraint is increased --> wont be processed
+for i = 1:size(sum(sic(:)))
+    if sum(adjMat(find(pixels == branches(1)), :)) == 4
+        constraint = inf;
+    end
+end
+
+% bool to check if the DNA is pro
 % only evaluate object that are valid. With the constraint we can differ
 % between valid objects and objects that have circles in them
 if (sum(eic(:)) - sum(sic(:))) == constraint
@@ -206,6 +214,8 @@ if (sum(eic(:)) - sum(sic(:))) == constraint
             end
         clear p1 p2
     end
+else
+    incorrectDNA = 1;
 end
 clear i j tempIndex branches sic singleBranchPointMask minDistance
 
@@ -218,7 +228,7 @@ odd = sum(sum(mod(cases,2))) / 2;
 even = (sum(sum(adjMat)) / 2) - odd;
 
 % evaluate the length using the Kulpa estimator
-dnaObj.length = 0.948 * even + 1.343 * odd;
+dnaObj.length = 0.948 * even + 1.343 * odd
 
 % reverse padding
 picture = picture(2:height - 1, 2:width - 1);
