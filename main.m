@@ -95,7 +95,7 @@ parfor index = 1:imageCount
     % remove objects from bwImage with pixelsize in [150, 900]
     
     imageList{index}.bwFilteredImage = ...
-        imageList{index}.bwImage - bwareafilt(imageList{index}.bwImage, [100,900]);
+        imageList{index}.bwImage - bwareafilt(imageList{index}.bwImage, [0,900]);
     % generate complement image that is 1 where there are NO artifacts and
     % 0 otherwise
     
@@ -124,7 +124,7 @@ parfor index = 1:imageCount
     
     % finally, remove any objects that might not be in the expected size
     % range of [100, 900]
-    imageList{index}.bwImgThickDna = bwareafilt(imageList{index}.bwImgThickDna, [100,900]);
+    imageList{index}.bwImgThickDna = bwareafilt(imageList{index}.bwImgThickDna, [150,900]);
     
     
     %% Generate 1 pixel thin objects for length calculation
