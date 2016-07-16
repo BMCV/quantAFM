@@ -14,6 +14,7 @@ if running == 0;
     parpool('local');
 end
 
+addpath(genpath('..\LengthEstimation'));
 imageFolderObj = dir(currentImageDir);
 imageCount = size(dir(currentImageDir),1);
 imageList = cell(1,imageCount);
