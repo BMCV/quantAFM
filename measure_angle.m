@@ -1,10 +1,9 @@
-function [angle1,angle2, intersecting_pixels] = measure_angle(dna)
+function [angle1,angle2] = measure_angle(dna)
 %% 
 % dna: dna_bound, dna.attachedNukleo, dna.attachedNukleo.rad, center
 warning off;
 angle1 = 0;
 angle2 = 0;
-intersecting_pixels = [0, 0; 0, 0];
 
     % more than one center or no center 
     % or no DNA backbone present!
@@ -33,7 +32,6 @@ end
 [~, idx1] = pdist2([y1,x1], dna.attachedNukleo{1}.localCenter,'euclidean', 'Smallest',1);
 [~, idx2] = pdist2([y2,x2], dna.attachedNukleo{1}.localCenter,'euclidean','Smallest',1);
 p = [y1(idx1),x1(idx1); y2(idx2), x2(idx2)];
-intersecting_pixels = p;
 % get lines throug points & nucleo center
 a = dna.attachedNukleo{1}.localCenter-p(1,:);
 b = dna.attachedNukleo{1}.localCenter- p(2,:);

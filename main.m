@@ -5,7 +5,7 @@ if( strcmp(getenv('OS'),'Windows_NT'))
     
 else
     addpath(genpath('../denoised_imgs'));
-    currentImageDir = '../denoised_imgs/handausgewertet/';
+    currentImageDir = '../denoised_imgs/p_Wildtyp/';
 end
 
 
@@ -152,7 +152,6 @@ for index = 1:imageCount
     if ~isempty(centers)
         imageList{index}.indexcenters = (centers(:,1)-1)*m + centers(:,2) ;
     end
-
     %     Go through all objects within the connected Components and create DNA
     %     Objects for them. DNABound if it is connected to a Nukleii and
     %     DNAFree if not
@@ -206,16 +205,15 @@ for index = 1:imageCount
             % pixelIdxList' length. If it is below a certain value or
             % above, it is likely not a DNA fragment, so we should discard
             % it and not compute anything for it.
-            %%%%CURRENTLY%%%%%%
+            %%%%CURRENT IMPLEMENTATION%%%%%%
             % Currently, each DNA object has an isValid flag. This is set
             % if after length determination the DNA backbone does not fit
             % the generally specified DNA length criteria
             %imageList{index}.dnaList{dnaIndex} = getDNALength(imageList{index}.dnaList{dnaIndex});
-            imageList{index}.dnaList{dnaIndex} = determineDnaLength2(imageList{index}.dnaList{dnaIndex});
+            imageList{index}.dnaList{dnaIndex} = determineDnaLength2(imageList{index}.dnaList{dnaIndex}, true);
             %          Calculate angle between the Nukleii and the arms(the DNA Arms
             [ imageList{index}.dnaList{dnaIndex}.angle1, ...
-                imageList{index}.dnaList{dnaIndex}.angle2, ...
-                intersecting_pixels] = ...
+                imageList{index}.dnaList{dnaIndex}.angle2] = ...
             measure_angle(imageList{index}.dnaList{dnaIndex});
         else
             %             When no Nukleii is attached, Create DNAFree Object and set
@@ -225,7 +223,7 @@ for index = 1:imageCount
                 detail_thickDna,...
                 imageList{index}.region(dnaIndex,:));
             %imageList{index}.dnaList{dnaIndex} = getDNALength(imageList{index}.dnaList{dnaIndex});
-            imageList{index}.dnaList{dnaIndex} = determineDnaLength2(imageList{index}.dnaList{dnaIndex});            
+            imageList{index}.dnaList{dnaIndex} = determineDnaLength2(imageList{index}.dnaList{dnaIndex}, false);
 
         end
         %         Set the dnaIndex as Number for the DNA strand object
@@ -259,5 +257,6 @@ for index = 1:imageCount
 %     showImage(imageList{index});
 %     w = waitforbuttonpress;
 %     close;
-%     writeToCsvFile([imageFolderObj(index).name 'fast_ChrLen.csv'], imageList{index});
+
+    writeToCsvFile([imageFolderObj(index).name '_test_ChrLen.csv'], imageList{index});
 end
