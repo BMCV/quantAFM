@@ -35,9 +35,7 @@ classdef DnaBound < DNA
 
 %               Calculate connected Components PixelIdxList
                 connectedThinned = bwconncomp(dnaObj.bwImageThinned);
-                if(~isempty(connectedThinned.PixelIdxList))
-                    dnaObj.connectedThinned = connectedThinned.PixelIdxList{1};
-                end
+                dnaObj.connectedThinned = connectedThinned.PixelIdxList{1};
                 dnaObj.sizeImg = size(detail_thickDna);
                
             end

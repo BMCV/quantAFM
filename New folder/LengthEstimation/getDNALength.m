@@ -3,9 +3,13 @@ function [ dnaObj ] = getDNALength( dnaObj )
 % This function evaluates the length of an DNA object in a picture clipping
 % The function needs a picture in which exactly one DNA string is visible
 % (and no more than one object)
-% The return values are the result (so the length of the DNA) and the
-% processed picture. The returned picture is the original picture after
-% pruning and only the "main string" of the DNA is visible anymore
+% UPDATE: NOW THE FUNCTION TAKES A DNA OBJECT WHICH HAS TO CONTAIN THIS
+% THINNED DNA IMAGE
+% The return value is the object itself which now has his length attribute
+% updated and -1 if the length could not be determined. Secondly,
+% bwImageThinnedRemoved is set to an image that was pruned and has its
+% L-points removed.
+% Have fun using this function!
 
 % Around the picture a quad of 0s is inserted so we dont have to check if
 % a point is at the edge of the picture
@@ -27,8 +31,7 @@ adjMat = logical(cases);
 % Therefore we look at a 2x2 clipping and check if the pixel has only 2
 % connections to other pixels
 for i = 1:length(pixels)
-    % do not check points that are connected to more than two points or to
-    % only 1 (endpoint)
+    % do not check points that are connected to more than two points
     if (sum(adjMat(i,:)) ~= 2)
         continue;
     end
@@ -48,6 +51,9 @@ for i = 1:length(pixels)
     a8 = picture(pixels(i) + height);
     a9 = picture(pixels(i) + height + 1);
     % create the 2x2 mask
+    if (a2 + a4 + a6 + a8 == 4 || a1 + a3 + a7 + a9 == 4)
+        continue
+    end
     fragment = [a1,a4;a2,a5];
     if isequal(fragment, [0,1;1,1])
         % delete L point
@@ -95,7 +101,7 @@ for i = 1:length(pixels)
         cases(:,i) = 0;
     end
 end
-clear a1 a2 a3 a4 a5 a6 a7 a8 a9 fragment
+% clear a1 a2 a3 a4 a5 a6 a7 a8 a9 fragment
 
 % get branch- and endpoints
 sic = bwmorph(picture, 'branchpoints');
@@ -108,13 +114,15 @@ branches = find(sic);
 constraint = 2;
 
 % if two strands overlap the constraint is increased --> wont be processed
-for i = 1:size(sum(sic(:)))
-    if sum(adjMat(find(pixels == branches(1)), :)) == 4
+for i = 1:sum(sic(:))
+    if sum(adjMat(find(pixels == branches(i)), :)) == 4
         constraint = inf;
     end
 end
 
-% bool to check if the DNA is pro
+% bool to check if the DNA is processed
+correctDNA = 1;
+
 % only evaluate object that are valid. With the constraint we can differ
 % between valid objects and objects that have circles in them
 if (sum(eic(:)) - sum(sic(:))) == constraint
@@ -215,20 +223,86 @@ if (sum(eic(:)) - sum(sic(:))) == constraint
         clear p1 p2
     end
 else
-    incorrectDNA = 1;
+    correctDNA = 0;
 end
-clear i j tempIndex branches sic singleBranchPointMask minDistance
+%  clear i j tempIndex branches sic singleBranchPointMask minDistance
 
-% now calculate length via Kulpa estimation
-% sum up number of pixels that are connected diagonally
-odd = sum(sum(mod(cases,2))) / 2;
+% calculate length if DNA is a valid string
+if correctDNA
+    % #lifehack
+    % retrace the ends of the thinned image to the original image so no
+    % length gets lost
+    % get the two remaining endpoints and their indices in the image
+    endpointzz = find(eic);
+    endpointzzIndex1 = find(pixels == endpointzz(1));
+    endpointzzIndex2 = find(pixels == endpointzz(2));
+    % get the neighbours of the endpointzz
+    connectedthingyIndex1 = find(adjMat(:,endpointzzIndex1) == 1);
+    connectedthingyIndex2 = find(adjMat(:,endpointzzIndex2) == 1);
+    % fuse the four points in one array. The order is important for the
+    % elongateDNAbackbone function
+    crippledPixels = [endpointzz(1),pixels(connectedthingyIndex1),pixels(connectedthingyIndex2),endpointzz(2)];
+    % elongateDnaBackbone retraces the points (thats the central point of
+    % this step)
+    [newBeginning, newEnd] = elongateDnaBackbone(crippledPixels', logical(padarray(dnaObj.bwImage, [1 1])));
+    
+    % for length detection these two variables have to be added to the
+    % other odd and even values of the rest of the DNA string (see Kulpa
+    % for reference)
+    OddlySpecial = 0;
+    EvenSpecial = 0;
+    
+    % newBeginning pixels odd or even?
+    for index = 2:length(newBeginning)
+        testsum = abs(newBeginning(index) - newBeginning(index-1));
+        if testsum == 1 || testsum == height
+            EvenSpecial = EvenSpecial + 1;
+        else
+            OddlySpecial = OddlySpecial + 1;
+        end
+    end
+    % newBeginning to Endpoint1 odd or even?
+    if length(newBeginning) >= 1
+        testsum = abs(endpointzz(1) - newBeginning(end));
+        if testsum == 1 || testsum == height
+            EvenSpecial = EvenSpecial + 1;
+        else
+            OddlySpecial = OddlySpecial + 1;
+        end
+    end
+       
+    % do the same for the new Endpoints
+    for index = 2:length(newEnd)
+        testsum = abs(newEnd(index) - newEnd(index-1));
+        if testsum == 1 || testsum == height
+            EvenSpecial = EvenSpecial + 1;
+        else
+            OddlySpecial = OddlySpecial + 1;
+        end
+    end
+    
+    if length(newEnd) >= 1
+        testsum = abs(endpointzz(2) - newEnd(end));
+        if testsum == 1 || testsum == height
+            EvenSpecial = EvenSpecial + 1;
+        else
+            OddlySpecial = OddlySpecial + 1;
+        end
+    end
+    
+    % now calculate length via Kulpa estimation
+    % sum up number of pixels that are connected diagonally
+    odd = sum(sum(mod(cases,2))) / 2 + OddlySpecial;
 
-% even is the number of pixels that are connected horizontically or
-% vertically
-even = (sum(sum(adjMat)) / 2) - odd;
+    % even is the number of pixels that are connected horizontically or
+    % vertically
+    even = (sum(sum(adjMat)) / 2) - odd + EvenSpecial;
 
-% evaluate the length using the Kulpa estimator
-dnaObj.length = 0.948 * even + 1.343 * odd
+    % evaluate the length using the Kulpa estimator
+    dnaObj.length = 0.948 * even + 1.343 * odd;
+else
+    dnaObj.length = -1;
+end
 
 % reverse padding
 picture = picture(2:height - 1, 2:width - 1);

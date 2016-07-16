@@ -14,6 +14,7 @@ if running == 0;
     parpool('local');
 end
 
+ addpath(genpath('..\LengthEstimation'));
 imageFolderObj = dir(currentImageDir);
 imageCount = size(dir(currentImageDir),1);
 imageList = cell(1,imageCount);
@@ -34,7 +35,7 @@ sigmaThreshold = 0.0124;
 par = 0; %bool wether to use multiple cores or not
 gpu = 0; %bool wether to use gpu or not
 
-for index = 1:imageCount
+parfor index = 1:imageCount
     %% this is required for Archlinux
     if or( strcmp(imageFolderObj(index).name , '.'), strcmp(imageFolderObj(index).name, '..') )
         continue
@@ -209,8 +210,10 @@ for index = 1:imageCount
             % Currently, each DNA object has an isValid flag. This is set
             % if after length determination the DNA backbone does not fit
             % the generally specified DNA length criteria
+
             %imageList{index}.dnaList{dnaIndex} = getDNALength(imageList{index}.dnaList{dnaIndex});
             imageList{index}.dnaList{dnaIndex} = determineDnaLength2(imageList{index}.dnaList{dnaIndex}, true);
+
             %          Calculate angle between the Nukleii and the arms(the DNA Arms
             [ imageList{index}.dnaList{dnaIndex}.angle1, ...
                 imageList{index}.dnaList{dnaIndex}.angle2] = ...
@@ -258,5 +261,5 @@ for index = 1:imageCount
 %     w = waitforbuttonpress;
 %     close;
 
-    %writeToCsvFile([imageFolderObj(index).name '_test_ChrLen.csv'], imageList{index});
+    writeToCsvFile([imageFolderObj(index).name '_test_ChrLen.csv'], imageList{index});
 end
