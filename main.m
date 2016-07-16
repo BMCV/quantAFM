@@ -34,7 +34,7 @@ sigmaThreshold = 0.0124;
 par = 0; %bool wether to use multiple cores or not
 gpu = 0; %bool wether to use gpu or not
 
-for index = 1:imageCount
+parfor index = 1:imageCount
     %% this is required for Archlinux
     if or( strcmp(imageFolderObj(index).name , '.'), strcmp(imageFolderObj(index).name, '..') )
         continue
@@ -70,9 +70,9 @@ for index = 1:imageCount
     % filtered. Afterwards, its background is auto-calculated and
     % substracted. This image will be the basis for further processing.
     
-    
-    imageList{index}.preprocImg = lowPassFilter(imageList{index}.rawImage);
-    imageList{index}.preprocImg = medfilt2(imageList{index}.preprocImg,[3 3]);
+    imageList{index}.preprocImg = medfilt2(imageList{index}.rawImage,[3 3]);
+    imageList{index}.preprocImg = lowPassFilter(imageList{index}.preprocImg);
+
     imageList{index}.background = imopen(imageList{index}.preprocImg, strel('disk',15));
     imageList{index}.preprocImg(imageList{index}.preprocImg< manThresh) = manThresh;
     %% Replace image artifacts
