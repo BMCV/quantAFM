@@ -1,7 +1,7 @@
 
 if( strcmp(getenv('OS'),'Windows_NT'))
     addpath(genpath('..\denoised_imgs'));
-    currentImageDir = '..\denoised_imgs\p_Wildtyp\*.tif';
+    currentImageDir = '..\denoised_imgs\all\*.tif';
     
 else
     addpath(genpath('../denoised_imgs'));
@@ -31,6 +31,7 @@ thresh2 =  zeros(1,imageCount);
 % median and sigma over ALL thresholds of ALL images
 medianTheshold = 0.4353;
 sigmaThreshold = 0.0124;
+setMeanThreshold  = 0;% Bool wether to calculate and set new mean ad Sigma values
 
 par = 0; %bool wether to use multiple cores or not
 gpu = 0; %bool wether to use gpu or not
@@ -89,7 +90,14 @@ parfor index = 1:imageCount
     thresh = threshold(threshAlgo, imageList{index}.preprocImg);
     imageList{index}.thresh = thresh;
     thresh1(index) = thresh;
-    imageList{index}.bwImage = im2bw(imageList{index}.preprocImg, thresh);
+end
+if(setMeanThreshold ~= 0)
+    medianThreshold = median(thresh1);
+    sigmaThreshold = std(thresh1);
+end
+
+parfor index = 1:imageCount
+    imageList{index}.bwImage = im2bw(imageList{index}.preprocImg, imageList{index}.thresh);
 %     imageList{index}.bwImage = bwareafilt(imageList{index}.bwImage, [100,900]);
 
     % remove objects from bwImage with pixelsize in [150, 900]
