@@ -300,8 +300,11 @@ if correctDNA
 
     % evaluate the length using the Kulpa estimator
     dnaObj.length = 0.948 * even + 1.343 * odd;
+    dnaObj.isValid = 1;
+    
 else
     dnaObj.length = -1;
+    dnaObj.isValid = 0;
 end
 
 % reverse padding
