@@ -237,24 +237,28 @@ end
 % calculate length if DNA is a valid string
 
 if correctDNA
-%     % #lifehack
-%     % retrace the ends of the thinned image to the original image so no
-%     % length gets lost
-%     % get the two remaining endpoints and their indices in the image
-%     endpointzz = find(eic);
-%     endpointzzIndex1 = find(pixels == endpointzz(1));
-%     endpointzzIndex2 = find(pixels == endpointzz(2));
-%     % get the neighbours of the endpointzz
-%     connectedthingyIndex1 = find(adjMat(:,endpointzzIndex1) == 1);
-%     connectedthingyIndex2 = find(adjMat(:,endpointzzIndex2) == 1);
-%     % fuse the four points in one array. The order is important for the
-%     % elongateDNAbackbone function
-%     crippledPixels = [endpointzz(1),pixels(connectedthingyIndex1),pixels(connectedthingyIndex2),endpointzz(2)];
-%     % elongateDnaBackbone retraces the points (thats the central point of
-%     % this step)
-%     [newBeginning, newEnd] = elongateDnaBackbone(crippledPixels', logical(padarray(dnaObj.bwImage, [1 1])));
+    % #lifehack
+    % retrace the ends of the thinned image to the original image so no
+    % length gets lost
+    % get the two remaining endpoints and their indices in the image
+    endpointzz = find(eic);
+    endpointzzIndex1 = find(pixels == endpointzz(1));
+    endpointzzIndex2 = find(pixels == endpointzz(2));
+    % get the neighbours of the endpointzz
+    connectedthingyIndex1 = find(adjMat(:,endpointzzIndex1) == 1);
+    connectedthingyIndex2 = find(adjMat(:,endpointzzIndex2) == 1);
+    % fuse the four points in one array. The order is important for the
+    % elongateDNAbackbone function
+    crippledPixels = [endpointzz(1),pixels(connectedthingyIndex1),pixels(connectedthingyIndex2),endpointzz(2)];
+    % elongateDnaBackbone retraces the points (thats the central point of
+    % this step)
+    [newBeginning, newEnd] = elongateDnaBackbone(crippledPixels', logical(padarray(dnaObj.bwImage, [1 1])));
+    
+<<<<<<< HEAD
+    % add those pixel values to the original image
+    picture(newBeginning) = 1;
+    picture(newEnd) = 1;
 %     
-% 
 %     % for length detection these two variables have to be added to the
 %     % other odd and even values of the rest of the DNA string (see Kulpa
 %     % for reference)
@@ -309,11 +313,8 @@ if correctDNA
 % 
 %     % evaluate the length using the Kulpa estimator
 %     dnaObj.length = 0.948 * even + 1.343 * odd;
-%     dnaObj.isValid = 1;
-%     
 % else
 %     dnaObj.length = -1;
-%     dnaObj.isValid = 0;
 
 end
 
