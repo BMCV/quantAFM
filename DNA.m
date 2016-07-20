@@ -12,6 +12,7 @@ classdef (Abstract) DNA
 %  Length of Dna strand
         length;
 %        flag that identifies whether DNA object is valid or not;
+%        a 1 represents a valid object, a 0 a non-valid object
 %        DNA object is invalid if it is
 %           - too short (< 20 pixel)
 %           - too long (> 200 pixel)

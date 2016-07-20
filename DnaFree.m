@@ -27,7 +27,9 @@ classdef DnaFree < DNA
                 dnaObj.bwImageThinned = thinningZhangSuen(dnaObj.bwImage);
 %               Calculate connected Components PixelIdxList
                 connectedThinned = bwconncomp(dnaObj.bwImageThinned);
-                dnaObj.connectedThinned = connectedThinned.PixelIdxList{1};
+                if(~isempty(connectedThinned.PixelIdxList))
+                    dnaObj.connectedThinned = connectedThinned.PixelIdxList{1};
+                end
                 dnaObj.sizeImg = size(detail_thickDna);
                
             end

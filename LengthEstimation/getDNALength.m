@@ -1,4 +1,4 @@
-function [ dnaObj ] = getDNALength( dnaObj )
+function [ dnaObj ] = getDNALength( dnaObj, dnaHasNucleos )
 % @author: Dennis Aumiller, Philip Hausner
 % This function evaluates the length of an DNA object in a picture clipping
 % The function needs a picture in which exactly one DNA string is visible
@@ -16,12 +16,24 @@ function [ dnaObj ] = getDNALength( dnaObj )
 picture = logical(padarray(dnaObj.bwImageThinned, [1 1]));
 [height, width] = size(picture);
 cc = bwconncomp(picture);
+fragmentLen = {};
+
+% if the image is empty return
+if(isempty(cc.PixelIdxList))
+    fragmentLen{1} = 0;
+    dnaObj.isValid = 0;
+    dnaObj.length= fragmentLen;
+    return;
+end;
+
 % get all pixels that are 1
 pixels = cc.PixelIdxList{1};
-
 % create the adjacencyMatrix
 cases = createAdjMat(picture, pixels);
 adjMat = logical(cases);
+
+% initialize cell struct for fragment length(s)
+
 
 % remove all "L points". That means points that are connected to exactly to
 % two points that are connected to each other thereselves. E.g.
@@ -101,7 +113,6 @@ for i = 1:length(pixels)
         cases(:,i) = 0;
     end
 end
-clear a1 a2 a3 a4 a5 a6 a7 a8 a9 fragment
 
 % get branch- and endpoints
 sic = bwmorph(picture, 'branchpoints');
@@ -119,9 +130,6 @@ for i = 1:sum(sic(:))
         constraint = inf;
     end
 end
-
-% bool to check if the DNA is processed
-correctDNA = 1;
 
 % only evaluate object that are valid. With the constraint we can differ
 % between valid objects and objects that have circles in them
@@ -220,94 +228,74 @@ if (sum(eic(:)) - sum(sic(:))) == constraint
                 picture(pixels(endPointIndex)) = 0;
                 %pixels(endPointIndex) = -pixels(endPointIndex);
             end
-        clear p1 p2
+        
     end
 else
-    correctDNA = 0;
+    dnaObj.isValid = 0;
 end
-clear i j tempIndex branches sic singleBranchPointMask minDistance
 
-% calculate length if DNA is a valid string
-if correctDNA
-    % #lifehack
-    % retrace the ends of the thinned image to the original image so no
-    % length gets lost
-    % get the two remaining endpoints and their indices in the image
-    endpointzz = find(eic);
-    endpointzzIndex1 = find(pixels == endpointzz(1));
-    endpointzzIndex2 = find(pixels == endpointzz(2));
-    % get the neighbours of the endpointzz
-    connectedthingyIndex1 = find(adjMat(:,endpointzzIndex1) == 1);
-    connectedthingyIndex2 = find(adjMat(:,endpointzzIndex2) == 1);
-    % fuse the four points in one array. The order is important for the
-    % elongateDNAbackbone function
-    crippledPixels = [endpointzz(1),pixels(connectedthingyIndex1),pixels(connectedthingyIndex2),endpointzz(2)];
-    % elongateDnaBackbone retraces the points (thats the central point of
-    % this step)
-    [newBeginning, newEnd] = elongateDnaBackbone(crippledPixels', logical(padarray(dnaObj.bwImage, [1 1])));
-    
-    % for length detection these two variables have to be added to the
-    % other odd and even values of the rest of the DNA string (see Kulpa
-    % for reference)
-    OddlySpecial = 0;
-    EvenSpecial = 0;
-    
-    % newBeginning pixels odd or even?
-    for index = 2:length(newBeginning)
-        testsum = abs(newBeginning(index) - newBeginning(index-1));
-        if testsum == 1 || testsum == height
-            EvenSpecial = EvenSpecial + 1;
-        else
-            OddlySpecial = OddlySpecial + 1;
-        end
-    end
-    % newBeginning to Endpoint1 odd or even?
-    if length(newBeginning) >= 1
-        testsum = abs(endpointzz(1) - newBeginning(end));
-        if testsum == 1 || testsum == height
-            EvenSpecial = EvenSpecial + 1;
-        else
-            OddlySpecial = OddlySpecial + 1;
-        end
-    end
-       
-    % do the same for the new Endpoints
-    for index = 2:length(newEnd)
-        testsum = abs(newEnd(index) - newEnd(index-1));
-        if testsum == 1 || testsum == height
-            EvenSpecial = EvenSpecial + 1;
-        else
-            OddlySpecial = OddlySpecial + 1;
-        end
-    end
-    
-    if length(newEnd) >= 1
-        testsum = abs(endpointzz(2) - newEnd(end));
-        if testsum == 1 || testsum == height
-            EvenSpecial = EvenSpecial + 1;
-        else
-            OddlySpecial = OddlySpecial + 1;
-        end
-    end
-    
-    % now calculate length via Kulpa estimation
-    % sum up number of pixels that are connected diagonally
-    odd = sum(sum(mod(cases,2))) / 2 + OddlySpecial;
-
-    % even is the number of pixels that are connected horizontically or
-    % vertically
-    even = (sum(sum(adjMat)) / 2) - odd + EvenSpecial;
-
-    % evaluate the length using the Kulpa estimator
-    dnaObj.length = 0.948 * even + 1.343 * odd;
-else
-    dnaObj.length = -1;
-end
 
 % reverse padding
 picture = picture(2:height - 1, 2:width - 1);
 % picture is 'logical', might be problematic in any other function?
 dnaObj.bwImageThinnedRemoved = picture;
 
+% also recalculate the new PixelIdxList
+cc = bwconncomp(picture);
+dnaObj.connectedThinned = cc.PixelIdxList{1};
+
+% calculate the fragment lengths, if there is exactly 1 nucleo bound to it
+if(dnaHasNucleos && numel(dnaObj.attachedNukleo) == 1) % dna has 1 nucleosome, so calc length for both arms
+    arms = getArmsNucleoIntersection(dnaObj);
+    for armIdx = 1:arms.NumObjects % for each arm, ...
+        currArm = arms.PixelIdxList{armIdx}; % ... get PixelIdxList ...
+        fragmentLen{armIdx} = calcKulpaLength(currArm, dnaObj.bwImageThinnedRemoved); % ... and calc its length
+    end
+% no valid DNA
+elseif ~dnaObj.isValid
+    fragmentLen{1} = 0;
+% no or multiple nucleosome(s), so calculate entire fragment's length
+else
+    fragmentLen{1} = calcKulpaLength(dnaObj.connectedThinned, dnaObj.bwImageThinnedRemoved);
 end
 
+% hack because of order of function calls
+if dnaObj.isValid == 0
+    fragmentLen{1} = 0;
+end
+
+% set the struct
+dnaObj.length = fragmentLen;
+
+
+end
+% function end
+
+
+% could be implemented as a separate function since it is called in
+% determineLengthDNA2 as well.
+function fragmentLen = calcKulpaLength(pxlIdxList, bwImgThinnedRemoved)
+    % Length = 0.948*Ne + 1.343*No
+    % with:     Ne - number of even pixels
+    %           No - number of odd pixels
+    % Here, even pixels are those that are, in their 8-neighourhood
+    % connected along the even axes, and odd pixels are those connected
+    % along the uneven axes.
+    %   3   2   1        0   1   0      would have:
+    %   4  pxl  0   =>   0   1   0  =>  1 odd pixel
+    %   5   6   7        1   0   0      1 even pixel
+    [row, col]= ind2sub(size(bwImgThinnedRemoved),pxlIdxList');
+    evenOdds = zeros(size(col));
+    % calculate differences between neighbouring entries in column and
+    % in row indices, respectively. Even pixels should have difference
+    % "0" between their row and col indices, resp.
+    diff_col = diff(col');
+    diff_row = diff(row');
+    % now, create vector that has "1" for even and "0" for odd pixels
+    evenOdds(find(~(diff_col))) = 1; 
+    evenOdds(find(~(diff_row))) = 1;
+    numberOfEvenPixels = sum(evenOdds);
+    numberOfOddPixels = size(col, 2) - numberOfEvenPixels;
+    % apply Kulpa Estimator
+    fragmentLen = 0.948*numberOfEvenPixels + 1.343 * numberOfOddPixels;
+end
