@@ -8,7 +8,8 @@ function [dnaObj] = determineDnaLength2(dnaObj, dnaHasNucleos)
     if( ~(size(currPxlList,1) < 3) ) 
         % create graph from its PixelIdxList and, from that, get the
         % fragment backbone
-        [gr, singlePath] = getDnaBackbone(currPxlList, bwImgThin);
+        [gr, singlePath, isValid] = getDnaBackbone(currPxlList, bwImgThin);
+        dnaObj.isValid = isValid;
         % both end parts of the fragment were lost during the
         % thinning step, so get them back from the thickDNA fragment
         [newBeginning, newEnd] = ... 
@@ -36,8 +37,6 @@ function [dnaObj] = determineDnaLength2(dnaObj, dnaHasNucleos)
         if ((size(singlePath, 1) < dnaObj.MIN_LENGTH) || ...
             (size(singlePath, 1) > dnaObj.MAX_LENGTH))
             dnaObj.isValid = 0;
-        else
-            dnaObj.isValid = 1;
         end
     else
         fragmentLen{1} = 0;
@@ -48,9 +47,10 @@ function [dnaObj] = determineDnaLength2(dnaObj, dnaHasNucleos)
 %    imwrite(imfuse(bwImgThick, bwImgThinnedRemoved) , '../pictures/DNA_spine_thickDna_overlay.tif');
 end
 
-function [gr, singlePath ]= getDnaBackbone(pxlIdxList, bwImg)
+function [gr, singlePath, isValid ]= getDnaBackbone(pxlIdxList, bwImg)
+    isValid = 1;
     % a is shorter than pxlIdxList... :-)
-    a = pxlIdxList;    
+    a = pxlIdxList;
     imgSize = size(bwImg);
 %    gr = diag(ones(1,size(a,1)));
     % future upper adjacency matrix
@@ -86,6 +86,15 @@ function [gr, singlePath ]= getDnaBackbone(pxlIdxList, bwImg)
         
     % create graph
     G = graph(gr, 'upper');
+    edges = size(G.Edges,1);
+    nodes = size(G.Nodes,1);
+    if edges - nodes > 2
+        isValid = 0;
+%         imshow(bwImg);
+%         waitforbuttonpress();
+%         d = degree(G);
+%         size(d(d==max(d)),1)
+    end
     % perform breadth first search with random start node to get one
     % farthest end
     V1 = bfsearch(G, 1);
