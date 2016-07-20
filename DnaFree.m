@@ -22,9 +22,9 @@ classdef DnaFree < DNA
                 dnaObj.bwImage = false(size(dnaObj.bwImage));
                 dnaObj.bwImage(CC.PixelIdxList{idx}) = true;
 %%               Thin the subImage with Matlab function
-%                dnaObj.bwImageThinned = bwmorph(dnaObj.bwImage,'thin',Inf);
+                dnaObj.bwImageThinned = bwmorph(dnaObj.bwImage,'thin',Inf);
 %%               ... using user-written implementation
-                dnaObj.bwImageThinned = thinningZhangSuen(dnaObj.bwImage);
+%                dnaObj.bwImageThinned = thinningZhangSuen(dnaObj.bwImage);
 %               Calculate connected Components PixelIdxList
                 connectedThinned = bwconncomp(dnaObj.bwImageThinned);
                 if(~isempty(connectedThinned.PixelIdxList))

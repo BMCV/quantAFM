@@ -5,7 +5,7 @@ if( strcmp(getenv('OS'),'Windows_NT'))
     
 else
     addpath(genpath('../denoised_imgs'));
-    currentImageDir = '../denoised_imgs/p_Wildtyp/';
+    currentImageDir = '../denoised_imgs/handausgewertet/';
 end
 
 addpath(genpath('..\LengthEstimation'));
@@ -27,8 +27,8 @@ medianTheshold = 0.4353;
 sigmaThreshold = 0.0124;
 setMeanThreshold  = 0;% Bool wether to calculate and set new mean ad Sigma values
 
-par = 1; %bool wether to use multiple cores or not
-gpu = 1; %bool wether to use gpu or not
+par = 0; %bool wether to use multiple cores or not
+gpu = 0; %bool wether to use gpu or not
 
 
 if(par)
@@ -98,6 +98,9 @@ if(setMeanThreshold ~= 0)
 end
 
 parfor index = 1:imageCount
+    if or( strcmp(imageFolderObj(index).name , '.'), strcmp(imageFolderObj(index).name, '..') )
+        continue
+    end
     imageList{index}.bwImage = im2bw(imageList{index}.preprocImg, imageList{index}.thresh);
 %     imageList{index}.bwImage = bwareafilt(imageList{index}.bwImage, [100,900]);
 
@@ -241,29 +244,29 @@ parfor index = 1:imageCount
         imageList{index}.dnaList{dnaIndex}.bBox = bBox;
     end
     
-    if( strcmp(getenv('OS'),'Windows_NT'))
-        
-        imwrite(imageList{index}.preprocImg , ['..\pictures\preprocImg\' 'preproc' imageFolderObj(index).name ]);
-        imwrite(imageList{index}.background , ['..\pictures\background\' 'bckground' imageFolderObj(index).name ]);
-        imwrite(imageList{index}.bwImage , ['..\pictures\bwImage\' 'bw' imageFolderObj(index).name ]);
-        imwrite(imageList{index}.bwFilteredImage , ['..\pictures\bwFilteredImage\' 'bwFiltered' imageFolderObj(index).name ]);
-        imwrite(imageList{index}.filteredImage , ['..\pictures\filteredImage\' 'filtered' imageFolderObj(index).name ]);
-        imwrite(imageList{index}.bwImgThickDna , ['..\pictures\bwImgThickDna\' 'bwThickDna' imageFolderObj(index).name ]);
-        %     imwrite(imageList{index}.bwImgDen , ['..\pictures\bwImgDen\' 'bwImgDen' imageFolderObj(index).name ]);
-%         imwrite(imageList{index}.bwImgThinnedDna , ['..\pictures\bwImgThinnedDna\' 'thinnedDna' imageFolderObj(index).name ]);
-        
-    else
-         imwrite(imageList{index}.preprocImg , ['../pictures/preprocImg/' 'me_preproc' imageFolderObj(index).name ]);
-         imwrite(imageList{index}.background , ['../pictures/background/' 'me_bckground' imageFolderObj(index).name ]);
-         imwrite(imageList{index}.bwImage , ['../pictures/bwImage/' 'me_bw' imageFolderObj(index).name ]);
-         imwrite(imageList{index}.bwFilteredImage , ['../pictures/bwFilteredImage/' 'me_bwFiltered' imageFolderObj(index).name ]);
-         imwrite(imageList{index}.filteredImage , ['../pictures/filteredImage/' 'me_filtered' imageFolderObj(index).name ]);
-         imwrite(imageList{index}.bwImgThickDna , ['../pictures/bwImgThickDna/' 'me_bwThickDna' imageFolderObj(index).name ]);
-%         imwrite(imageList{index}.bwImgDen , ['..\pictures\bwImgDen\' 'bwImgDen' imageFolderObj(index).name ]);
-%          imwrite(imageList{index}.bwImgThinnedDna , ['../pictures/bwImgThinnedDna/' 'me_thinnedDna' imageFolderObj(index).name ]);
-%          imwrite(imfuse(imageList{index}.rawImage , imageList{index}.bwImgThinnedDna), ['../pictures/overlays_thin/' 'overlay_' imageFolderObj(index).name ]);
-         imwrite(imfuse(imageList{index}.rawImage , imageList{index}.bwImgThickDna), ['../pictures/overlays_thick/' 'overlay__' imageFolderObj(index).name ]);
-    end
+%     if( strcmp(getenv('OS'),'Windows_NT'))
+%         
+%         imwrite(imageList{index}.preprocImg , ['..\pictures\preprocImg\' 'preproc' imageFolderObj(index).name ]);
+%         imwrite(imageList{index}.background , ['..\pictures\background\' 'bckground' imageFolderObj(index).name ]);
+%         imwrite(imageList{index}.bwImage , ['..\pictures\bwImage\' 'bw' imageFolderObj(index).name ]);
+%         imwrite(imageList{index}.bwFilteredImage , ['..\pictures\bwFilteredImage\' 'bwFiltered' imageFolderObj(index).name ]);
+%         imwrite(imageList{index}.filteredImage , ['..\pictures\filteredImage\' 'filtered' imageFolderObj(index).name ]);
+%         imwrite(imageList{index}.bwImgThickDna , ['..\pictures\bwImgThickDna\' 'bwThickDna' imageFolderObj(index).name ]);
+%         %     imwrite(imageList{index}.bwImgDen , ['..\pictures\bwImgDen\' 'bwImgDen' imageFolderObj(index).name ]);
+% %         imwrite(imageList{index}.bwImgThinnedDna , ['..\pictures\bwImgThinnedDna\' 'thinnedDna' imageFolderObj(index).name ]);
+%         
+%     else
+%          imwrite(imageList{index}.preprocImg , ['../pictures/preprocImg/' 'me_preproc' imageFolderObj(index).name ]);
+%          imwrite(imageList{index}.background , ['../pictures/background/' 'me_bckground' imageFolderObj(index).name ]);
+%          imwrite(imageList{index}.bwImage , ['../pictures/bwImage/' 'me_bw' imageFolderObj(index).name ]);
+%          imwrite(imageList{index}.bwFilteredImage , ['../pictures/bwFilteredImage/' 'me_bwFiltered' imageFolderObj(index).name ]);
+%          imwrite(imageList{index}.filteredImage , ['../pictures/filteredImage/' 'me_filtered' imageFolderObj(index).name ]);
+%          imwrite(imageList{index}.bwImgThickDna , ['../pictures/bwImgThickDna/' 'me_bwThickDna' imageFolderObj(index).name ]);
+% %         imwrite(imageList{index}.bwImgDen , ['..\pictures\bwImgDen\' 'bwImgDen' imageFolderObj(index).name ]);
+% %          imwrite(imageList{index}.bwImgThinnedDna , ['../pictures/bwImgThinnedDna/' 'me_thinnedDna' imageFolderObj(index).name ]);
+% %          imwrite(imfuse(imageList{index}.rawImage , imageList{index}.bwImgThinnedDna), ['../pictures/overlays_thin/' 'overlay_' imageFolderObj(index).name ]);
+%          imwrite(imfuse(imageList{index}.rawImage , imageList{index}.bwImgThickDna), ['../pictures/overlays_thick/' 'overlay__' imageFolderObj(index).name ]);
+%    end
 %     showImage(imageList{index});
 %     w = waitforbuttonpress;
 %     close;
@@ -282,10 +285,10 @@ for index = 1:imageCount
         continue
     end
     
-    %[image,colorMap] = imread(strcat(currentImageDir, imageFolderObj(index).name));
+    [image,colorMap] = imread(strcat(currentImageDir, imageFolderObj(index).name));
     %% until here
     
-    [image,colorMap] = imread(imageFolderObj(index).name);
+    %[image,colorMap] = imread(imageFolderObj(index).name);
     imageList{index} = Image(image, colorMap);
     
     %% Call OpenCV function to denoise the image before further processing.
@@ -343,6 +346,9 @@ if(setMeanThreshold ~= 0)
 end
 
 for index = 1:imageCount
+    if or( strcmp(imageFolderObj(index).name , '.'), strcmp(imageFolderObj(index).name, '..') )
+        continue
+    end
     imageList{index}.bwImage = im2bw(imageList{index}.preprocImg, imageList{index}.thresh);
 %     imageList{index}.bwImage = bwareafilt(imageList{index}.bwImage, [100,900]);
 
@@ -464,8 +470,8 @@ for index = 1:imageCount
             % Currently, each DNA object has an isValid flag. This is set
             % if after length determination the DNA backbone does not fit
             % the generally specified DNA length criteria
-            imageList{index}.dnaList{dnaIndex} = getDNALength(imageList{index}.dnaList{dnaIndex}, true);
-%             imageList{index}.dnaList{dnaIndex} = determineDnaLength2(imageList{index}.dnaList{dnaIndex}, true);
+%            imageList{index}.dnaList{dnaIndex} = getDNALength(imageList{index}.dnaList{dnaIndex}, true);
+             imageList{index}.dnaList{dnaIndex} = determineDnaLength2(imageList{index}.dnaList{dnaIndex}, true);
             %          Calculate angle between the Nukleii and the arms(the DNA Arms
             [ imageList{index}.dnaList{dnaIndex}.angle1, ...
                 imageList{index}.dnaList{dnaIndex}.angle2] = ...
@@ -477,8 +483,8 @@ for index = 1:imageCount
                 imageList{index}.connectedThickDna.PixelIdxList{dnaIndex}, ...
                 detail_thickDna,...
                 imageList{index}.region(dnaIndex,:));
-            imageList{index}.dnaList{dnaIndex} = getDNALength(imageList{index}.dnaList{dnaIndex}, false);
-%             imageList{index}.dnaList{dnaIndex} = determineDnaLength2(imageList{index}.dnaList{dnaIndex}, false);
+%            imageList{index}.dnaList{dnaIndex} = getDNALength(imageList{index}.dnaList{dnaIndex}, false);
+             imageList{index}.dnaList{dnaIndex} = determineDnaLength2(imageList{index}.dnaList{dnaIndex}, false);
 
         end
         %         Set the dnaIndex as Number for the DNA strand object
@@ -486,34 +492,32 @@ for index = 1:imageCount
         imageList{index}.dnaList{dnaIndex}.bBox = bBox;
     end
     
-    if( strcmp(getenv('OS'),'Windows_NT'))
-        
-        imwrite(imageList{index}.preprocImg , ['..\pictures\preprocImg\' 'preproc' imageFolderObj(index).name ]);
-        imwrite(imageList{index}.background , ['..\pictures\background\' 'bckground' imageFolderObj(index).name ]);
-        imwrite(imageList{index}.bwImage , ['..\pictures\bwImage\' 'bw' imageFolderObj(index).name ]);
-        imwrite(imageList{index}.bwFilteredImage , ['..\pictures\bwFilteredImage\' 'bwFiltered' imageFolderObj(index).name ]);
-        imwrite(imageList{index}.filteredImage , ['..\pictures\filteredImage\' 'filtered' imageFolderObj(index).name ]);
-        imwrite(imageList{index}.bwImgThickDna , ['..\pictures\bwImgThickDna\' 'bwThickDna' imageFolderObj(index).name ]);
-        %     imwrite(imageList{index}.bwImgDen , ['..\pictures\bwImgDen\' 'bwImgDen' imageFolderObj(index).name ]);
-%         imwrite(imageList{index}.bwImgThinnedDna , ['..\pictures\bwImgThinnedDna\' 'thinnedDna' imageFolderObj(index).name ]);
-        
-    else
-         imwrite(imageList{index}.preprocImg , ['../pictures/preprocImg/' 'me_preproc' imageFolderObj(index).name ]);
-         imwrite(imageList{index}.background , ['../pictures/background/' 'me_bckground' imageFolderObj(index).name ]);
-         imwrite(imageList{index}.bwImage , ['../pictures/bwImage/' 'me_bw' imageFolderObj(index).name ]);
-         imwrite(imageList{index}.bwFilteredImage , ['../pictures/bwFilteredImage/' 'me_bwFiltered' imageFolderObj(index).name ]);
-         imwrite(imageList{index}.filteredImage , ['../pictures/filteredImage/' 'me_filtered' imageFolderObj(index).name ]);
-         imwrite(imageList{index}.bwImgThickDna , ['../pictures/bwImgThickDna/' 'me_bwThickDna' imageFolderObj(index).name ]);
-%         imwrite(imageList{index}.bwImgDen , ['..\pictures\bwImgDen\' 'bwImgDen' imageFolderObj(index).name ]);
-%          imwrite(imageList{index}.bwImgThinnedDna , ['../pictures/bwImgThinnedDna/' 'me_thinnedDna' imageFolderObj(index).name ]);
-%          imwrite(imfuse(imageList{index}.rawImage , imageList{index}.bwImgThinnedDna), ['../pictures/overlays_thin/' 'overlay_' imageFolderObj(index).name ]);
-         imwrite(imfuse(imageList{index}.rawImage , imageList{index}.bwImgThickDna), ['../pictures/overlays_thick/' 'overlay__' imageFolderObj(index).name ]);
-    end
-%     showImage(imageList{index});
-%     w = waitforbuttonpress;
-%     close;
-
-    %writeToCsvFile([imageFolderObj(index).name '_test_ChrLen.csv'], imageList{index});  
+%     if( strcmp(getenv('OS'),'Windows_NT'))
+%         
+%         imwrite(imageList{index}.preprocImg , ['..\pictures\preprocImg\' 'preproc' imageFolderObj(index).name ]);
+%         imwrite(imageList{index}.background , ['..\pictures\background\' 'bckground' imageFolderObj(index).name ]);
+%         imwrite(imageList{index}.bwImage , ['..\pictures\bwImage\' 'bw' imageFolderObj(index).name ]);
+%         imwrite(imageList{index}.bwFilteredImage , ['..\pictures\bwFilteredImage\' 'bwFiltered' imageFolderObj(index).name ]);
+%         imwrite(imageList{index}.filteredImage , ['..\pictures\filteredImage\' 'filtered' imageFolderObj(index).name ]);
+%         imwrite(imageList{index}.bwImgThickDna , ['..\pictures\bwImgThickDna\' 'bwThickDna' imageFolderObj(index).name ]);
+%         %     imwrite(imageList{index}.bwImgDen , ['..\pictures\bwImgDen\' 'bwImgDen' imageFolderObj(index).name ]);
+% %         imwrite(imageList{index}.bwImgThinnedDna , ['..\pictures\bwImgThinnedDna\' 'thinnedDna' imageFolderObj(index).name ]);
+%         
+%     else
+%          imwrite(imageList{index}.preprocImg , ['../pictures/preprocImg/' 'me_preproc' imageFolderObj(index).name ]);
+%          imwrite(imageList{index}.background , ['../pictures/background/' 'me_bckground' imageFolderObj(index).name ]);
+%          imwrite(imageList{index}.bwImage , ['../pictures/bwImage/' 'me_bw' imageFolderObj(index).name ]);
+%          imwrite(imageList{index}.bwFilteredImage , ['../pictures/bwFilteredImage/' 'me_bwFiltered' imageFolderObj(index).name ]);
+%          imwrite(imageList{index}.filteredImage , ['../pictures/filteredImage/' 'me_filtered' imageFolderObj(index).name ]);
+%          imwrite(imageList{index}.bwImgThickDna , ['../pictures/bwImgThickDna/' 'me_bwThickDna' imageFolderObj(index).name ]);
+% %         imwrite(imageList{index}.bwImgDen , ['..\pictures\bwImgDen\' 'bwImgDen' imageFolderObj(index).name ]);
+% %          imwrite(imageList{index}.bwImgThinnedDna , ['../pictures/bwImgThinnedDna/' 'me_thinnedDna' imageFolderObj(index).name ]);
+% %          imwrite(imfuse(imageList{index}.rawImage , imageList{index}.bwImgThinnedDna), ['../pictures/overlays_thin/' 'overlay_' imageFolderObj(index).name ]);
+%          imwrite(imfuse(imageList{index}.rawImage , imageList{index}.bwImgThickDna), ['../pictures/overlays_thick/' 'overlay__' imageFolderObj(index).name ]);
+%     end
+    %% write output: image with detected objects, csv file with results for each object
+    showImage(imageList{index}, imageFolderObj(index).name);
+    writeToCsvFile([imageFolderObj(index).name '_fast_ChrLen.csv'], imageList{index});
 end
 
 end
