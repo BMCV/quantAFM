@@ -16,7 +16,7 @@ function [ dnaObj ] = getDNALength( dnaObj, dnaHasNucleos )
 picture = logical(padarray(dnaObj.bwImageThinned, [1 1]));
 [height, width] = size(picture);
 cc = bwconncomp(picture);
-fragmentLen = {};
+fragmentLen = {0};
 dnaObj.isValid = 1;
 
 % if the image is empty return
