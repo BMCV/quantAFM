@@ -5,8 +5,8 @@ function done = writeToCsvFile(filename, imageObj)
     ym = zeros(dnaCount,1) -1;
     radius = zeros(dnaCount,1) -1;
     length = zeros(dnaCount,1) -1;
-    length_arm1 = zeros(dnaCount,1) -1;
-    length_arm2 = zeros(dnaCount,1) -1;
+    short_arm = zeros(dnaCount,1) -1;
+    long_arm = zeros(dnaCount,1) -1;
     hasNucleus = zeros(dnaCount,1) -1;
     isValid = zeros(dnaCount,1) -1;
     angle1 = zeros(dnaCount,1) -1;
@@ -24,8 +24,8 @@ function done = writeToCsvFile(filename, imageObj)
             angle2(dnaIndex,1) = 0;
             radius(dnaIndex,1) = 0;
             length(dnaIndex,1) = curr.length{1};
-            length_arm1(dnaIndex,1) = 0;
-            length_arm2(dnaIndex,1) = 0;
+            short_arm(dnaIndex,1) = 0;
+            long_arm(dnaIndex,1) = 0;
             numNucleosomes(dnaIndex,1) = 0;
         else
            angle1(dnaIndex,1) = curr.angle1;
@@ -33,14 +33,20 @@ function done = writeToCsvFile(filename, imageObj)
            radius(dnaIndex,1) = curr.attachedNukleo{1}.rad;
            numNucleosomes(dnaIndex,1) = size(curr.attachedNukleo, 2);
            length(dnaIndex,1) = 0;
-           length_arm1(dnaIndex,1) = curr.length{1};
            if size(curr.length, 2) == 2
-               length_arm2(dnaIndex,1) = curr.length{2};
+                if curr.length{1} > curr.length{2}
+                    short_arm(dnaIndex,1) = curr.length{2};
+                    long_arm(dnaIndex,1) = curr.length{1};
+                else
+                    short_arm(dnaIndex,1) = curr.length{1};
+                    long_arm(dnaIndex,1) = curr.length{2};
+                end
            else
-               length_arm2(dnaIndex,1) = 0;
+               short_arm(dnaIndex,1) = 0;
+               long_arm(dnaIndex,1) = curr.length{1};
            end 
     end
-    T = table(number, xm, ym, length, hasNucleus, length_arm1, length_arm2 ,...
+    T = table(number, xm, ym, length, hasNucleus, short_arm, long_arm ,...
         radius, isValid, angle1, angle2, numNucleosomes);
     writetable(T, filename);
     done = 'done';

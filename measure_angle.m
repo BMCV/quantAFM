@@ -6,9 +6,12 @@ angle1 = 0;
 angle2 = 0;
 
     % more than one center or no center 
-    % or no DNA backbone present!
-if ( numel(dna.attachedNukleo) ~= 1 || ...
-    size(dna.connectedThinnedRemoved,1) < 2 )
+if numel(dna.attachedNukleo) ~= 1    
+    return
+end
+    % no DNA backbone present!
+if size(dna.connectedThinnedRemoved,1) < 2
+    dna.isValid = 0;
     return
 end
 

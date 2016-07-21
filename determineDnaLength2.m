@@ -3,9 +3,18 @@ function [dnaObj] = determineDnaLength2(dnaObj, dnaHasNucleos)
     bwImgThin = dnaObj.bwImageThinned;
     bwImgThick = dnaObj.bwImage;
     bwImgThinnedRemoved = zeros(size(bwImgThin));
+    % An bw img with a closed area will have Euler number 0, while an img
+    % without will have Euler number 1. So, with this we check whether the
+    % current dna object has a self intersection (a loop)
+    eulerNum = regionprops(bwImgThin, 'EulerNumber');
+    if(isempty(currPxlList) || eulerNum.EulerNumber == 0)
+       dnaObj.isValid = 0;
+       dnaObj.length = {0};
+       return
+    end
     fragmentLen = {};
     % if fragment too small or too large don't compute the rest
-    if( ~(size(currPxlList,1) < 3) ) 
+    if( ~(size(currPxlList,1) < 3)  && ~(size(currPxlList,1) > 210)) 
         % create graph from its PixelIdxList and, from that, get the
         % fragment backbone
         [gr, singlePath, isValid] = getDnaBackbone(currPxlList, bwImgThin);
@@ -24,9 +33,15 @@ function [dnaObj] = determineDnaLength2(dnaObj, dnaHasNucleos)
         %% for each arm or for entire fragment, calculate length with Kulpa Estimator
         if(dnaHasNucleos && numel(dnaObj.attachedNukleo) == 1) % dna has 1 nucleosome, so calc length for both arms
             arms = getArmsNucleoIntersection(dnaObj);
-            for armIdx = 1:arms.NumObjects % for each arm, ...
-                currArm = arms.PixelIdxList{armIdx}; % ... get PixelIdxList ...
-                fragmentLen{armIdx} = calcKulpaLength(currArm, bwImgThinnedRemoved); % ... and calc its length
+            % no arms found => only big blob that resembles nucleus
+            if(arms.NumObjects == 0)
+                fragmentLen{1} = 0;
+                dnaObj.isValid = 0;
+            else
+                for armIdx = 1:arms.NumObjects % for each arm, ...
+                    currArm = arms.PixelIdxList{armIdx}; % ... get PixelIdxList ...
+                    fragmentLen{armIdx} = calcKulpaLength(currArm, bwImgThinnedRemoved); % ... and calc its length
+                end
             end
         else % no or multiple nucleosome(s), so calculate entire fragment's length
             fragmentLen{1} = calcKulpaLength(singlePath, bwImgThinnedRemoved);
@@ -41,6 +56,7 @@ function [dnaObj] = determineDnaLength2(dnaObj, dnaHasNucleos)
     else
         fragmentLen{1} = 0;
         dnaObj.isValid = 0;
+
     end
     dnaObj.length = fragmentLen;
 %    imshow(imfuse(bwImgThick, bwImgThinnedRemoved));
@@ -86,6 +102,7 @@ function [gr, singlePath, isValid ]= getDnaBackbone(pxlIdxList, bwImg)
         
     % create graph
     G = graph(gr, 'upper');
+%     dag = digraph(sparse(gr'));
     edges = size(G.Edges,1);
     nodes = size(G.Nodes,1);
     if edges - nodes > 2
