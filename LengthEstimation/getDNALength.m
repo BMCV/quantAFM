@@ -17,6 +17,7 @@ picture = logical(padarray(dnaObj.bwImageThinned, [1 1]));
 [height, width] = size(picture);
 cc = bwconncomp(picture);
 fragmentLen = {};
+dnaObj.isValid = 1;
 
 % if the image is empty return
 if(isempty(cc.PixelIdxList))
@@ -40,7 +41,7 @@ adjMat = logical(cases);
 % 0 0 0
 % 0 1 1
 % 0 1 0
-% Therefore we look at a 2x2 clipping and check if the pixel has only 2
+% % Therefore we look at a 2x2 clipping and check if the pixel has only 2
 % connections to other pixels
 for i = 1:length(pixels)
     % do not check points that are connected to more than two points
