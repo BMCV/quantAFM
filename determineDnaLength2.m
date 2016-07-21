@@ -18,7 +18,9 @@ function [dnaObj] = determineDnaLength2(dnaObj, dnaHasNucleos)
         % create graph from its PixelIdxList and, from that, get the
         % fragment backbone
         [gr, singlePath, isValid] = getDnaBackbone(currPxlList, bwImgThin);
-        dnaObj.isValid = isValid;
+        if(~isValid)    
+            dnaObj.isValid = isValid;
+        end
         % both end parts of the fragment were lost during the
         % thinning step, so get them back from the thickDNA fragment
         [newBeginning, newEnd] = ... 

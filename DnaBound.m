@@ -21,6 +21,7 @@ classdef DnaBound < DNA
                 dnaObj.hasNucleus = hasNucleus;
 %                 delete all other objects on the subImage besides the Dna
 %                 strand
+                dnaObj.isValid = 1;
                 CC = bwconncomp(detail_thickDna);
                 numPixels = cellfun(@numel, CC.PixelIdxList);
                 [largestObj, idx] = max(numPixels);

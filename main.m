@@ -1,14 +1,14 @@
 
 if( strcmp(getenv('OS'),'Windows_NT'))
     addpath(genpath('..\denoised_imgs'));
-    currentImageDir = '..\denoised_imgs\all\*.tif';
+    currentImageDir = '..\denoised_imgs\p_Wildtyp\*.tif';
     
 else
     addpath(genpath('../denoised_imgs'));
     currentImageDir = '../denoised_imgs/handausgewertet/';
 end
 
-addpath(genpath('..\LengthEstimation'));
+addpath(genpath('LengthEstimation'));
 imageFolderObj = dir(currentImageDir);
 imageCount = size(dir(currentImageDir),1);
 imageList = cell(1,imageCount);
@@ -222,8 +222,8 @@ parfor index = 1:imageCount
             % Currently, each DNA object has an isValid flag. This is set
             % if after length determination the DNA backbone does not fit
             % the generally specified DNA length criteria
-            imageList{index}.dnaList{dnaIndex} = getDNALength(imageList{index}.dnaList{dnaIndex}, true);
-%             imageList{index}.dnaList{dnaIndex} = determineDnaLength2(imageList{index}.dnaList{dnaIndex}, true);
+%             imageList{index}.dnaList{dnaIndex} = getDNALength(imageList{index}.dnaList{dnaIndex}, true);
+             imageList{index}.dnaList{dnaIndex} = determineDnaLength2(imageList{index}.dnaList{dnaIndex}, true);
             %          Calculate angle between the Nukleii and the arms(the DNA Arms
             [ imageList{index}.dnaList{dnaIndex}.angle1, ...
                 imageList{index}.dnaList{dnaIndex}.angle2] = ...
@@ -235,8 +235,8 @@ parfor index = 1:imageCount
                 imageList{index}.connectedThickDna.PixelIdxList{dnaIndex}, ...
                 detail_thickDna,...
                 imageList{index}.region(dnaIndex,:));
-            imageList{index}.dnaList{dnaIndex} = getDNALength(imageList{index}.dnaList{dnaIndex}, false);
-%             imageList{index}.dnaList{dnaIndex} = determineDnaLength2(imageList{index}.dnaList{dnaIndex}, false);
+%             imageList{index}.dnaList{dnaIndex} = getDNALength(imageList{index}.dnaList{dnaIndex}, false);
+             imageList{index}.dnaList{dnaIndex} = determineDnaLength2(imageList{index}.dnaList{dnaIndex}, false);
 
         end
         %         Set the dnaIndex as Number for the DNA strand object

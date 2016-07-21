@@ -17,7 +17,7 @@ picture = logical(padarray(dnaObj.bwImageThinned, [1 1]));
 [height, width] = size(picture);
 cc = bwconncomp(picture);
 fragmentLen = {0};
-dnaObj.isValid = 1;
+% dnaObj.isValid = 1;
 
 % if the image is empty return
 if(isempty(cc.PixelIdxList))
@@ -243,7 +243,7 @@ dnaObj.bwImageThinnedRemoved = picture;
 
 % also recalculate the new PixelIdxList
 cc = bwconncomp(picture);
-dnaObj.connectedThinned = cc.PixelIdxList{1};
+dnaObj.connectedThinnedRemoved = cc.PixelIdxList{1};
 
 % calculate the fragment lengths, if there is exactly 1 nucleo bound to it
 if(dnaHasNucleos && numel(dnaObj.attachedNukleo) == 1) % dna has 1 nucleosome, so calc length for both arms
@@ -257,7 +257,7 @@ elseif ~dnaObj.isValid
     fragmentLen{1} = 0;
 % no or multiple nucleosome(s), so calculate entire fragment's length
 else
-    fragmentLen{1} = calcKulpaLength(dnaObj.connectedThinned, dnaObj.bwImageThinnedRemoved);
+    fragmentLen{1} = calcKulpaLength(dnaObj.connectedThinnedRemoved, dnaObj.bwImageThinnedRemoved);
 end
 
 % hack because of order of function calls

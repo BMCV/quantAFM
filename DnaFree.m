@@ -13,7 +13,7 @@ classdef DnaFree < DNA
                 dnaObj.bwImage = detail_thickDna;
          
                 dnaObj.hasNucleus = 0;
-                                
+                dnaObj.isValid = 1;                
 %                 delete all other objects on the subImage besides the Dna
 %                 strand
                 CC = bwconncomp(detail_thickDna);
