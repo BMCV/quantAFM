@@ -1,0 +1,26 @@
+Manual Analysis 
+To annotate and evaluate the results of the algorithm to the real objects, the open source program ImgaeJ (2.0.0-rc-46/1.50g) was used to perform a manual evaluation. Therefore, the features of the objects, from a sample or whole images, were analyzed manually with the tools of the ImageJ software.
+For the objects, which were single DNA-strands and mono nucleosomes, the location and the couture length were determined. For nucleosomes, also the angle between the two DNA-strands entering the nucleosome core, the approximate area of the nucleosome core and the mean gray value of the nucleosome core were measured.
+To annotate the data from one object to the results of the algorithm the centre of mass was used. Therefore a binary image was produced by thresholding. Then the “Analyze Particle Tool“ was used to get the x-y coordinates of the centre of mass from the different objects. 
+All other parameters were determined on the original images. To measure the different lengths, the “Segmented Line Tool“ was used. One end of a DNA strand was set as starting point, from which the line-points were drawn centrally through the fragment towards the other end of the fragment. This so called couture length was also measured for mono nucleosomes, by drawing centrally through the DNA and through the approximate center of the nucleosome core (figure). For mono nucleosomes, however two lengths were determined. The second length was the distance between the approximate center of the nucleosome core and the end of the shorter of the two entering DNA-strands.
+The entry/exit DNA-strand angles of mono nucleosomes were measured by using the three point selection “Angle Tool“ of the ImageJ software. Figure illustrates that the entry/exit DNA-strand angles can be determined in two different ways. In that context, α1 and α2 were measured on different mono nucleosomes for the test data evaluation.
+α1 was measured by connecting the two entry/exit points of the nucleosome with the approximate center of the nucleosome core. For the determination of α2, the two DNA-axes at the nucleosome core were traced. The angle between the two DNA-axes was then measured at their intersection point.
+The approximate area and mean gray value of nucleosomes were determined by manually fitting an oval structure to the nucleosome cores with the “Oval Selection Tool“ of ImageJ.
+Besides single DNA strands and mono nucleosomes, the locations of special objects were recorded. The special objects were intersecting DNA-fragments/nucleosomes, self-intersecting DNA-fragments/nucleosomes, objects on the edges of an image and undefined objects. To increase objectivity, test data were measured and from different persons.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	

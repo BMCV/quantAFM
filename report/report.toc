@@ -1,0 +1,51 @@
+\contentsline {section}{\numberline {1}Organisation}{3}{section.1}
+\contentsline {subsection}{\numberline {1.1}Distribution of Tasks}{3}{subsection.1.1}
+\contentsline {subsection}{\numberline {1.2}Time Schedule}{3}{subsection.1.2}
+\contentsline {section}{\numberline {2}Introduction}{5}{section.2}
+\contentsline {subsection}{\numberline {2.1}Motivation}{5}{subsection.2.1}
+\contentsline {subsection}{\numberline {2.2}AFM}{5}{subsection.2.2}
+\contentsline {subsubsection}{\numberline {2.2.1}Concept}{5}{subsubsection.2.2.1}
+\contentsline {subsection}{\numberline {2.3}Epigenetics and Histones}{7}{subsection.2.3}
+\contentsline {subsubsection}{\numberline {2.3.1}Chromatin and Histone Structure}{8}{subsubsection.2.3.1}
+\contentsline {subsubsection}{\numberline {2.3.2}Histone Modifications}{8}{subsubsection.2.3.2}
+\contentsline {subsection}{\numberline {2.4}Histone Complexes by AFM}{10}{subsection.2.4}
+\contentsline {subsection}{\numberline {2.5}Related Work}{11}{subsection.2.5}
+\contentsline {subsubsection}{\numberline {2.5.1}Filtering}{11}{subsubsection.2.5.1}
+\contentsline {subsubsection}{\numberline {2.5.2}Segmentation}{11}{subsubsection.2.5.2}
+\contentsline {subsubsection}{\numberline {2.5.3}Thinning}{12}{subsubsection.2.5.3}
+\contentsline {subsubsection}{\numberline {2.5.4}Removal of Corner Pixel}{13}{subsubsection.2.5.4}
+\contentsline {subsubsection}{\numberline {2.5.5}Removal of Objects Across the Image Boundary}{13}{subsubsection.2.5.5}
+\contentsline {subsubsection}{\numberline {2.5.6}Pruning}{13}{subsubsection.2.5.6}
+\contentsline {subsubsection}{\numberline {2.5.7}Removal of Invalid Fragments}{13}{subsubsection.2.5.7}
+\contentsline {subsubsection}{\numberline {2.5.8}Pixel Restoring}{14}{subsubsection.2.5.8}
+\contentsline {subsubsection}{\numberline {2.5.9}Length Determination}{14}{subsubsection.2.5.9}
+\contentsline {section}{\numberline {3}Methods}{17}{section.3}
+\contentsline {subsection}{\numberline {3.1}Test Data Creation}{17}{subsection.3.1}
+\contentsline {subsubsection}{\numberline {3.1.1}Manual Analysis}{17}{subsubsection.3.1.1}
+\contentsline {subsection}{\numberline {3.2}Software Architecture}{18}{subsection.3.2}
+\contentsline {subsection}{\numberline {3.3}Denoising}{18}{subsection.3.3}
+\contentsline {subsection}{\numberline {3.4}Filtering}{18}{subsection.3.4}
+\contentsline {subsubsection}{\numberline {3.4.1}Adaptive Lowpass Filter}{19}{subsubsection.3.4.1}
+\contentsline {subsubsection}{\numberline {3.4.2}Description of Proposed Method}{19}{subsubsection.3.4.2}
+\contentsline {subsubsection}{\numberline {3.4.3}Advantages over Other Filtering Techniques}{21}{subsubsection.3.4.3}
+\contentsline {subsubsection}{\numberline {3.4.4}Results and Comparison}{22}{subsubsection.3.4.4}
+\contentsline {subsection}{\numberline {3.5}Thresholding}{22}{subsection.3.5}
+\contentsline {subsubsection}{\numberline {3.5.1}Adaptive Thresholding}{22}{subsubsection.3.5.1}
+\contentsline {subsubsection}{\numberline {3.5.2}Level Background}{23}{subsubsection.3.5.2}
+\contentsline {subsubsection}{\numberline {3.5.3}Identify and remove outliers}{25}{subsubsection.3.5.3}
+\contentsline {subsubsection}{\numberline {3.5.4}Limit Threshold}{25}{subsubsection.3.5.4}
+\contentsline {subsection}{\numberline {3.6}Nucleosome Detection}{27}{subsection.3.6}
+\contentsline {subsection}{\numberline {3.7}Thinning}{31}{subsection.3.7}
+\contentsline {subsubsection}{\numberline {3.7.1}Hilditch's Sequential Thinning}{31}{subsubsection.3.7.1}
+\contentsline {subsubsection}{\numberline {3.7.2}Zhang Suen Parallel Thinning}{32}{subsubsection.3.7.2}
+\contentsline {subsection}{\numberline {3.8}Erosion of Noise Branches}{34}{subsection.3.8}
+\contentsline {subsection}{\numberline {3.9}Lenght Estimation}{34}{subsection.3.9}
+\contentsline {subsection}{\numberline {3.10}Angle Measurement}{34}{subsection.3.10}
+\contentsline {subsubsection}{\numberline {3.10.1}Measurement over Nucleosome Center}{34}{subsubsection.3.10.1}
+\contentsline {subsubsection}{\numberline {3.10.2}Measurement over Fitted Lines}{35}{subsubsection.3.10.2}
+\contentsline {subsection}{\numberline {3.11}Optimization}{36}{subsection.3.11}
+\contentsline {section}{\numberline {4}Results}{36}{section.4}
+\contentsline {subsection}{\numberline {4.1}Validation}{36}{subsection.4.1}
+\contentsline {subsection}{\numberline {4.2}Biological Significance}{36}{subsection.4.2}
+\contentsline {section}{\numberline {5}Discussion}{36}{section.5}
+\contentsline {section}{\numberline {6}Conclusion and Outlook}{36}{section.6}

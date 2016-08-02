@@ -1,0 +1,51 @@
+\BOOKMARK [1][-]{section.1}{Organisation}{}% 1
+\BOOKMARK [2][-]{subsection.1.1}{Distribution of Tasks}{section.1}% 2
+\BOOKMARK [2][-]{subsection.1.2}{Time Schedule}{section.1}% 3
+\BOOKMARK [1][-]{section.2}{Introduction}{}% 4
+\BOOKMARK [2][-]{subsection.2.1}{Motivation}{section.2}% 5
+\BOOKMARK [2][-]{subsection.2.2}{AFM}{section.2}% 6
+\BOOKMARK [3][-]{subsubsection.2.2.1}{Concept}{subsection.2.2}% 7
+\BOOKMARK [2][-]{subsection.2.3}{Epigenetics and Histones}{section.2}% 8
+\BOOKMARK [3][-]{subsubsection.2.3.1}{Chromatin and Histone Structure}{subsection.2.3}% 9
+\BOOKMARK [3][-]{subsubsection.2.3.2}{Histone Modifications}{subsection.2.3}% 10
+\BOOKMARK [2][-]{subsection.2.4}{Histone Complexes by AFM}{section.2}% 11
+\BOOKMARK [2][-]{subsection.2.5}{Related Work}{section.2}% 12
+\BOOKMARK [3][-]{subsubsection.2.5.1}{Filtering}{subsection.2.5}% 13
+\BOOKMARK [3][-]{subsubsection.2.5.2}{Segmentation}{subsection.2.5}% 14
+\BOOKMARK [3][-]{subsubsection.2.5.3}{Thinning}{subsection.2.5}% 15
+\BOOKMARK [3][-]{subsubsection.2.5.4}{Removal of Corner Pixel}{subsection.2.5}% 16
+\BOOKMARK [3][-]{subsubsection.2.5.5}{Removal of Objects Across the Image Boundary}{subsection.2.5}% 17
+\BOOKMARK [3][-]{subsubsection.2.5.6}{Pruning}{subsection.2.5}% 18
+\BOOKMARK [3][-]{subsubsection.2.5.7}{Removal of Invalid Fragments}{subsection.2.5}% 19
+\BOOKMARK [3][-]{subsubsection.2.5.8}{Pixel Restoring}{subsection.2.5}% 20
+\BOOKMARK [3][-]{subsubsection.2.5.9}{Length Determination}{subsection.2.5}% 21
+\BOOKMARK [1][-]{section.3}{Methods}{}% 22
+\BOOKMARK [2][-]{subsection.3.1}{Test Data Creation}{section.3}% 23
+\BOOKMARK [3][-]{subsubsection.3.1.1}{Manual Analysis}{subsection.3.1}% 24
+\BOOKMARK [2][-]{subsection.3.2}{Software Architecture}{section.3}% 25
+\BOOKMARK [2][-]{subsection.3.3}{Denoising}{section.3}% 26
+\BOOKMARK [2][-]{subsection.3.4}{Filtering}{section.3}% 27
+\BOOKMARK [3][-]{subsubsection.3.4.1}{Adaptive Lowpass Filter}{subsection.3.4}% 28
+\BOOKMARK [3][-]{subsubsection.3.4.2}{Description of Proposed Method}{subsection.3.4}% 29
+\BOOKMARK [3][-]{subsubsection.3.4.3}{Advantages over Other Filtering Techniques}{subsection.3.4}% 30
+\BOOKMARK [3][-]{subsubsection.3.4.4}{Results and Comparison}{subsection.3.4}% 31
+\BOOKMARK [2][-]{subsection.3.5}{Thresholding}{section.3}% 32
+\BOOKMARK [3][-]{subsubsection.3.5.1}{Adaptive Thresholding}{subsection.3.5}% 33
+\BOOKMARK [3][-]{subsubsection.3.5.2}{Level Background}{subsection.3.5}% 34
+\BOOKMARK [3][-]{subsubsection.3.5.3}{Identify and remove outliers}{subsection.3.5}% 35
+\BOOKMARK [3][-]{subsubsection.3.5.4}{Limit Threshold}{subsection.3.5}% 36
+\BOOKMARK [2][-]{subsection.3.6}{Nucleosome Detection}{section.3}% 37
+\BOOKMARK [2][-]{subsection.3.7}{Thinning}{section.3}% 38
+\BOOKMARK [3][-]{subsubsection.3.7.1}{Hilditch's Sequential Thinning}{subsection.3.7}% 39
+\BOOKMARK [3][-]{subsubsection.3.7.2}{Zhang Suen Parallel Thinning}{subsection.3.7}% 40
+\BOOKMARK [2][-]{subsection.3.8}{Erosion of Noise Branches}{section.3}% 41
+\BOOKMARK [2][-]{subsection.3.9}{Lenght Estimation}{section.3}% 42
+\BOOKMARK [2][-]{subsection.3.10}{Angle Measurement}{section.3}% 43
+\BOOKMARK [3][-]{subsubsection.3.10.1}{Measurement over Nucleosome Center}{subsection.3.10}% 44
+\BOOKMARK [3][-]{subsubsection.3.10.2}{Measurement over Fitted Lines}{subsection.3.10}% 45
+\BOOKMARK [2][-]{subsection.3.11}{Optimization}{section.3}% 46
+\BOOKMARK [1][-]{section.4}{Results}{}% 47
+\BOOKMARK [2][-]{subsection.4.1}{Validation}{section.4}% 48
+\BOOKMARK [2][-]{subsection.4.2}{Biological Significance}{section.4}% 49
+\BOOKMARK [1][-]{section.5}{Discussion}{}% 50
+\BOOKMARK [1][-]{section.6}{Conclusion and Outlook}{}% 51

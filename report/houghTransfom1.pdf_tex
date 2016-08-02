@@ -1,0 +1,65 @@
+%% Creator: Inkscape inkscape 0.91, www.inkscape.org
+%% PDF/EPS/PS + LaTeX output extension by Johan Engelen, 2010
+%% Accompanies image file 'houghTransfom1.pdf' (pdf, eps, ps)
+%%
+%% To include the image in your LaTeX document, write
+%%   \input{<filename>.pdf_tex}
+%%  instead of
+%%   \includegraphics{<filename>.pdf}
+%% To scale the image, write
+%%   \def\svgwidth{<desired width>}
+%%   \input{<filename>.pdf_tex}
+%%  instead of
+%%   \includegraphics[width=<desired width>]{<filename>.pdf}
+%%
+%% Images with a different path to the parent latex file can
+%% be accessed with the `import' package (which may need to be
+%% installed) using
+%%   \usepackage{import}
+%% in the preamble, and then including the image with
+%%   \import{<path to file>}{<filename>.pdf_tex}
+%% Alternatively, one can specify
+%%   \graphicspath{{<path to file>/}}
+%% 
+%% For more information, please see info/svg-inkscape on CTAN:
+%%   http://tug.ctan.org/tex-archive/info/svg-inkscape
+%%
+\begingroup%
+  \makeatletter%
+  \providecommand\color[2][]{%
+    \errmessage{(Inkscape) Color is used for the text in Inkscape, but the package 'color.sty' is not loaded}%
+    \renewcommand\color[2][]{}%
+  }%
+  \providecommand\transparent[1]{%
+    \errmessage{(Inkscape) Transparency is used (non-zero) for the text in Inkscape, but the package 'transparent.sty' is not loaded}%
+    \renewcommand\transparent[1]{}%
+  }%
+  \providecommand\rotatebox[2]{#2}%
+  \ifx\svgwidth\undefined%
+    \setlength{\unitlength}{213.31164551bp}%
+    \ifx\svgscale\undefined%
+      \relax%
+    \else%
+      \setlength{\unitlength}{\unitlength * \real{\svgscale}}%
+    \fi%
+  \else%
+    \setlength{\unitlength}{\svgwidth}%
+  \fi%
+  \global\let\svgwidth\undefined%
+  \global\let\svgscale\undefined%
+  \makeatother%
+  \begin{picture}(1,0.47376041)%
+    \put(0,0){\includegraphics[width=\unitlength,page=1]{houghTransfom1.pdf}}%
+    \put(0.25701239,0.4){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{edge pixel}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=2]{houghTransfom1.pdf}}%
+    \put(0.30866846,0.3154826){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{votes}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=3]{houghTransfom1.pdf}}%
+    \put(0.87150772,0.30704421){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{estimated center}}}%
+    \put(0.39586483,0.04357998){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{x}}}%
+    \put(0.0020748,0.44299556){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{y}}}%
+    \put(0.96854844,0.04357978){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{a}}}%
+    \put(0.57475863,0.44299546){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{b}}}%
+    %\put(-0.00167559,0.01170163){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{y}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=4]{houghTransfom1.pdf}}%
+  \end{picture}%
+\endgroup%
