@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Arch Linux) (preloaded format=pdflatex 2015.11.25)  5 AUG 2016 18:14
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Arch Linux) (preloaded format=pdflatex 2015.11.25)  5 AUG 2016 20:59
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -231,8 +231,6 @@ Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
 )
 \Hy@SectionHShift=\skip46
 )
-Package hyperref Info: Option `colorlinks' set `false' on input line 13.
-
 (/usr/share/texmf-dist/tex/latex/graphics/color.sty
 Package: color 2014/10/28 v1.1a Standard LaTeX Color (DPC)
 
@@ -906,12 +904,24 @@ File: tikzlibraryplotmarks.code.tex 2008/01/09 v3.0.1a (rcs-revision 1.1)
 
 (/usr/share/texmf-dist/tex/generic/pgf/libraries/pgflibraryplotmarks.code.tex
 File: pgflibraryplotmarks.code.tex 2015/08/03 v3.0.1a (rcs-revision 1.14)
-))) (/usr/share/texmf-dist/tex/latex/SIunits/SIunits.sty
+))) (/usr/share/texmf-dist/tex/latex/titlesec/titlesec.sty
+Package: titlesec 2011/12/15 v2.10.0 Sectioning titles
+\ttl@box=\box44
+\beforetitleunit=\skip51
+\aftertitleunit=\skip52
+\ttl@plus=\dimen191
+\ttl@minus=\dimen192
+\ttl@toksa=\toks41
+\titlewidth=\dimen193
+\titlewidthlast=\dimen194
+\titlewidthfirst=\dimen195
+)
+(/usr/share/texmf-dist/tex/latex/SIunits/SIunits.sty
 Package: SIunits 2007/12/02 v1.36 Support for the International System of units
  (MH)
 
 
-\@qskwidth=\skip51
+\@qskwidth=\skip53
 Now handling font encoding TS1 ...
 ... processing UTF-8 mapping file for font encoding TS1
 (/usr/share/texmf-dist/tex/latex/base/ts1enc.dfu
@@ -999,7 +1009,9 @@ Option `squaren' provided!
 (/usr/share/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrary
 calc.code.tex
 File: tikzlibrarycalc.code.tex 2013/07/15 v3.0.1a (rcs-revision 1.9)
-) (./report.aux
+)
+Package hyperref Info: Option `colorlinks' set `false' on input line 32.
+ (./report.aux
 
 LaTeX Warning: Label `fig:bwbefore' multiply defined.
 
@@ -1015,40 +1027,40 @@ LaTeX Warning: Label `sub@fig:bwafter' multiply defined.
 )
 \openout1 = `report.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 31.
-LaTeX Font Info:    ... okay on input line 31.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 31.
-LaTeX Font Info:    ... okay on input line 31.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 31.
-LaTeX Font Info:    ... okay on input line 31.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 31.
-LaTeX Font Info:    ... okay on input line 31.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 31.
-LaTeX Font Info:    ... okay on input line 31.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 31.
-LaTeX Font Info:    ... okay on input line 31.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 31.
-LaTeX Font Info:    ... okay on input line 31.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 31.
-LaTeX Font Info:    Try loading font information for TS1+cmr on input line 31.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 40.
+LaTeX Font Info:    ... okay on input line 40.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 40.
+LaTeX Font Info:    ... okay on input line 40.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 40.
+LaTeX Font Info:    ... okay on input line 40.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 40.
+LaTeX Font Info:    ... okay on input line 40.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 40.
+LaTeX Font Info:    ... okay on input line 40.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 40.
+LaTeX Font Info:    ... okay on input line 40.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 40.
+LaTeX Font Info:    ... okay on input line 40.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 40.
+LaTeX Font Info:    Try loading font information for TS1+cmr on input line 40.
  (/usr/share/texmf-dist/tex/latex/base/ts1cmr.fd
 File: ts1cmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
-LaTeX Font Info:    ... okay on input line 31.
+LaTeX Font Info:    ... okay on input line 40.
 
 (/usr/share/texmf-dist/tex/context/base/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count151
-\scratchdimen=\dimen191
-\scratchbox=\box44
+\scratchdimen=\dimen196
+\scratchbox=\box45
 \nofMPsegments=\count152
 \nofMParguments=\count153
-\everyMPshowfont=\toks41
+\everyMPshowfont=\toks42
 \MPscratchCnt=\count154
-\MPscratchDim=\dimen192
+\MPscratchDim=\dimen197
 \MPnumerator=\count155
 \makeMPintoPDFobject=\count156
-\everyMPtoPDFconversion=\toks42
+\everyMPtoPDFconversion=\toks43
 ) (/usr/share/texmf-dist/tex/latex/oberdiek/epstopdf-base.sty
 Package: epstopdf-base 2010/02/09 v2.5 Base part for package epstopdf
 
@@ -1064,8 +1076,8 @@ G,.JBIG2,.JB2,.eps]
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
-\AtBeginShipoutBox=\box45
-Package hyperref Info: Link coloring OFF on input line 31.
+\AtBeginShipoutBox=\box46
+Package hyperref Info: Link coloring OFF on input line 40.
 
 (/usr/share/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2012/10/27 v2.43 Cross-referencing by name of section
@@ -1075,9 +1087,9 @@ Package: gettitlestring 2010/12/03 v1.4 Cleanup title references (HO)
 )
 \c@section@level=\count157
 )
-LaTeX Info: Redefining \ref on input line 31.
-LaTeX Info: Redefining \pageref on input line 31.
-LaTeX Info: Redefining \nameref on input line 31.
+LaTeX Info: Redefining \ref on input line 40.
+LaTeX Info: Redefining \pageref on input line 40.
+LaTeX Info: Redefining \nameref on input line 40.
  (./report.out) (./report.out)
 \@outlinefile=\write4
 \openout4 = `report.out'.
@@ -1099,534 +1111,539 @@ Option `squaren' provided!
 page.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.44 ...arallel Thinning}{40}{subsubsection.3.7.2}
-                                                   [1])
+l.43 ...uential Thinning}{38}{subsubsection.3.7.1}
+                                                   [1]
+Overfull \hbox (9.58398pt too wide) in paragraph at lines 50--50
+ [][] [][]\OT1/cmr/m/n/10 Algorithm C: Ero-sion us-ing Breadth-First-Search and
+ Short- 
+ []
+
+)
 \tf@toc=\write5
 \openout5 = `report.toc'.
 
  [2]
 
 LaTeX Warning: Reference `sec:Adaptive Thresholding' on page 3 undefined on inp
-ut line 65.
+ut line 74.
 
 
 LaTeX Warning: Reference `sec:Level Background' on page 3 undefined on input li
-ne 65.
+ne 74.
 
 
 LaTeX Warning: Reference `sec:Identify and remove outliers' on page 3 undefined
- on input line 65.
+ on input line 74.
 
 
 LaTeX Warning: Reference `sec:Limit Threshold' on page 3 undefined on input lin
-e 65.
+e 74.
 
 
-LaTeX Warning: Reference `sec: Denoising' on page 3 undefined on input line 71.
+LaTeX Warning: Reference `sec: Denoising' on page 3 undefined on input line 80.
 
 
-<timeline2.png, id=334, 1462.71469pt x 1145.02782pt>
+<timeline2.png, id=323, 1462.71469pt x 1145.02782pt>
 File: timeline2.png Graphic file (type png)
  <use timeline2.png>
-Package pdftex.def Info: timeline2.png used on input line 88.
+Package pdftex.def Info: timeline2.png used on input line 97.
 (pdftex.def)             Requested size: 345.0pt x 270.06pt.
 
 [3] [4 <./timeline2.png (PNG copy)>]
-<Figure1.png, id=353, 189.8292pt x 303.0522pt>
+<Figure1.png, id=344, 189.8292pt x 303.0522pt>
 File: Figure1.png Graphic file (type png)
  <use Figure1.png>
-Package pdftex.def Info: Figure1.png used on input line 110.
+Package pdftex.def Info: Figure1.png used on input line 119.
 (pdftex.def)             Requested size: 172.5pt x 275.38487pt.
 
-<Figure2.png, id=360, 264.99pt x 198.9834pt>
+<Figure2.png, id=351, 264.99pt x 198.9834pt>
 File: Figure2.png Graphic file (type png)
  <use Figure2.png>
-Package pdftex.def Info: Figure2.png used on input line 119.
+Package pdftex.def Info: Figure2.png used on input line 128.
 (pdftex.def)             Requested size: 258.75pt x 194.31013pt.
 
-<Figure3.png, id=364, 280.4076pt x 152.2488pt>
+<Figure3.png, id=355, 280.4076pt x 152.2488pt>
 File: Figure3.png Graphic file (type png)
  <use Figure3.png>
-Package pdftex.def Info: Figure3.png used on input line 127.
+Package pdftex.def Info: Figure3.png used on input line 136.
 (pdftex.def)             Requested size: 310.4979pt x 168.58463pt.
  [5] [6 <./Figure1.png>] [7 <./Figure2.png> <./Figure3.png>]
-<Figure4.png, id=414, 452.4102pt x 217.7736pt>
+<Figure4.png, id=405, 452.4102pt x 217.7736pt>
 File: Figure4.png Graphic file (type png)
  <use Figure4.png>
-Package pdftex.def Info: Figure4.png used on input line 144.
+Package pdftex.def Info: Figure4.png used on input line 153.
 (pdftex.def)             Requested size: 310.4979pt x 149.4631pt.
- [8 <./Figure4.png>] <Figure5.png, id=431, 216.81pt x 217.7736pt>
+ [8 <./Figure4.png>] <Figure5.png, id=422, 216.81pt x 217.7736pt>
 File: Figure5.png Graphic file (type png)
  <use Figure5.png>
-Package pdftex.def Info: Figure5.png used on input line 153.
+Package pdftex.def Info: Figure5.png used on input line 162.
 (pdftex.def)             Requested size: 172.5pt x 173.27539pt.
  [9 <./Figure5.png>] [10] [11]
-<Segmentation_histo.PNG, id=513, 448.67625pt x 418.56375pt>
+<Segmentation_histo.PNG, id=504, 448.67625pt x 418.56375pt>
 File: Segmentation_histo.PNG Graphic file (type png)
 
 <use Segmentation_histo.PNG>
-Package pdftex.def Info: Segmentation_histo.PNG used on input line 180.
+Package pdftex.def Info: Segmentation_histo.PNG used on input line 189.
 (pdftex.def)             Requested size: 241.49895pt x 225.28658pt.
  [12 <./Segmentation_histo.PNG>]
-<Masken.JPG, id=552, 917.67844pt x 618.05907pt>
+<Masken.JPG, id=543, 917.67844pt x 618.05907pt>
 File: Masken.JPG Graphic file (type jpg)
  <use Masken.JPG>
-Package pdftex.def Info: Masken.JPG used on input line 213.
+Package pdftex.def Info: Masken.JPG used on input line 222.
 (pdftex.def)             Requested size: 241.49895pt x 162.64374pt.
  [13]
-Underfull \hbox (badness 10000) in paragraph at lines 229--230
+Underfull \hbox (badness 10000) in paragraph at lines 238--239
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 243--246
+Underfull \hbox (badness 10000) in paragraph at lines 252--255
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 247--249
+Underfull \hbox (badness 10000) in paragraph at lines 256--258
 
  []
 
 [14 <./Masken.JPG>]
-Underfull \hbox (badness 10000) in paragraph at lines 254--257
+Underfull \hbox (badness 10000) in paragraph at lines 263--266
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 258--259
+Underfull \hbox (badness 10000) in paragraph at lines 267--268
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 264--267
+Underfull \hbox (badness 10000) in paragraph at lines 273--276
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 268--269
+Underfull \hbox (badness 10000) in paragraph at lines 277--278
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 275--278
+Underfull \hbox (badness 10000) in paragraph at lines 284--287
 
  []
 
-<freeman.PNG, id=584, 771.63281pt x 319.1925pt>
+<freeman.PNG, id=575, 771.63281pt x 319.1925pt>
 File: freeman.PNG Graphic file (type png)
  <use freeman.PNG>
-Package pdftex.def Info: freeman.PNG used on input line 282.
+Package pdftex.def Info: freeman.PNG used on input line 291.
 (pdftex.def)             Requested size: 241.49895pt x 99.89839pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 288--289
+Underfull \hbox (badness 10000) in paragraph at lines 297--298
 
  []
 
 [15 <./freeman.PNG>]
-Underfull \hbox (badness 10000) in paragraph at lines 294--297
+Underfull \hbox (badness 10000) in paragraph at lines 303--306
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 300--301
+Underfull \hbox (badness 10000) in paragraph at lines 309--310
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 314--317
+Underfull \hbox (badness 10000) in paragraph at lines 323--326
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 322--323
+Underfull \hbox (badness 10000) in paragraph at lines 331--332
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 339--342
+Underfull \hbox (badness 10000) in paragraph at lines 348--351
 
  []
 
-[16] <coutureLength.png, id=605, 1018.80624pt x 794.97pt>
+[16] <coutureLength.png, id=596, 1018.80624pt x 794.97pt>
 File: coutureLength.png Graphic file (type png)
 
 <use coutureLength.png>
-Package pdftex.def Info: coutureLength.png used on input line 361.
+Package pdftex.def Info: coutureLength.png used on input line 370.
 (pdftex.def)             Requested size: 172.5pt x 134.59724pt.
 
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
-<angleMeasurement.png, id=606, 1092.08pt x 428.60126pt>
+<angleMeasurement.png, id=597, 1092.08pt x 428.60126pt>
 File: angleMeasurement.png Graphic file (type png)
 
 <use angleMeasurement.png>
-Package pdftex.def Info: angleMeasurement.png used on input line 369.
+Package pdftex.def Info: angleMeasurement.png used on input line 378.
 (pdftex.def)             Requested size: 241.49895pt x 94.77652pt.
 
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
 [17] [18 <./coutureLength.png> <./angleMeasurement.png>]
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 384.
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 393.
 
 
 (/usr/share/texmf-dist/tex/latex/base/omscmr.fd
 File: omscmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 384.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 393.
 
-Underfull \hbox (badness 10000) in paragraph at lines 388--389
+Underfull \hbox (badness 10000) in paragraph at lines 397--398
 
  []
 
-[19] <beforeDenoise_img.png, id=640, 505.89pt x 433.62pt>
+[19] <beforeDenoise_img.png, id=631, 505.89pt x 433.62pt>
 File: beforeDenoise_img.png Graphic file (type png)
 
 <use beforeDenoise_img.png>
-Package pdftex.def Info: beforeDenoise_img.png used on input line 422.
+Package pdftex.def Info: beforeDenoise_img.png used on input line 431.
 (pdftex.def)             Requested size: 96.59958pt x 82.79887pt.
 
-<afterDenoise_img.png, id=641, 496.85625pt x 426.09187pt>
+<afterDenoise_img.png, id=632, 496.85625pt x 426.09187pt>
 File: afterDenoise_img.png Graphic file (type png)
 
 <use afterDenoise_img.png>
-Package pdftex.def Info: afterDenoise_img.png used on input line 426.
+Package pdftex.def Info: afterDenoise_img.png used on input line 435.
 (pdftex.def)             Requested size: 96.59958pt x 82.83727pt.
 
-<beforeDenoise_histogram.png, id=642, 963.6pt x 322.95656pt>
+<beforeDenoise_histogram.png, id=633, 963.6pt x 322.95656pt>
 File: beforeDenoise_histogram.png Graphic file (type png)
 
 <use beforeDenoise_histogram.png>
-Package pdftex.def Info: beforeDenoise_histogram.png used on input line 431.
+Package pdftex.def Info: beforeDenoise_histogram.png used on input line 440.
 (pdftex.def)             Requested size: 241.49895pt x 80.93605pt.
 
-<afterDenoise_histogram.png, id=643, 963.6pt x 322.95656pt>
+<afterDenoise_histogram.png, id=634, 963.6pt x 322.95656pt>
 File: afterDenoise_histogram.png Graphic file (type png)
 
 <use afterDenoise_histogram.png>
-Package pdftex.def Info: afterDenoise_histogram.png used on input line 435.
+Package pdftex.def Info: afterDenoise_histogram.png used on input line 444.
 (pdftex.def)             Requested size: 241.49895pt x 80.93605pt.
 
 
 LaTeX Warning: Reference `Software Architecture' on page 20 undefined on input 
-line 445.
+line 454.
 
 [20] [21 <./beforeDenoise_img.png (PNG copy)> <./afterDenoise_img.png (PNG copy
 )> <./beforeDenoise_histogram.png (PNG copy)> <./afterDenoise_histogram.png (PN
 G copy)>]
 
-LaTeX Warning: Reference `fig:step1lpf' on page 22 undefined on input line 459.
+LaTeX Warning: Reference `fig:step1lpf' on page 22 undefined on input line 468.
 
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 458--463
+Underfull \hbox (badness 10000) in paragraph at lines 467--472
 
  []
 
-[22] <step1.png, id=666, 1284.8pt x 1284.8pt>
-File: step1.png Graphic file (type png)
- <use step1.png>
-Package pdftex.def Info: step1.png used on input line 469.
-(pdftex.def)             Requested size: 110.40253pt x 110.39262pt.
+[22] <step1_dp.PNG, id=657, 410.2828pt x 410.2828pt>
+File: step1_dp.PNG Graphic file (type png)
+ <use step1_dp.PNG>
+Package pdftex.def Info: step1_dp.PNG used on input line 478.
+(pdftex.def)             Requested size: 110.40253pt x 110.4022pt.
 
-<step2.PNG, id=667, 408.77719pt x 407.27156pt>
+<step2.PNG, id=658, 408.77719pt x 407.27156pt>
 File: step2.PNG Graphic file (type png)
  <use step2.PNG>
-Package pdftex.def Info: step2.PNG used on input line 475.
+Package pdftex.def Info: step2.PNG used on input line 484.
 (pdftex.def)             Requested size: 110.40253pt x 109.99585pt.
 
-<step3.PNG, id=668, 410.2828pt x 408.77719pt>
+<step3.PNG, id=659, 410.2828pt x 408.77719pt>
 File: step3.PNG Graphic file (type png)
  <use step3.PNG>
-Package pdftex.def Info: step3.PNG used on input line 481.
+Package pdftex.def Info: step3.PNG used on input line 490.
 (pdftex.def)             Requested size: 110.40253pt x 109.99707pt.
 
-<step4.PNG, id=669, 409.53pt x 410.2828pt>
+<step4.PNG, id=660, 409.53pt x 410.2828pt>
 File: step4.PNG Graphic file (type png)
  <use step4.PNG>
-Package pdftex.def Info: step4.PNG used on input line 487.
+Package pdftex.def Info: step4.PNG used on input line 496.
 (pdftex.def)             Requested size: 110.40253pt x 110.60254pt.
 
-<step5.PNG, id=670, 362.10281pt x 361.35pt>
+<step5.PNG, id=661, 362.10281pt x 361.35pt>
 File: step5.PNG Graphic file (type png)
  <use step5.PNG>
-Package pdftex.def Info: step5.PNG used on input line 493.
+Package pdftex.def Info: step5.PNG used on input line 502.
 (pdftex.def)             Requested size: 110.40253pt x 110.17023pt.
 
-<step6.PNG, id=671, 364.36125pt x 362.10281pt>
+<step6.PNG, id=662, 364.36125pt x 362.10281pt>
 File: step6.PNG Graphic file (type png)
  <use step6.PNG>
-Package pdftex.def Info: step6.PNG used on input line 499.
+Package pdftex.def Info: step6.PNG used on input line 508.
 (pdftex.def)             Requested size: 110.40253pt x 109.71461pt.
 
-<step7.PNG, id=672, 361.35pt x 362.10281pt>
+<step7.PNG, id=663, 361.35pt x 362.10281pt>
 File: step7.PNG Graphic file (type png)
  <use step7.PNG>
-Package pdftex.def Info: step7.PNG used on input line 505.
+Package pdftex.def Info: step7.PNG used on input line 514.
 (pdftex.def)             Requested size: 110.40253pt x 110.6318pt.
 
-<step8.PNG, id=673, 363.60844pt x 360.59718pt>
+<step8.PNG, id=664, 363.60844pt x 360.59718pt>
 File: step8.PNG Graphic file (type png)
  <use step8.PNG>
-Package pdftex.def Info: step8.PNG used on input line 511.
+Package pdftex.def Info: step8.PNG used on input line 520.
 (pdftex.def)             Requested size: 110.40253pt x 109.48952pt.
 
-<step9.png, id=674, 347.04657pt x 348.55219pt>
+<step9.png, id=665, 347.04657pt x 348.55219pt>
 File: step9.png Graphic file (type png)
  <use step9.png>
-Package pdftex.def Info: step9.png used on input line 517.
+Package pdftex.def Info: step9.png used on input line 526.
 (pdftex.def)             Requested size: 110.40253pt x 110.87947pt.
 
 
-LaTeX Warning: Reference `fig:step1lpf' on page 23 undefined on input line 529.
+LaTeX Warning: Reference `fig:step1lpf' on page 23 undefined on input line 538.
 
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 529--539
+Underfull \hbox (badness 10000) in paragraph at lines 538--548
 
  []
 
-[23 <./step1.png> <./step2.PNG> <./step3.PNG> <./step4.PNG> <./step5.PNG> <./st
-ep6.PNG> <./step7.PNG> <./step8.PNG> <./step9.png>] [24]
+[23 <./step1_dp.PNG> <./step2.PNG> <./step3.PNG> <./step4.PNG> <./step5.PNG> <.
+/step6.PNG> <./step7.PNG> <./step8.PNG> <./step9.png>] [24]
 
 LaTeX Warning: Reference `ficarra2005automated' on page 25 undefined on input l
-ine 557.
+ine 566.
 
 
 LaTeX Warning: Reference `ficarra2005automated' on page 25 undefined on input l
-ine 559.
+ine 568.
 
-[25] <original.png, id=705, 480.29437pt x 481.04718pt>
+[25] <original.png, id=696, 480.29437pt x 481.04718pt>
 File: original.png Graphic file (type png)
  <use original.png>
-Package pdftex.def Info: original.png used on input line 568.
+Package pdftex.def Info: original.png used on input line 577.
 (pdftex.def)             Requested size: 110.7447pt x 110.91745pt.
 
-<only_median.png, id=706, 482.55281pt x 482.55281pt>
+<only_median.png, id=697, 482.55281pt x 482.55281pt>
 File: only_median.png Graphic file (type png)
  <use only_median.png>
-Package pdftex.def Info: only_median.png used on input line 574.
+Package pdftex.def Info: only_median.png used on input line 583.
 (pdftex.def)             Requested size: 110.7447pt x 110.74182pt.
 
-<only_low.png, id=707, 481.8pt x 482.55281pt>
+<only_low.png, id=698, 481.8pt x 482.55281pt>
 File: only_low.png Graphic file (type png)
  <use only_low.png>
-Package pdftex.def Info: only_low.png used on input line 580.
+Package pdftex.def Info: only_low.png used on input line 589.
 (pdftex.def)             Requested size: 110.7447pt x 110.91118pt.
 File: original.png Graphic file (type png)
 
 <use original.png>
-Package pdftex.def Info: original.png used on input line 600.
+Package pdftex.def Info: original.png used on input line 609.
 (pdftex.def)             Requested size: 110.7447pt x 110.91745pt.
- <both_inverse_order.png, id=709, 481.04718pt x 481.04718pt>
+ <both_inverse_order.png, id=700, 481.04718pt x 481.04718pt>
 File: both_inverse_order.png Graphic file (type png)
 
 <use both_inverse_order.png>
-Package pdftex.def Info: both_inverse_order.png used on input line 606.
+Package pdftex.def Info: both_inverse_order.png used on input line 615.
 (pdftex.def)             Requested size: 110.7447pt x 110.74129pt.
 
-<both_right_order.png, id=710, 481.8pt x 481.04718pt>
+<both_right_order.png, id=701, 481.8pt x 481.04718pt>
 File: both_right_order.png Graphic file (type png)
 
 <use both_right_order.png>
-Package pdftex.def Info: both_right_order.png used on input line 612.
+Package pdftex.def Info: both_right_order.png used on input line 621.
 (pdftex.def)             Requested size: 110.7447pt x 110.56511pt.
  [26 <./original.png> <./only_median.png> <./only_low.png>]
-Underfull \hbox (badness 10000) in paragraph at lines 624--627
+Underfull \hbox (badness 10000) in paragraph at lines 633--636
 
  []
 
-<original_histo.png, id=722, 1445.4pt x 724.95844pt>
+<original_histo.png, id=713, 1445.4pt x 724.95844pt>
 File: original_histo.png Graphic file (type png)
  <use original_histo.png>
-Package pdftex.def Info: original_histo.png used on input line 631.
+Package pdftex.def Info: original_histo.png used on input line 640.
 (pdftex.def)             Requested size: 155.24895pt x 77.86513pt.
 
-<only_med_histo.png, id=723, 1445.4pt x 724.95844pt>
+<only_med_histo.png, id=714, 1445.4pt x 724.95844pt>
 File: only_med_histo.png Graphic file (type png)
  <use only_med_histo.png>
-Package pdftex.def Info: only_med_histo.png used on input line 637.
+Package pdftex.def Info: only_med_histo.png used on input line 646.
 (pdftex.def)             Requested size: 155.24895pt x 77.86513pt.
 
-<only_low_histo.png, id=724, 1445.4pt x 724.95844pt>
+<only_low_histo.png, id=715, 1445.4pt x 724.95844pt>
 File: only_low_histo.png Graphic file (type png)
  <use only_low_histo.png>
-Package pdftex.def Info: only_low_histo.png used on input line 643.
+Package pdftex.def Info: only_low_histo.png used on input line 652.
 (pdftex.def)             Requested size: 155.24895pt x 77.86513pt.
 
 [27 <./both_inverse_order.png> <./both_right_order.png>]
 File: original_histo.png Graphic file (type png)
 
 <use original_histo.png>
-Package pdftex.def Info: original_histo.png used on input line 663.
+Package pdftex.def Info: original_histo.png used on input line 672.
 (pdftex.def)             Requested size: 155.24895pt x 77.86513pt.
 
-<both_inverse_histo.png, id=735, 1445.4pt x 724.95844pt>
+<both_inverse_histo.png, id=726, 1445.4pt x 724.95844pt>
 File: both_inverse_histo.png Graphic file (type png)
 
 <use both_inverse_histo.png>
-Package pdftex.def Info: both_inverse_histo.png used on input line 669.
+Package pdftex.def Info: both_inverse_histo.png used on input line 678.
 (pdftex.def)             Requested size: 155.24895pt x 77.86513pt.
 
-<both_right_histo.png, id=736, 1445.4pt x 724.95844pt>
+<both_right_histo.png, id=727, 1445.4pt x 724.95844pt>
 File: both_right_histo.png Graphic file (type png)
 
 <use both_right_histo.png>
-Package pdftex.def Info: both_right_histo.png used on input line 675.
+Package pdftex.def Info: both_right_histo.png used on input line 684.
 (pdftex.def)             Requested size: 155.24895pt x 77.86513pt.
  [28 <./original_histo.png (PNG copy)> <./only_med_histo.png (PNG copy)> <./onl
 y_low_histo.png (PNG copy)>] [29 <./both_inverse_histo.png (PNG copy)> <./both_
 right_histo.png (PNG copy)>]
-<noise1.png, id=754, 578.16pt x 578.16pt>
+<noise1.png, id=747, 578.16pt x 578.16pt>
 File: noise1.png Graphic file (type png)
  <use noise1.png>
-Package pdftex.def Info: noise1.png used on input line 813.
+Package pdftex.def Info: noise1.png used on input line 823.
 (pdftex.def)             Requested size: 172.5pt x 172.49655pt.
 
-<noise2.png, id=755, 578.16pt x 578.16pt>
+<noise2.png, id=748, 578.16pt x 578.16pt>
 File: noise2.png Graphic file (type png)
  <use noise2.png>
-Package pdftex.def Info: noise2.png used on input line 819.
+Package pdftex.def Info: noise2.png used on input line 829.
 (pdftex.def)             Requested size: 172.5pt x 172.49655pt.
 
-Overfull \hbox (2.22221pt too wide) in paragraph at lines 812--823
+Overfull \hbox (2.22221pt too wide) in paragraph at lines 822--833
 []$[]$  $[]$ 
  []
 
-[30 <./noise1.png> <./noise2.png>]
-<histogramOriginal.png, id=767, 1204.5pt x 662.475pt>
+[30] <histogramOriginal.png, id=759, 1204.5pt x 662.475pt>
 File: histogramOriginal.png Graphic file (type png)
 
 <use histogramOriginal.png>
-Package pdftex.def Info: histogramOriginal.png used on input line 845.
+Package pdftex.def Info: histogramOriginal.png used on input line 855.
 (pdftex.def)             Requested size: 345.0pt x 189.74742pt.
- [31 <./histogramOriginal.png>]
-<noise21.png, id=778, 1284.8pt x 1284.8pt>
+ <noise21.png, id=761, 1284.8pt x 1284.8pt>
 File: noise21.png Graphic file (type png)
- <use noise21.png>
-Package pdftex.def Info: noise21.png used on input line 858.
-(pdftex.def)             Requested size: 172.5pt x 172.4995pt.
 
-<step21.png, id=779, 1284.8pt x 1284.8pt>
+<use noise21.png>
+Package pdftex.def Info: noise21.png used on input line 868.
+(pdftex.def)             Requested size: 172.5pt x 172.4995pt.
+ <step21.png, id=762, 1284.8pt x 1284.8pt>
 File: step21.png Graphic file (type png)
  <use step21.png>
-Package pdftex.def Info: step21.png used on input line 864.
+Package pdftex.def Info: step21.png used on input line 874.
 (pdftex.def)             Requested size: 172.5pt x 172.4995pt.
 
-Overfull \hbox (2.22221pt too wide) in paragraph at lines 857--868
+Overfull \hbox (2.22221pt too wide) in paragraph at lines 867--878
 []$[]$  $[]$ 
  []
 
-<Maske.png, id=781, 1284.8pt x 1284.8pt>
+[31 <./noise1.png> <./noise2.png>] <Maske.png, id=775, 1284.8pt x 1284.8pt>
 File: Maske.png Graphic file (type png)
- <use Maske.png>
-Package pdftex.def Info: Maske.png used on input line 876.
-(pdftex.def)             Requested size: 172.5pt x 172.4995pt.
 
-<filtered.png, id=782, 1284.8pt x 1284.8pt>
+<use Maske.png>
+Package pdftex.def Info: Maske.png used on input line 886.
+(pdftex.def)             Requested size: 172.5pt x 172.4995pt.
+ <filtered.png, id=776, 1284.8pt x 1284.8pt>
 File: filtered.png Graphic file (type png)
  <use filtered.png>
-Package pdftex.def Info: filtered.png used on input line 882.
+Package pdftex.def Info: filtered.png used on input line 892.
 (pdftex.def)             Requested size: 172.5pt x 172.4995pt.
 
-Overfull \hbox (2.22221pt too wide) in paragraph at lines 875--886
+Overfull \hbox (2.22221pt too wide) in paragraph at lines 885--896
 []$[]$  $[]$ 
  []
 
-<before.png, id=788, 1284.8pt x 1284.8pt>
+[32 <./histogramOriginal.png> <./noise21.png (PNG copy)> <./step21.png (PNG cop
+y)>] <before.png, id=789, 1284.8pt x 1284.8pt>
 File: before.png Graphic file (type png)
  <use before.png>
-Package pdftex.def Info: before.png used on input line 902.
+Package pdftex.def Info: before.png used on input line 912.
 (pdftex.def)             Requested size: 172.5pt x 172.4995pt.
 
-<after.png, id=789, 1284.8pt x 1284.8pt>
+<after.png, id=790, 1284.8pt x 1284.8pt>
 File: after.png Graphic file (type png)
  <use after.png>
-Package pdftex.def Info: after.png used on input line 908.
+Package pdftex.def Info: after.png used on input line 918.
 (pdftex.def)             Requested size: 172.5pt x 172.4995pt.
 
-Overfull \hbox (2.22221pt too wide) in paragraph at lines 901--912
+Overfull \hbox (2.22221pt too wide) in paragraph at lines 911--922
 []$[]$  $[]$ 
  []
 
-[32 <./noise21.png (PNG copy)> <./step21.png (PNG copy)>] [33 <./Maske.png (PNG
- copy)> <./filtered.png (PNG copy)> <./before.png> <./after.png>]
-<thresholds.png, id=806, 1204.5pt x 662.475pt>
+[33 <./Maske.png (PNG copy)> <./filtered.png (PNG copy)>]
+<thresholds.png, id=798, 1204.5pt x 662.475pt>
 File: thresholds.png Graphic file (type png)
  <use thresholds.png>
-Package pdftex.def Info: thresholds.png used on input line 936.
+Package pdftex.def Info: thresholds.png used on input line 946.
 (pdftex.def)             Requested size: 345.0pt x 189.74742pt.
 
-<noise2before.png, id=809, 1284.8pt x 1284.8pt>
+<noise2before.png, id=801, 1284.8pt x 1284.8pt>
 File: noise2before.png Graphic file (type png)
  <use noise2before.png>
-Package pdftex.def Info: noise2before.png used on input line 947.
+Package pdftex.def Info: noise2before.png used on input line 957.
 (pdftex.def)             Requested size: 172.5pt x 172.4995pt.
 
-<noise2after.png, id=810, 1284.8pt x 1284.8pt>
+<noise2after.png, id=802, 1284.8pt x 1284.8pt>
 File: noise2after.png Graphic file (type png)
  <use noise2after.png>
-Package pdftex.def Info: noise2after.png used on input line 953.
+Package pdftex.def Info: noise2after.png used on input line 963.
 (pdftex.def)             Requested size: 172.5pt x 172.4995pt.
 
-Overfull \hbox (2.22221pt too wide) in paragraph at lines 946--957
+Overfull \hbox (2.22221pt too wide) in paragraph at lines 956--967
 []$[]$  $[]$ 
  []
 
-[34 <./thresholds.png>] (./houghTransfom1.pdf_tex
-<houghTransfom1.pdf, id=819, page=1, 214.11156pt x 101.43758pt>
+[34 <./before.png> <./after.png>] [35 <./thresholds.png> <./noise2before.png> <
+./noise2after.png>] (./houghTransfom1.pdf_tex
+<houghTransfom1.pdf, id=820, page=1, 214.11156pt x 101.43758pt>
 File: houghTransfom1.pdf Graphic file (type pdf)
 
 <use houghTransfom1.pdf, page 1>
 Package pdftex.def Info: houghTransfom1.pdf, page1 used on input line 52.
 (pdftex.def)             Requested size: 327.74895pt x 155.28564pt.
 
-<houghTransfom1.pdf, id=820, page=2, 214.11156pt x 101.43758pt>
+<houghTransfom1.pdf, id=821, page=2, 214.11156pt x 101.43758pt>
 File: houghTransfom1.pdf Graphic file (type pdf)
 
 <use houghTransfom1.pdf, page 2>
 Package pdftex.def Info: houghTransfom1.pdf, page2 used on input line 54.
 (pdftex.def)             Requested size: 327.74895pt x 155.28564pt.
 
-<houghTransfom1.pdf, id=821, page=3, 214.11156pt x 101.43758pt>
+<houghTransfom1.pdf, id=822, page=3, 214.11156pt x 101.43758pt>
 File: houghTransfom1.pdf Graphic file (type pdf)
 
 <use houghTransfom1.pdf, page 3>
 Package pdftex.def Info: houghTransfom1.pdf, page3 used on input line 56.
 (pdftex.def)             Requested size: 327.74895pt x 155.28564pt.
 
-<houghTransfom1.pdf, id=822, page=4, 214.11156pt x 101.43758pt>
+<houghTransfom1.pdf, id=823, page=4, 214.11156pt x 101.43758pt>
 File: houghTransfom1.pdf Graphic file (type pdf)
 
 <use houghTransfom1.pdf, page 4>
 Package pdftex.def Info: houghTransfom1.pdf, page4 used on input line 63.
 (pdftex.def)             Requested size: 327.74895pt x 155.28564pt.
 ) (./houghTransfom2.pdf_tex
-<houghTransfom2.pdf, id=824, page=1, 213.71007pt x 101.43758pt>
+<houghTransfom2.pdf, id=825, page=1, 213.71007pt x 101.43758pt>
 File: houghTransfom2.pdf Graphic file (type pdf)
 
 <use houghTransfom2.pdf, page 1>
 Package pdftex.def Info: houghTransfom2.pdf, page1 used on input line 54.
 (pdftex.def)             Requested size: 327.74895pt x 155.58127pt.
 
-<houghTransfom2.pdf, id=825, page=2, 213.71007pt x 101.43758pt>
+<houghTransfom2.pdf, id=826, page=2, 213.71007pt x 101.43758pt>
 File: houghTransfom2.pdf Graphic file (type pdf)
 
 <use houghTransfom2.pdf, page 2>
 Package pdftex.def Info: houghTransfom2.pdf, page2 used on input line 60.
 (pdftex.def)             Requested size: 327.74895pt x 155.58127pt.
-) [35 <./noise2before.png> <./noise2after.png>] (./houghTransfom3.pdf_tex
-<houghTransfom3.pdf, id=836, page=1, 215.06953pt x 92.10658pt>
+) (./houghTransfom3.pdf_tex
+<houghTransfom3.pdf, id=828, page=1, 215.06953pt x 92.10658pt>
 File: houghTransfom3.pdf Graphic file (type pdf)
 
 <use houghTransfom3.pdf, page 1>
 Package pdftex.def Info: houghTransfom3.pdf, page1 used on input line 52.
 (pdftex.def)             Requested size: 327.74895pt x 140.36603pt.
 
-<houghTransfom3.pdf, id=837, page=2, 215.06953pt x 92.10658pt>
+<houghTransfom3.pdf, id=829, page=2, 215.06953pt x 92.10658pt>
 File: houghTransfom3.pdf Graphic file (type pdf)
 
 <use houghTransfom3.pdf, page 2>
@@ -1644,257 +1661,406 @@ ultiple pdfs with page group included in a single page
 
 pdfTeX warning: /usr/bin/pdflatex (file ./houghTransfom1.pdf): PDF inclusion: m
 ultiple pdfs with page group included in a single page
-> <./houghTransfom2.pdf
-
-pdfTeX warning: /usr/bin/pdflatex (file ./houghTransfom2.pdf): PDF inclusion: m
-ultiple pdfs with page group included in a single page
-> <./houghTransfom2.pdf
-
-pdfTeX warning: /usr/bin/pdflatex (file ./houghTransfom2.pdf): PDF inclusion: m
-ultiple pdfs with page group included in a single page
->] <findNukleii_rawCloseAn.png, id=1087, 593.21625pt x 574.145pt>
+>] <findNukleii_rawCloseAn.png, id=961, 593.21625pt x 574.145pt>
 File: findNukleii_rawCloseAn.png Graphic file (type png)
 
 <use findNukleii_rawCloseAn.png>
-Package pdftex.def Info: findNukleii_rawCloseAn.png used on input line 1016.
+Package pdftex.def Info: findNukleii_rawCloseAn.png used on input line 1026.
 (pdftex.def)             Requested size: 172.5pt x 166.95334pt.
 
-<findNukleii1_rawCloseAn.png, id=1088, 593.21625pt x 574.145pt>
+<findNukleii1_rawCloseAn.png, id=962, 593.21625pt x 574.145pt>
 File: findNukleii1_rawCloseAn.png Graphic file (type png)
 
 <use findNukleii1_rawCloseAn.png>
-Package pdftex.def Info: findNukleii1_rawCloseAn.png used on input line 1017.
+Package pdftex.def Info: findNukleii1_rawCloseAn.png used on input line 1027.
 (pdftex.def)             Requested size: 172.5pt x 166.95334pt.
 
-Overfull \hbox (2.22221pt too wide) in paragraph at lines 1016--1018
+Overfull \hbox (2.22221pt too wide) in paragraph at lines 1026--1028
 [][] [] 
  []
 
-[37 <./houghTransfom3.pdf> <./houghTransfom3.pdf
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+[37 <./houghTransfom2.pdf> <./houghTransfom2.pdf
+
+pdfTeX warning: /usr/bin/pdflatex (file ./houghTransfom2.pdf): PDF inclusion: m
+ultiple pdfs with page group included in a single page
+> <./houghTransfom3.pdf
 
 pdfTeX warning: /usr/bin/pdflatex (file ./houghTransfom3.pdf): PDF inclusion: m
 ultiple pdfs with page group included in a single page
-> <./findNukleii_rawCloseAn.png> <./findNukleii1_rawCloseAn.png>] [38]
-<bin.png, id=1126, 518.1759pt x 518.1759pt>
+> <./houghTransfom3.pdf
+
+pdfTeX warning: /usr/bin/pdflatex (file ./houghTransfom3.pdf): PDF inclusion: m
+ultiple pdfs with page group included in a single page
+>] [38 <./findNukleii_rawCloseAn.png> <./findNukleii1_rawCloseAn.png>] [39]
+<bin.png, id=1124, 518.1759pt x 518.1759pt>
 File: bin.png Graphic file (type png)
  <use bin.png>
-Package pdftex.def Info: bin.png used on input line 1092.
+Package pdftex.def Info: bin.png used on input line 1102.
 (pdftex.def)             Requested size: 169.0519pt x 169.04561pt.
 
-<thinned.png, id=1127, 518.1759pt x 518.1759pt>
+<thinned.png, id=1125, 518.1759pt x 518.1759pt>
 File: thinned.png Graphic file (type png)
  <use thinned.png>
-Package pdftex.def Info: thinned.png used on input line 1093.
+Package pdftex.def Info: thinned.png used on input line 1103.
 (pdftex.def)             Requested size: 169.0519pt x 169.04561pt.
- [39]
-<thinnedHilditch.png, id=1140, 461.47406pt x 461.47406pt>
+ [40 <./bin.png (PNG copy)> <./thinned.png (PNG copy)>]
+<thinnedHilditch.png, id=1138, 461.47406pt x 461.47406pt>
 File: thinnedHilditch.png Graphic file (type png)
 
 <use thinnedHilditch.png>
-Package pdftex.def Info: thinnedHilditch.png used on input line 1130.
+Package pdftex.def Info: thinnedHilditch.png used on input line 1140.
 (pdftex.def)             Requested size: 137.9979pt x 137.99261pt.
 
-<thinnedZhangSuen.png, id=1141, 461.47406pt x 461.47406pt>
+<thinnedZhangSuen.png, id=1139, 461.47406pt x 461.47406pt>
 File: thinnedZhangSuen.png Graphic file (type png)
 
 <use thinnedZhangSuen.png>
-Package pdftex.def Info: thinnedZhangSuen.png used on input line 1131.
+Package pdftex.def Info: thinnedZhangSuen.png used on input line 1141.
 (pdftex.def)             Requested size: 137.9979pt x 137.99261pt.
- [40 <./bin.png (PNG copy)> <./thinned.png (PNG copy)>] [41 <./thinnedHilditch.
-png (PNG copy)> <./thinnedZhangSuen.png>]
-<dna_with_loop.png, id=1157, 443.6575pt x 431.6125pt>
-File: dna_with_loop.png Graphic file (type png)
- <use dna_with_loop.png>
-Package pdftex.def Info: dna_with_loop.png used on input line 1160.
-(pdftex.def)             Requested size: 68.99895pt x 67.12315pt.
-
-Underfull \hbox (badness 10000) in paragraph at lines 1157--1165
+ [41 <./thinnedHilditch.png (PNG copy)> <./thinnedZhangSuen.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 1149--1150
 
  []
 
-<small_DNA_obj.png, id=1159, 431.6125pt x 302.12875pt>
+
+Underfull \hbox (badness 10000) in paragraph at lines 1152--1153
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1155--1156
+
+ []
+
+<Lpoint.png, id=1150, 285.31593pt x 283.81032pt>
+File: Lpoint.png Graphic file (type png)
+ <use Lpoint.png>
+Package pdftex.def Info: Lpoint.png used on input line 1166.
+(pdftex.def)             Requested size: 124.20021pt x 123.54309pt.
+
+<Lpoint_mask.png, id=1151, 285.31593pt x 283.81032pt>
+File: Lpoint_mask.png Graphic file (type png)
+ <use Lpoint_mask.png>
+Package pdftex.def Info: Lpoint_mask.png used on input line 1172.
+(pdftex.def)             Requested size: 124.20021pt x 123.54309pt.
+
+[42] <praes2.png, id=1158, 84.315pt x 44.165pt>
+File: praes2.png Graphic file (type png)
+ <use praes2.png>
+Package pdftex.def Info: praes2.png used on input line 1188.
+(pdftex.def)             Requested size: 120.7521pt x 63.25247pt.
+
+<rect4833.png, id=1159, 76.285pt x 40.15pt>
+File: rect4833.png Graphic file (type png)
+ <use rect4833.png>
+Package pdftex.def Info: rect4833.png used on input line 1194.
+(pdftex.def)             Requested size: 120.7521pt x 63.55635pt.
+ [43 <./Lpoint.png> <./Lpoint_mask.png> <./praes2.png> <./rect4833.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 1211--1216
+
+ []
+
+[44] <neighborhood.PNG, id=1185, 163.3603pt x 94.10156pt>
+File: neighborhood.PNG Graphic file (type png)
+
+<use neighborhood.PNG>
+Package pdftex.def Info: neighborhood.PNG used on input line 1220.
+(pdftex.def)             Requested size: 103.50105pt x 59.62027pt.
+ <example.PNG, id=1186, 94.10156pt x 48.93282pt>
+File: example.PNG Graphic file (type png)
+
+<use example.PNG>
+Package pdftex.def Info: example.PNG used on input line 1226.
+(pdftex.def)             Requested size: 103.50105pt x 53.82474pt.
+ <example_idlist.PNG, id=1187, 31.61812pt x 51.19125pt>
+File: example_idlist.PNG Graphic file (type png)
+
+<use example_idlist.PNG>
+Package pdftex.def Info: example_idlist.PNG used on input line 1232.
+(pdftex.def)             Requested size: 34.5021pt x 55.86139pt.
+ <example_adj.PNG, id=1188, 105.39375pt x 47.42719pt>
+File: example_adj.PNG Graphic file (type png)
+
+<use example_adj.PNG>
+Package pdftex.def Info: example_adj.PNG used on input line 1238.
+(pdftex.def)             Requested size: 113.85063pt x 51.23361pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 1254--1255
+
+ []
+
+[45 <./neighborhood.PNG> <./example.PNG> <./example_idlist.PNG> <./example_adj.
+PNG>] <remove1.png, id=1200, 30.1125pt x 30.1125pt>
+File: remove1.png Graphic file (type png)
+ <use remove1.png>
+Package pdftex.def Info: remove1.png used on input line 1259.
+(pdftex.def)             Requested size: 110.40253pt x 110.41324pt.
+
+<remove2.png, id=1201, 30.1125pt x 30.1125pt>
+File: remove2.png Graphic file (type png)
+ <use remove2.png>
+Package pdftex.def Info: remove2.png used on input line 1264.
+(pdftex.def)             Requested size: 110.40253pt x 110.41324pt.
+
+<remove3.png, id=1202, 30.1125pt x 30.1125pt>
+File: remove3.png Graphic file (type png)
+ <use remove3.png>
+Package pdftex.def Info: remove3.png used on input line 1269.
+(pdftex.def)             Requested size: 110.40253pt x 110.41324pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 1278--1283
+
+ []
+
+[46 <./remove1.png> <./remove2.png> <./remove3.png>]
+<critical1.png, id=1213, 30.1125pt x 30.1125pt>
+File: critical1.png Graphic file (type png)
+ <use critical1.png>
+Package pdftex.def Info: critical1.png used on input line 1287.
+(pdftex.def)             Requested size: 110.40253pt x 110.41324pt.
+
+<critical2.png, id=1214, 30.1125pt x 30.1125pt>
+File: critical2.png Graphic file (type png)
+ <use critical2.png>
+Package pdftex.def Info: critical2.png used on input line 1292.
+(pdftex.def)             Requested size: 110.40253pt x 110.41324pt.
+
+<critical3.png, id=1215, 30.1125pt x 30.1125pt>
+File: critical3.png Graphic file (type png)
+ <use critical3.png>
+Package pdftex.def Info: critical3.png used on input line 1297.
+(pdftex.def)             Requested size: 110.40253pt x 110.41324pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 1306--1317
+
+ []
+
+[47 <./critical1.png> <./critical2.png> <./critical3.png (PNG copy)>]
+Underfull \hbox (badness 10000) in paragraph at lines 1318--1320
+
+ []
+
+<ghostbusters1.png, id=1231, 302.5704pt x 273.6624pt>
+File: ghostbusters1.png Graphic file (type png)
+ <use ghostbusters1.png>
+Package pdftex.def Info: ghostbusters1.png used on input line 1331.
+(pdftex.def)             Requested size: 117.29874pt x 106.09319pt.
+
+<ghostbusters2.png, id=1232, 302.5704pt x 273.6624pt>
+File: ghostbusters2.png Graphic file (type png)
+ <use ghostbusters2.png>
+Package pdftex.def Info: ghostbusters2.png used on input line 1337.
+(pdftex.def)             Requested size: 117.29874pt x 106.09319pt.
+
+[48 <./ghostbusters1.png (PNG copy)> <./ghostbusters2.png (PNG copy)>]
+<preprocessed.png, id=1239, 300.1614pt x 271.2534pt>
+File: preprocessed.png Graphic file (type png)
+ <use preprocessed.png>
+Package pdftex.def Info: preprocessed.png used on input line 1350.
+(pdftex.def)             Requested size: 110.40253pt x 99.77031pt.
+
+<processed.png, id=1240, 302.5704pt x 273.6624pt>
+File: processed.png Graphic file (type png)
+ <use processed.png>
+Package pdftex.def Info: processed.png used on input line 1356.
+(pdftex.def)             Requested size: 110.40253pt x 99.85461pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 1365--1374
+
+ []
+
+[49 <./preprocessed.png> <./processed.png>]
+<dna_with_loop.png, id=1250, 443.6575pt x 431.6125pt>
+File: dna_with_loop.png Graphic file (type png)
+ <use dna_with_loop.png>
+Package pdftex.def Info: dna_with_loop.png used on input line 1392.
+(pdftex.def)             Requested size: 68.99895pt x 67.12315pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 1389--1397
+
+ []
+
+[50 <./dna_with_loop.png>]
+<small_DNA_obj.png, id=1261, 431.6125pt x 302.12875pt>
 File: small_DNA_obj.png Graphic file (type png)
  <use small_DNA_obj.png>
-Package pdftex.def Info: small_DNA_obj.png used on input line 1169.
+Package pdftex.def Info: small_DNA_obj.png used on input line 1403.
 (pdftex.def)             Requested size: 86.25pt x 60.37396pt.
 
-<small_DNA_obj_adj_matrix.png, id=1160, 603.25375pt x 420.57124pt>
+<small_DNA_obj_adj_matrix.png, id=1262, 603.25375pt x 420.57124pt>
 File: small_DNA_obj_adj_matrix.png Graphic file (type png)
 
 <use small_DNA_obj_adj_matrix.png>
-Package pdftex.def Info: small_DNA_obj_adj_matrix.png used on input line 1174.
+Package pdftex.def Info: small_DNA_obj_adj_matrix.png used on input line 1408.
 (pdftex.def)             Requested size: 86.25pt x 60.13095pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 1175--1175
+Underfull \hbox (badness 10000) in paragraph at lines 1409--1409
 []\OT1/cmr/bx/n/9 (b) |\OT1/cmr/m/n/9 Cor-re-spond-ing
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1175--1175
+Underfull \hbox (badness 10000) in paragraph at lines 1409--1409
 \OT1/cmr/m/n/9 up-per tri-an-gu-lar
  []
 
-<small_DNA_obj_graph.png, id=1161, 207.77625pt x 229.85875pt>
+<small_DNA_obj_graph.png, id=1263, 207.77625pt x 229.85875pt>
 File: small_DNA_obj_graph.png Graphic file (type png)
 
 <use small_DNA_obj_graph.png>
-Package pdftex.def Info: small_DNA_obj_graph.png used on input line 1179.
+Package pdftex.def Info: small_DNA_obj_graph.png used on input line 1413.
 (pdftex.def)             Requested size: 86.25pt x 95.41765pt.
 
-<small_DNA_graph_bfs1.png, id=1164, 206.7725pt x 229.85875pt>
+<small_DNA_graph_bfs1.png, id=1266, 206.7725pt x 229.85875pt>
 File: small_DNA_graph_bfs1.png Graphic file (type png)
 
 <use small_DNA_graph_bfs1.png>
-Package pdftex.def Info: small_DNA_graph_bfs1.png used on input line 1192.
+Package pdftex.def Info: small_DNA_graph_bfs1.png used on input line 1426.
 (pdftex.def)             Requested size: 75.90042pt x 84.37648pt.
 
-<small_DNA_obj_bfs1.png, id=1165, 431.6125pt x 300.12125pt>
+<small_DNA_obj_bfs1.png, id=1267, 431.6125pt x 300.12125pt>
 File: small_DNA_obj_bfs1.png Graphic file (type png)
 
 <use small_DNA_obj_bfs1.png>
-Package pdftex.def Info: small_DNA_obj_bfs1.png used on input line 1196.
+Package pdftex.def Info: small_DNA_obj_bfs1.png used on input line 1430.
 (pdftex.def)             Requested size: 75.90042pt x 52.77386pt.
 
-<small_DNA_graph_bfs2.png, id=1166, 206.7725pt x 229.85875pt>
+<small_DNA_graph_bfs2.png, id=1268, 206.7725pt x 229.85875pt>
 File: small_DNA_graph_bfs2.png Graphic file (type png)
 
 <use small_DNA_graph_bfs2.png>
-Package pdftex.def Info: small_DNA_graph_bfs2.png used on input line 1201.
+Package pdftex.def Info: small_DNA_graph_bfs2.png used on input line 1435.
 (pdftex.def)             Requested size: 75.90042pt x 84.37648pt.
 
-<small_DNA_obj_bfs2.png, id=1167, 427.5975pt x 300.12125pt>
+<small_DNA_obj_bfs2.png, id=1269, 427.5975pt x 300.12125pt>
 File: small_DNA_obj_bfs2.png Graphic file (type png)
 
 <use small_DNA_obj_bfs2.png>
-Package pdftex.def Info: small_DNA_obj_bfs2.png used on input line 1205.
+Package pdftex.def Info: small_DNA_obj_bfs2.png used on input line 1439.
 (pdftex.def)             Requested size: 75.90042pt x 53.27303pt.
 
-<small_DNA_graph_ssp.png, id=1168, 206.7725pt x 229.85875pt>
+<small_DNA_graph_ssp.png, id=1270, 206.7725pt x 229.85875pt>
 File: small_DNA_graph_ssp.png Graphic file (type png)
 
 <use small_DNA_graph_ssp.png>
-Package pdftex.def Info: small_DNA_graph_ssp.png used on input line 1210.
+Package pdftex.def Info: small_DNA_graph_ssp.png used on input line 1444.
 (pdftex.def)             Requested size: 75.90042pt x 84.37648pt.
 
-<small_DNA_obj_ssp.png, id=1169, 428.60126pt x 300.12125pt>
+<small_DNA_obj_ssp.png, id=1271, 428.60126pt x 300.12125pt>
 File: small_DNA_obj_ssp.png Graphic file (type png)
 
 <use small_DNA_obj_ssp.png>
-Package pdftex.def Info: small_DNA_obj_ssp.png used on input line 1214.
+Package pdftex.def Info: small_DNA_obj_ssp.png used on input line 1448.
 (pdftex.def)             Requested size: 75.90042pt x 53.1448pt.
 
-<small_DNA_real_bfs.png, id=1170, 602.25pt x 603.25375pt>
+<small_DNA_real_bfs.png, id=1272, 602.25pt x 603.25375pt>
 File: small_DNA_real_bfs.png Graphic file (type png)
 
 <use small_DNA_real_bfs.png>
-Package pdftex.def Info: small_DNA_real_bfs.png used on input line 1219.
+Package pdftex.def Info: small_DNA_real_bfs.png used on input line 1453.
 (pdftex.def)             Requested size: 75.90042pt x 76.02325pt.
 
-<small_DNA_real_ssp.png, id=1171, 426.59375pt x 390.45876pt>
+<small_DNA_real_ssp.png, id=1273, 426.59375pt x 390.45876pt>
 File: small_DNA_real_ssp.png Graphic file (type png)
 
 <use small_DNA_real_ssp.png>
-Package pdftex.def Info: small_DNA_real_ssp.png used on input line 1223.
+Package pdftex.def Info: small_DNA_real_ssp.png used on input line 1457.
 (pdftex.def)             Requested size: 75.90042pt x 69.46925pt.
- [42 <./dna_with_loop.png>] [43 <./small_DNA_obj.png> <./small_DNA_obj_adj_matr
-ix.png> <./small_DNA_obj_graph.png (PNG copy)>]
-[44 <./small_DNA_graph_bfs1.png (PNG copy)> <./small_DNA_obj_bfs1.png> <./small
-_DNA_graph_bfs2.png (PNG copy)> <./small_DNA_obj_bfs2.png> <./small_DNA_graph_s
-sp.png (PNG copy)> <./small_DNA_obj_ssp.png> <./small_DNA_real_bfs.png> <./smal
-l_DNA_real_ssp.png>] <thin_DNA_1.png, id=1195, 516.93124pt x 360.34625pt>
+ [51 <./small_DNA_obj.png> <./small_DNA_obj_adj_matrix.png> <./small_DNA_obj_gr
+aph.png (PNG copy)>] [52 <./small_DNA_graph_bfs1.png (PNG copy)> <./small_DNA_o
+bj_bfs1.png> <./small_DNA_graph_bfs2.png (PNG copy)> <./small_DNA_obj_bfs2.png>
+ <./small_DNA_graph_ssp.png (PNG copy)> <./small_DNA_obj_ssp.png> <./small_DNA_
+real_bfs.png> <./small_DNA_real_ssp.png>]
+<thin_DNA_1.png, id=1293, 516.93124pt x 360.34625pt>
 File: thin_DNA_1.png Graphic file (type png)
-
-<use thin_DNA_1.png>
-Package pdftex.def Info: thin_DNA_1.png used on input line 1248.
+ <use thin_DNA_1.png>
+Package pdftex.def Info: thin_DNA_1.png used on input line 1480.
 (pdftex.def)             Requested size: 86.25pt x 60.11987pt.
- <thick_DNA_1.png, id=1196, 516.93124pt x 360.34625pt>
+
+<thick_DNA_1.png, id=1294, 516.93124pt x 360.34625pt>
 File: thick_DNA_1.png Graphic file (type png)
-
-<use thick_DNA_1.png>
-Package pdftex.def Info: thick_DNA_1.png used on input line 1252.
+ <use thick_DNA_1.png>
+Package pdftex.def Info: thick_DNA_1.png used on input line 1484.
 (pdftex.def)             Requested size: 86.25pt x 60.11987pt.
- <thin_DNA_2.png, id=1197, 518.93875pt x 360.34625pt>
+
+<thin_DNA_2.png, id=1295, 518.93875pt x 360.34625pt>
 File: thin_DNA_2.png Graphic file (type png)
-
-<use thin_DNA_2.png>
-Package pdftex.def Info: thin_DNA_2.png used on input line 1257.
+ <use thin_DNA_2.png>
+Package pdftex.def Info: thin_DNA_2.png used on input line 1489.
 (pdftex.def)             Requested size: 86.25pt x 59.88893pt.
- <thick_DNA_2.png, id=1198, 516.93124pt x 361.35pt>
+
+<thick_DNA_2.png, id=1296, 516.93124pt x 361.35pt>
 File: thick_DNA_2.png Graphic file (type png)
-
-<use thick_DNA_2.png>
-Package pdftex.def Info: thick_DNA_2.png used on input line 1261.
+ <use thick_DNA_2.png>
+Package pdftex.def Info: thick_DNA_2.png used on input line 1493.
 (pdftex.def)             Requested size: 86.25pt x 60.28734pt.
- <thin_DNA_4.png, id=1199, 518.93875pt x 361.35pt>
+
+<thin_DNA_4.png, id=1297, 518.93875pt x 361.35pt>
 File: thin_DNA_4.png Graphic file (type png)
-
-<use thin_DNA_4.png>
-Package pdftex.def Info: thin_DNA_4.png used on input line 1266.
+ <use thin_DNA_4.png>
+Package pdftex.def Info: thin_DNA_4.png used on input line 1498.
 (pdftex.def)             Requested size: 86.25pt x 60.05576pt.
- <thick_DNA_4.png, id=1200, 518.93875pt x 360.34625pt>
-File: thick_DNA_4.png Graphic file (type png)
 
-<use thick_DNA_4.png>
-Package pdftex.def Info: thick_DNA_4.png used on input line 1270.
+<thick_DNA_4.png, id=1298, 518.93875pt x 360.34625pt>
+File: thick_DNA_4.png Graphic file (type png)
+ <use thick_DNA_4.png>
+Package pdftex.def Info: thick_DNA_4.png used on input line 1502.
 (pdftex.def)             Requested size: 86.25pt x 59.88893pt.
 
-<thick_thin_before_recovery.png, id=1201, 554.07pt x 505.89pt>
+<thick_thin_before_recovery.png, id=1299, 554.07pt x 505.89pt>
 File: thick_thin_before_recovery.png Graphic file (type png)
 
 <use thick_thin_before_recovery.png>
-Package pdftex.def Info: thick_thin_before_recovery.png used on input line 1275
+Package pdftex.def Info: thick_thin_before_recovery.png used on input line 1507
 .
 (pdftex.def)             Requested size: 68.99895pt x 62.9968pt.
 
-<thin_after_recovery.png, id=1202, 554.07pt x 504.88625pt>
+<thin_after_recovery.png, id=1300, 554.07pt x 504.88625pt>
 File: thin_after_recovery.png Graphic file (type png)
 
 <use thin_after_recovery.png>
-Package pdftex.def Info: thin_after_recovery.png used on input line 1279.
+Package pdftex.def Info: thin_after_recovery.png used on input line 1511.
 (pdftex.def)             Requested size: 68.99895pt x 62.8718pt.
- [45 <./thin_DNA_1.png> <./thick_DNA_1.png> <./thin_DNA_2.png> <./thick_DNA_2.p
-ng> <./thin_DNA_4.png> <./thick_DNA_4.png> <./thick_thin_before_recovery.png> <
-./thin_after_recovery.png>]
-<length_calc_two_arms.png, id=1213, 635.37375pt x 250.9375pt>
+
+<length_calc_two_arms.png, id=1306, 635.37375pt x 250.9375pt>
 File: length_calc_two_arms.png Graphic file (type png)
 
 <use length_calc_two_arms.png>
-Package pdftex.def Info: length_calc_two_arms.png used on input line 1297.
+Package pdftex.def Info: length_calc_two_arms.png used on input line 1529.
 (pdftex.def)             Requested size: 172.5pt x 68.12926pt.
-
-
-LaTeX Warning: Reference `fig:length_calc_two_arms' on page 46 undefined on inp
-ut line 1302.
-
-[46 <./length_calc_two_arms.png>]
-<angle_endstrand.png, id=1221, 200.24812pt x 200.24812pt>
+ [53] [54 <./thin_DNA_1.png> <./thick_DNA_1.png> <./thin_DNA_2.png> <./thick_DN
+A_2.png> <./thin_DNA_4.png> <./thick_DNA_4.png> <./thick_thin_before_recovery.p
+ng> <./thin_after_recovery.png> <./length_calc_two_arms.png>] <angle_endstrand.
+png, id=1321, 200.24812pt x 200.24812pt>
 File: angle_endstrand.png Graphic file (type png)
 
 <use angle_endstrand.png>
-Package pdftex.def Info: angle_endstrand.png used on input line 1308.
+Package pdftex.def Info: angle_endstrand.png used on input line 1540.
 (pdftex.def)             Requested size: 169.0519pt x 169.06282pt.
- <angle_two.png, id=1222, 205.5178pt x 205.5178pt>
+ <angle_two.png, id=1322, 205.5178pt x 205.5178pt>
 File: angle_two.png Graphic file (type png)
 
 <use angle_two.png>
-Package pdftex.def Info: angle_two.png used on input line 1309.
+Package pdftex.def Info: angle_two.png used on input line 1541.
 (pdftex.def)             Requested size: 169.0519pt x 169.05252pt.
- [47 <./angle_endstrand.png (PNG copy)> <./angle_two.png (PNG copy)>] (./angle_
+ [55 <./angle_endstrand.png (PNG copy)> <./angle_two.png (PNG copy)>] (./angle_
 1.pdf_tex
-<angle_1.pdf, id=1230, page=1, 170.88844pt x 186.6975pt>
+<angle_1.pdf, id=1330, page=1, 170.88844pt x 186.6975pt>
 File: angle_1.pdf Graphic file (type pdf)
 
 <use angle_1.pdf, page 1>
 Package pdftex.def Info: angle_1.pdf, page1 used on input line 52.
 (pdftex.def)             Requested size: 172.5pt x 188.47182pt.
-) [48 <./angle_1.pdf>] (./angle_2.pdf_tex
-<angle_2.pdf, id=1255, page=1, 170.88844pt x 186.6975pt>
+) [56 <./angle_1.pdf>] (./angle_2.pdf_tex
+<angle_2.pdf, id=1354, page=1, 170.88844pt x 186.6975pt>
 File: angle_2.pdf Graphic file (type pdf)
 
 <use angle_2.pdf, page 1>
 Package pdftex.def Info: angle_2.pdf, page1 used on input line 52.
 (pdftex.def)             Requested size: 172.5pt x 188.47182pt.
-) [49 <./angle_2.pdf>] [50] (./report.bbl
+) [57 <./angle_2.pdf>] [58] (./report.bbl
 Underfull \hbox (badness 10000) in paragraph at lines 34--38
 []\OT1/cmr/m/n/10 Bruker cor-po-ra-tion: Bio dy-nam-ics with atomic force
  []
@@ -1933,38 +2099,38 @@ Underfull \hbox (badness 10000) in paragraph at lines 40--45
 cmr/m/n/10 .  Ac-cessed:
  []
 
-[51]
+[59]
 Underfull \hbox (badness 1383) in paragraph at lines 149--154
 []\OT1/cmr/m/n/10 N Kour-mouli, P Jeppe-sen, S Ma-hade-vha-iah, P Bur-goyne, R 
 Wu,
  []
 
-[52] [53] [54]
-Underfull \hbox (badness 10000) in paragraph at lines 367--372
+[60] [61] [62]
+Underfull \hbox (badness 10000) in paragraph at lines 371--376
 []\OT1/cmr/m/n/10 J Linbo.  Im-ple-men-ta-tion of zhang-suen thin-ning al-go-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 367--372
+Underfull \hbox (badness 10000) in paragraph at lines 371--376
 \OT1/cmr/m/n/10 rithm for skele-toniza-tion.  []$\OT1/cmtt/m/n/10 https : / / g
 ithub . com / linbojin /
  []
 
 
-Underfull \hbox (badness 5622) in paragraph at lines 374--380
+Underfull \hbox (badness 5622) in paragraph at lines 378--384
 []\OT1/cmr/m/n/10 AR Widiarti.  Com-par-ing hilditch, rosen-feld, zhang-suen, a
 nd
  []
 
-[55]) [56]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1369.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 1369.
+[63]) [64]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1601.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 1601.
  (./report.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1369.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1369.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1601.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1601.
 
 Package rerunfilecheck Info: File `report.out' has not changed.
-(rerunfilecheck)             Checksum: 92DB878A682C15D9D594C22A61F2D30E;4355.
+(rerunfilecheck)             Checksum: 6E0C998A73C6CA4FAFAB7D0BCC4C4A82;4202.
 
 
 LaTeX Warning: There were undefined references.
@@ -1972,13 +2138,13 @@ LaTeX Warning: There were undefined references.
 
 LaTeX Warning: There were multiply-defined labels.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 1369.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 1601.
  ) 
 Here is how much of TeX's memory you used:
- 28775 strings out of 493054
- 654698 string characters out of 6140585
- 843293 words of memory out of 5000000
- 31495 multiletter control sequences out of 15000+600000
+ 29199 strings out of 493054
+ 660975 string characters out of 6140585
+ 843345 words of memory out of 5000000
+ 31878 multiletter control sequences out of 15000+600000
  13404 words of font info for 48 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  62i,16n,77p,1754b,609s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -2002,10 +2168,10 @@ msfonts/cm/cmsy5.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy
 6.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/sha
 re/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/share/texmf-dist/
 fonts/type1/public/amsfonts/cm/cmtt10.pfb>
-Output written on report.pdf (57 pages, 10398027 bytes).
+Output written on report.pdf (65 pages, 10466857 bytes).
 PDF statistics:
- 1450 PDF objects out of 1728 (max. 8388607)
- 1111 compressed objects within 12 object streams
- 236 named destinations out of 1000 (max. 500000)
- 902 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 1552 PDF objects out of 1728 (max. 8388607)
+ 1174 compressed objects within 12 object streams
+ 255 named destinations out of 1000 (max. 500000)
+ 976 words of extra memory for PDF output out of 10000 (max. 10000000)
 

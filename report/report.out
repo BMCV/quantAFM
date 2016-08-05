@@ -42,17 +42,15 @@
 \BOOKMARK [2][-]{subsection.3.7}{Thinning}{section.3}% 42
 \BOOKMARK [3][-]{subsubsection.3.7.1}{Hilditch's Sequential Thinning}{subsection.3.7}% 43
 \BOOKMARK [3][-]{subsubsection.3.7.2}{Zhang Suen Parallel Thinning}{subsection.3.7}% 44
-\BOOKMARK [2][-]{subsection.3.8}{Erosion of Noise Branches}{section.3}% 45
-\BOOKMARK [3][-]{subsubsection.3.8.1}{Method 1: Erosion using Breadth-First-Search and Shortest Path Algorithms}{subsection.3.8}% 46
-\BOOKMARK [3][-]{subsubsection.3.8.2}{Method 2: Erosion by L-Point identification}{subsection.3.8}% 47
-\BOOKMARK [2][-]{subsection.3.9}{Recovery of lost pixel}{section.3}% 48
-\BOOKMARK [2][-]{subsection.3.10}{Length Estimation}{section.3}% 49
-\BOOKMARK [2][-]{subsection.3.11}{Angle Measurement}{section.3}% 50
-\BOOKMARK [3][-]{subsubsection.3.11.1}{Measurement over Nucleosome Center}{subsection.3.11}% 51
-\BOOKMARK [3][-]{subsubsection.3.11.2}{Measurement over Fitted Lines}{subsection.3.11}% 52
-\BOOKMARK [2][-]{subsection.3.12}{Optimization}{section.3}% 53
-\BOOKMARK [1][-]{section.4}{Results}{}% 54
-\BOOKMARK [2][-]{subsection.4.1}{Validation}{section.4}% 55
-\BOOKMARK [2][-]{subsection.4.2}{Biological Significance}{section.4}% 56
-\BOOKMARK [1][-]{section.5}{Discussion}{}% 57
-\BOOKMARK [1][-]{section.6}{Conclusion and Outlook}{}% 58
+\BOOKMARK [2][-]{subsection.3.8}{Length Estimation}{section.3}% 45
+\BOOKMARK [3][-]{subsubsection.3.8.1}{Algorithm D: Iterative length estimation}{subsection.3.8}% 46
+\BOOKMARK [3][-]{subsubsection.3.8.2}{Algorithm C: Erosion using Breadth-First-Search and Shortest Path Algorithms}{subsection.3.8}% 47
+\BOOKMARK [2][-]{subsection.3.9}{Angle Measurement}{section.3}% 48
+\BOOKMARK [3][-]{subsubsection.3.9.1}{Measurement over Nucleosome Center}{subsection.3.9}% 49
+\BOOKMARK [3][-]{subsubsection.3.9.2}{Measurement over Fitted Lines}{subsection.3.9}% 50
+\BOOKMARK [2][-]{subsection.3.10}{Optimization}{section.3}% 51
+\BOOKMARK [1][-]{section.4}{Results}{}% 52
+\BOOKMARK [2][-]{subsection.4.1}{Validation}{section.4}% 53
+\BOOKMARK [2][-]{subsection.4.2}{Biological Significance}{section.4}% 54
+\BOOKMARK [1][-]{section.5}{Discussion}{}% 55
+\BOOKMARK [1][-]{section.6}{Conclusion and Outlook}{}% 56

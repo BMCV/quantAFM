@@ -357,6 +357,10 @@ Antoni Buades, Bartomeu Coll, and Jean-Michel Morel.
   \url{http://de.mathworks.com/help/vision/opencv-interface-support-package.html},
   2016.
 
+\bibitem{GNUOctave}
+{GNU Octave}.
+\newblock \url{https://www.gnu.org/software/octave/}, 2016.
+
 \bibitem{lam1992thinning}
 L~Lam, SW~Lee, and CY~Suen.
 \newblock Thinning methodologies-a comprehensive survey.

@@ -41,18 +41,23 @@
 \contentsline {subsection}{\numberline {3.6}Nucleosome Detection}{35}{subsection.3.6}
 \contentsline {subsection}{\numberline {3.7}Thinning}{38}{subsection.3.7}
 \contentsline {subsubsection}{\numberline {3.7.1}Hilditch's Sequential Thinning}{38}{subsubsection.3.7.1}
-\contentsline {subsubsection}{\numberline {3.7.2}Zhang Suen Parallel Thinning}{39}{subsubsection.3.7.2}
-\contentsline {subsection}{\numberline {3.8}Erosion of Noise Branches}{41}{subsection.3.8}
-\contentsline {subsubsection}{\numberline {3.8.1}Method 1: Erosion using Breadth-First-Search and Shortest Path Algorithms}{41}{subsubsection.3.8.1}
-\contentsline {subsubsection}{\numberline {3.8.2}Method 2: Erosion by L-Point identification}{45}{subsubsection.3.8.2}
-\contentsline {subsection}{\numberline {3.9}Recovery of lost pixel}{45}{subsection.3.9}
-\contentsline {subsection}{\numberline {3.10}Length Estimation}{46}{subsection.3.10}
-\contentsline {subsection}{\numberline {3.11}Angle Measurement}{47}{subsection.3.11}
-\contentsline {subsubsection}{\numberline {3.11.1}Measurement over Nucleosome Center}{47}{subsubsection.3.11.1}
-\contentsline {subsubsection}{\numberline {3.11.2}Measurement over Fitted Lines}{48}{subsubsection.3.11.2}
-\contentsline {subsection}{\numberline {3.12}Optimization}{50}{subsection.3.12}
-\contentsline {section}{\numberline {4}Results}{50}{section.4}
-\contentsline {subsection}{\numberline {4.1}Validation}{50}{subsection.4.1}
-\contentsline {subsection}{\numberline {4.2}Biological Significance}{50}{subsection.4.2}
-\contentsline {section}{\numberline {5}Discussion}{50}{section.5}
-\contentsline {section}{\numberline {6}Conclusion and Outlook}{50}{section.6}
+\contentsline {subsubsection}{\numberline {3.7.2}Zhang Suen Parallel Thinning}{40}{subsubsection.3.7.2}
+\contentsline {subsection}{\numberline {3.8}Length Estimation}{42}{subsection.3.8}
+\contentsline {subsubsection}{\numberline {3.8.1}Algorithm D: Iterative length estimation}{43}{subsubsection.3.8.1}
+\contentsline {paragraph}{\numberline {3.8.1.1}Problems of the data}{43}{paragraph.3.8.1.1}
+\contentsline {paragraph}{\numberline {3.8.1.2}Description of the proposed method}{44}{paragraph.3.8.1.2}
+\contentsline {paragraph}{\numberline {3.8.1.3}Results}{49}{paragraph.3.8.1.3}
+\contentsline {subsubsection}{\numberline {3.8.2}Algorithm C: Erosion using Breadth-First-Search and Shortest Path Algorithms}{50}{subsubsection.3.8.2}
+\contentsline {paragraph}{\numberline {3.8.2.1}Conversion of DNA fragments into graph objects}{51}{paragraph.3.8.2.1}
+\contentsline {paragraph}{\numberline {3.8.2.2}Erosion of Noise Branches}{52}{paragraph.3.8.2.2}
+\contentsline {paragraph}{\numberline {3.8.2.3}Recovery of lost pixels}{53}{paragraph.3.8.2.3}
+\contentsline {paragraph}{\numberline {3.8.2.4}Length Estimation}{53}{paragraph.3.8.2.4}
+\contentsline {subsection}{\numberline {3.9}Angle Measurement}{55}{subsection.3.9}
+\contentsline {subsubsection}{\numberline {3.9.1}Measurement over Nucleosome Center}{56}{subsubsection.3.9.1}
+\contentsline {subsubsection}{\numberline {3.9.2}Measurement over Fitted Lines}{56}{subsubsection.3.9.2}
+\contentsline {subsection}{\numberline {3.10}Optimization}{58}{subsection.3.10}
+\contentsline {section}{\numberline {4}Results}{58}{section.4}
+\contentsline {subsection}{\numberline {4.1}Validation}{58}{subsection.4.1}
+\contentsline {subsection}{\numberline {4.2}Biological Significance}{58}{subsection.4.2}
+\contentsline {section}{\numberline {5}Discussion}{58}{section.5}
+\contentsline {section}{\numberline {6}Conclusion and Outlook}{58}{section.6}

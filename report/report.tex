@@ -8,9 +8,6 @@
 \usepackage{amsmath}
 \usepackage{graphicx}
 \usepackage{hyperref}
-\hypersetup{
-	colorlinks=false
-	}
 \usepackage{color}
 \usepackage{transparent}
 \usepackage{pbox}
@@ -21,6 +18,7 @@
 \usepackage[font=small]{subcaption}
 \usepackage[utf8]{inputenc}
 \usepackage{pgfplots}
+\usepackage{titlesec}
 \usepackage{url}
 %\usepackage{siunitx}
 \usepackage[mediumspace,mediumqspace,squaren]{SIunits}
@@ -28,6 +26,17 @@
 \pgfplotsset{compat=1.8}
 %\usepackage{array}
 %
+% setup for package hyperref
+\hypersetup{
+	colorlinks=false
+}
+% setup for package titlesec
+\setcounter{secnumdepth}{4}
+\titleformat{\paragraph}
+{\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}
+\titlespacing*{\paragraph}
+{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+
 \begin{document}
 
 %
@@ -385,7 +394,7 @@ The algorithm of \textit{Non-local Means Denoising} is provided by the OpenCV li
 	\item \textit{template window size} (int): Window size in pixels of the patch that is used to compute weights. The recommended value is 7, which we found to be sufficient.
 	\item \textit{search window size} (int): Window size in pixels of the patch that is used to compute the denoised value of the currently examined pixel from. Since this value affects performance linearly, we chose this value to be slightly smaller than the recommended value of 21, namely 17. This proved to be sufficient for good denoising results.
 \end{itemize}
-The heuristics to find these parameters were a) to achieve fastest possible runtime while b) providing satisfactory levels of denoising as measured by final DNA detection rate and length estimation accuracy. Increasing the search window size from 17 to up to 31 greatly increased the removal of background in the resulting preprocessed images. However, in conjunction with the subsequent steps of Filtering (\ref{sec:Filtering}) and Thresholding (\ref{sec:Thresholding}), this gain did not result in a notably improved detection rate of DNA objects or increased accuracy of length calculation. Since it also had a drastic negative impact on the overall runtime, we decided to keep this parameter as low as possible without loosing the benefit of denoising. Comparable observations were made when investigating the required template window size. Increasing it resulted in increased runtime without any distinct gains in image denoising. \\
+The heuristics to find these parameters were a) to achieve fastest possible runtime while b) providing satisfactory levels of denoising as measured by final DNA detection rate and length estimation accuracy. Increasing the search window size from 17 to up to 31 greatly increased the removal of background in the resulting preprocessed images. However, in conjunction with the subsequent steps of Filtering (\ref{sec:Filtering}) and Thresholding (\ref{sec:Thresholding}), this gain did not result in a notably improved detection rate of DNA objects or increased accuracy of length calculation (data not shown). Since it also had a drastic negative impact on the overall runtime, we decided to keep this parameter as low as possible without loosing the benefit of denoising. Comparable observations were made when investigating the required template window size. Increasing it resulted in increased runtime without any distinct gains in image denoising. \\
 
 The great strength of this method is that for each pixel p of an image it searches for similar pixels - not in a close distance around that pixel, like many other noise reduction approaches do, but over a large portion of the image. The average value of these pixels is then calculated and set as the new, denoised value of the currently examined pixel p. In order to further increase robustness, similarity between two pixels p and q furthermore is computed by calculating a weighted Euclidean distance between square patches around these pixels, and not between only those two pixels. 
 So, the denoised value $\hat{u}(p)$ of pixel p is calculated as follows:
@@ -442,8 +451,8 @@ Furthermore, some artifacts already could be removed. AFM images often show long
 \end{figure}
 
 \subsubsection{Technical considerations / limitations}
-As mentioned in Section \ref{Software Architecture}, our program is written using MATLAB. However, OpenCV is a C++ library, so \textit{fastNlMeansDenoising} is a C++ function. Consequently, we had to find a way to combine MATLAB with C++ code. \\
-For such cases, there exists a C++ interface library that is provided by MATLAB (see \cite{opencvInterfaceSupport}). With its help, C++ code can be compiled into so-called mex files, which themselves call OpenCV functions and which can be called like regular MATLAB functions. We succeeded in integrating such specifically compiled mex files into our main program and, thusly, in denoising all images. Unfortunately, we had to discover that the resulting, denoised images were considerably different from those that had been denoised by the original C++ function. Since we were unable to discern the reason for this unexpected behavior, we had to find other measures to use OpenCV functionality from within our MATLAB routine. Therefore, our routine makes a system call to run an C++ executable file. This file is a standard executable compiled from the C++ code containing the denoising instructions; it will read all images, denoise them, and temporarily create and write new, denoised images. These images then are read by our MATLAB routine as input for the rest of the program.
+As mentioned in Section \ref{sec:Software Architecture}, our program is written using MATLAB. However, OpenCV is a C++ library, so \textit{fastNlMeansDenoising} is a C++ function. Consequently, we had to find a way to combine MATLAB with C++ code. \\
+For such cases, there exists a C++ interface library that is provided by MATLAB (see \cite{opencvInterfaceSupport}). With its help, C++ code can be compiled into so-called mex files, which themselves call OpenCV functions and which can be called like regular MATLAB functions. We succeeded in integrating such specifically compiled mex files into our main program and, thusly, in denoising all images. Unfortunately, we had to discover that the resulting, denoised images were considerably different from those that had been denoised by the original C++ function. Since we were unable to discern the reason for this unexpected behavior, we had to find other measures to use OpenCV functionality from within our MATLAB routine. Therefore, our routine now makes a system call in order to run a C++ executable file. This file is a standard executable compiled from C++ code containing the denoising instructions; it will read all images, denoise them, and temporarily create and write new, denoised images. These images then are read by our MATLAB routine as input for the rest of the program.
 
 \newpage
 \subsection{Filtering}\label{sec:Filtering}
@@ -466,7 +475,7 @@ It should be mentioned that for non-quadratic images an ellipsoid instead of a c
 
 \begin{figure}[H]
 	\begin{subfigure}[b]{0.32\textwidth}
-		\includegraphics[width=\linewidth]{step1}
+		\includegraphics[width=\linewidth]{step1_dp}
 		\caption{}
 		\label{fig:step1lpf }
 	\end{subfigure}%
@@ -800,11 +809,12 @@ Lastly, a dilation is performed in (g) and the resulting circular selection is d
 
 % 03.07 Dennis initial description and structure
 \subsection{Thresholding}\label{sec:Thresholding}
-After denoising and the subsequent application of our filter combination, the next logical step is to determine a threshold for the binarization of each image. Binarization means that each pixel of an image can be classified either as background or as belonging to a potential DNA strand / nucleosome. It is done by computing a gray value, the threshold, each pixel's gray value is compared to in order to classify it. However, many images still contain noise types that have not yet been removed but that will have a strong influence during the computation of such a threshold. If not removed, the corresponding threshold will be so much distorted that meaningful / useful binarization will not be possible.
-Therefore, an adaptive thresholding algorithm was deployed that allowed us, on any image, to create a much more uniform background. This step is one of the reasons for the general robustness of our product towards different noise sources.
+After denoising and the subsequent application of our filter combination, the next logical step is to determine a threshold for the binarization of each image. Binarization means that each pixel of an image can be classified either as background or as belonging to a potential DNA strand / nucleosome. It is done by computing a specific gray value, the threshold, each pixel's gray value is compared to in order to classify it.\\
+In a first approach, we tried several different thresholding algorithms, such as Intermeans-, Moments-, Intermodes-, Maxentropy-, Minerror-, Percentile- and Otsu-Thresholding. Except for the last, all of these were adapted from GNU Octave (\cite{GNUOctave}), since MATLAB only provides the Otsu-Thresholding method. GNU Octave is an open source high-level numerical computation language comparable to MATLAB. Some of them determine a global threshold, some a local. However, after several tests especially in conjunction with the rest of our Thresholding algorithm we found that Otsu-Thresholding provided us with the best results (data not shown).\\
+The greatest problem was that many images still contained noise types that have not yet been removed but that had a strong influence during the computation of these thresholds. If not removed, the corresponding threshold will be so much distorted that meaningful / useful binarization will not be possible.\\
+Therefore, an adaptive thresholding algorithm (see \ref{sec: AdaptiveThresholding}) was designed that allowed us, on any image, to create a much more uniform background. This step is one of the main reasons for the general robustness of our routine towards different noise sources.
 
-
-\subsubsection{Adaptive Thresholding}
+\subsubsection{Adaptive Thresholding}\label{sec: AdaptiveThresholding}
 The TIFF images often vary in intensity, distribution and scaling of the height profile of the DNA samples. This presents a couple of problems for the thresholding algorithms, such as pollution of some image regions which distort the threshold. As discussed above, these issues lead to a false classification of the DNA strands or even to a complete loss of image information.
 Two sorts of noise persist after the initial pipelining steps  
 Opencv Denoising, LowPassFilter and Median Filter (see Sections \ref{sec:Denoising}, \ref{sec:Filtering}).
@@ -1134,14 +1144,236 @@ The result of this algorithm differs from the result of Hilditch's algorithm as 
 \end{figure}
 \newpage
 % second approach: Zhang-Suen https://github.com/linbojin/Skeletonization-by-Zhang-Suen-Thinning-Algorithm/blob/master/thinning.m
-\subsection{Erosion of Noise Branches}\label{sec:Erosion of Noise Branches}
-At this stage of the program, each DNA object already has been isolated into a small black-and-white image that otherwise only contains this one DNA object, and both thinning algorithms have produced thinned DNA-strands. However, due to the nature of their operations, in most cases the resulting strands not only have two end points, but contain branches and multiple end points. Several examples can be seen in the right panel of Figure \ref{fig: thinning} above. In order to correctly determine DNA length, it is necessary to erode these branches so that afterwards only DNA strands without any branches and with only two ends are left. These will be called DNA backbones. Consequently, the next step in our routine is the erosion of these noise branches and the extraction of DNA backbones. This problem was approached in two different ways.\\
-\iffalse
-For Estimating the length of one DNA strand several approaches were introduced in the literature. Firstly, spline fitting was one prominent idea. For spline fitting, the DNA strand has to be subdivided into a few piece-wise strands that add up into the original strand. Out of every piecewise strand some points are taken and these points are used to interpolate with a so called spline which is a polynom of n-th degree (n equals the number of supporting points minus 1). Normally, these splines have to satisfy some more constraints to improve accuracy and smoothness of the interpolation. By interpolation of every substring it is possible to calculate the overall length of the object. The challenge of this method is to choose the best substrings and supporting points. \\
-\fi
-The problem of DNA backbone extraction was approached in two different ways.
 
-\subsubsection{Method 1: Erosion using Breadth-First-Search and Shortest Path Algorithms}
+\subsection{Length Estimation}
+At this stage of the program, each DNA object already has been isolated into a small black-and-white image that otherwise only contains this one DNA object, and both thinning algorithms have produced thinned DNA-strands. However, due to the nature of their operations, in most cases the resulting strands not only have two end points, but contain branches and multiple end points. Several examples can be seen in the right panel of Figure \ref{fig: thinning} above. In order to correctly determine DNA length, it is necessary to erode these branches so that afterwards only DNA strands without any branches and with only two ends are left. These will be called DNA backbones. Consequently, the next step in our routine is the erosion of these noise branches and the extraction of DNA backbones. \\
+
+% Spline fitting
+For Estimating the length of DNA fragments, several approaches seemed plausible. Firstly, backbone approximation by spline fitting was one prominent idea. For spline fitting, the DNA strand has to be subdivided into a few piecewise strands that add up into the original strand. Out of every piecewise strand some points are taken and these points are use to interpolate with a so called spline which is a polynom of n-th degree (n equals the number of supporting points minus 1). Normally these splines have to satisfy some more constraints to improve the accuracy and the smoothness of the interpolation. By interpolation of every substring it is possible to calculate the overall length of the object. The challenge of this method is to choose the best substrings and supporting points, and to perform these costly calculations without increasing the overall runtime too much. For these reasons, we decided not to follow this line.\\
+
+% Pruning + freeman/Kulpa estimation
+Another approach is to alter the DNA in a way that only one single strand remains and all side strands, which are most probably dirt or noise anyway, and some special points that are explained below are removed. After that the length of this single strand can be determined by simple length estimation algorithms as described by Rivetti \cite{rivetti2001accurate}. The most effort for this algorithm is altering the DNA string while the actual length estimation afterwards is rather easy. The huge advantage of this method is that by altering the DNA cases can be discovered in which the DNA forms a ring or overlaps with another DNA. Other length estimation algorithms have to take care about this separately. This is one of the methods used in our routine, and it is described in detail in Section \ref{sec:Iterative Length Estimation}.\\
+
+An entirely different approach is described in Section \ref{sec:bfs_ssp_length_estimation}, however, which represents the other method used in our routine. Here, each thinned DNA fragment is converted into a graph object. On the basis of this, breadth-first-search and shortest path algorithms are used in order to extract the DNA backbone. After subsequent recovery of those pixels that were lost during the thinning process, length calculation is performed with help of the afore mentioned Kulpa Estimator.
+
+\subsubsection{Algorithm D: Iterative length estimation}\label{sec:Iterative Length Estimation}
+
+\paragraph{Problems of the data}
+% Why do we need pruning?
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}[b]{0.36\textwidth}
+		\includegraphics[width = \linewidth]{Lpoint.png}
+		\caption{}
+		\label{fig:lpoint}
+	\end{subfigure}
+	\hspace{\fill}
+	\begin{subfigure}[b]{0.36\textwidth}
+		\includegraphics[width = \linewidth]{Lpoint_mask.png}
+		\caption{}
+		\label{fig:lpoint_mask}
+	\end{subfigure}
+	\captionsetup{justification=centering}
+	\caption{(a) one variant of a so called "L-point" \\(b) the four different submasks }
+	\label{fig:lpoint_overview} % you need to include this to reference the figure afterwards
+\end{figure}
+In the dataset used for this algorithm often it occurs that the DNA strand is not one single strand but at some points sidebranches can be detected. This makes the length estimation much harder. Also L-points as shown in figure 
+\ref{fig:lpoint} are a common problem since the algorithm has no distinct way to get from one of the outer pixels to the other outer one. In the proposed algorithm this can lead to problems where the parts of the DNA string are deleted that are not intended to or the object can be divided into multiple objects. Both effects are not desirable and are avoided by removing this critical L-points. \\
+Another problem occurs when a branch is deleted. In some cases it can arise that a former branch point becomes an L-point after the deletion of the branch. In that case it has to be deleted, too, so the distinct way through the object is not destroyed again. So for every deleted branch there has also to be a routine that detects newly generated L-points.
+
+% What is the problem with crossing DNA strings?
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}[b]{0.35\textwidth}
+		\includegraphics[width=\linewidth]{praes2}
+		\caption{}
+		\label{fig: crossed}
+	\end{subfigure}
+	\hspace{20mm}
+	\begin{subfigure}[b]{0.35\textwidth}
+		\includegraphics[width=\linewidth]{rect4833}
+		\caption{}
+		\label{fig: ring}
+	\end{subfigure}
+	\captionsetup{justification=centering}
+	\caption{(a) is a simple example for two overlapping strands\\ (b) DNA forming a ring}
+	\label{fig: crossring} % you need to include this to reference the figure afterwards
+\end{figure}
+In figure \ref{fig: crossring} two special cases are shown. Case \ref{fig: crossed} shows a simple example for two overlapping DNA strands. Even though this is only an easy example in most cases where two DNAs overlap some kind of cross can be found. In case \ref{fig: ring} a DNA forming some kind of ring can be seen. This is mostly an error in the segmentation process or the DNA is intersecting with itself. All these cases can not be analyzed and are ignored in further processing steps. \\
+For dealing with this two issues a special constraint is introduced. To better understand this constraint it is helpful to realize that a distinct DNA string has only two endpoints and no branchpoints (otherwise there would be a branch and therefore no distinct way through the object). Adding one additional branchpoint now automatically implies that there also has to be another endpoint. To be precise there has to be exactly one more endpoint because otherwise there would be a cross like in example \ref{fig: crossed} or a ring like in \ref{fig: ring} when the branchpoints produces no new endpoint. Secondly, it is important to notice that a ring like in figure \ref{fig: ring} has only one endpoint and one branchpoint. Creating a new endpoint would require another branchpoint too.\\
+So what are the implications of these thoughts? Ultimately one will come to the conclusion that a good constraint to check for regular DNA strands is $\#endpoints - \#branchpoints = 2$. \\
+This idea takes in regard that having a lower difference than 2 would imply to have more branchpoints and so some kind of ring in the DNA and having a higher difference would imply some kind of cross. \\
+Of course this constraint will lead to the problem that some cases where noise is forming a cross or the DNA is a ring that could be analyzed anyhow will be thrown out. These cases are mostly DNAs that are in very noisy areas though and the accuracy of the length estimation for these strands would be low anyway. On the other hand it is a huge advantage to recognize molecules which are faulty and to make no false assumptions of their length. In that way statistics like the mean over all DNA strings are not influenced incorrectly. \\
+In the course of the implementation another problem arised. What happens if the cross- and ring structure combine in a way that adds up in a constraint of 2 nonetheless (imagine a ring and two additional intersections)? This problem was eliminated by only looking if a cross occurs. Further explanation can be found later. The case of a DNA forming a ring is still treated by checking with the constraint.\\
+Eventually this method has found a good middle ground between evaluating as many molecules as possible and throwing out DNA one can not analyze in a reliable way.
+
+\paragraph{Description of the proposed method}
+Firstly, the algorithm asserts that the image is not empty. This is just a step of precaution but should be done in every good code nonetheless. If the image is empty a length of 0 is returned and the algorithms immediately terminates.\\
+To avoid border cases of points lying at the edge of the image the image is padded with a single row of zeros. Afterwards essential information is extracted out of the image like width, height and the connected components of the object. Reextracting the connected components is necessary since by padding the pixel indices are shifted.\\
+The next important step is to create an adjacency matrix of the pixels of the connected component. An adjacency matrix essentially describes for each pixel which other pixels can be reached from this one. In image processing this refers most often to neighbouring pixels in a 8-neighbourhood. If the reader is not familiar with adjacency matrices reading of further papers is strongly recommended. It should be mentioned that it is sufficient to create the matrix by using only the pixels that are part of the object which are stored in a pixel index list and it is not needed to create a adjacency matrix using all image pixels. \\
+A speciality of the proposed method is that the adjacency matrix does not only represent the neighbourhood but also the direction in which the neighbour lies (see fig \ref{fig: example_adj}).\\
+The next step is to remove all L-points. L-points are described earlier in this section. The removal is performed by iterating over all object pixels that have exactly two neighbourgs. Points with less neighbours are endpoints and pixels with more neighbours branchpoints. Therefore a 3x3 clipping around the current pixel is cut out and the clipping again subdivided into 4 quadrants (see fig \ref{fig:lpoint_mask}). A pixel is now identified as an L-point if the point is considered an L-point in one of the quadrants (see red quadrant in fig \ref{fig:lpoint_mask}). L-points are deleted from the picture as well as the adjacency matrix.\\
+
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}[b]{0.3\textwidth}
+		\includegraphics[width=\linewidth]{neighborhood}
+		\caption{}
+		\label{fig: example_neighborhood}
+	\end{subfigure}
+	\\
+	\begin{subfigure}[b]{0.3\textwidth}
+		\includegraphics[width=\linewidth]{example}
+		\caption{}
+		\label{fig: example_strand}
+	\end{subfigure}
+	\hspace{\fill}
+	\begin{subfigure}[b]{0.1\textwidth}
+		\includegraphics[width=\linewidth]{example_idlist}
+		\caption{}
+		\label{fig: example_idxlist}
+	\end{subfigure}
+	\hspace{\fill}
+	\begin{subfigure}[b]{0.33\textwidth}
+		\includegraphics[width=\linewidth]{example_adj}
+		\caption{}
+		\label{fig: example_adj}
+	\end{subfigure}
+	\captionsetup{justification=centering}
+	\caption{(a) numeration of the neighborhood (b) simple example of thinned strand (c) index list of the image (d) resulting adjacency list \\
+		Note that the adjacency list is symmetric only with opposing cases }
+	\label{fig: adj_example} % you need to include this to reference the figure afterwards
+\end{figure}
+
+%% Dennis Philip 02.08
+At this point the branchpoints and endpoints are computed with
+\begin{verbatim}
+bwmorph(picture, 'branchpoints') 
+bwmorph(picture, 'endpoints') 
+\end{verbatim}
+respectively. As described before, the segmented strand is tested on its validity by the constraint of $\#endpoints - \#branchpoints = 2$. If a branchpoint now has exactly 4 neighbours, it is assumed to be a self-intersection which is reliable for the sequential Hilditch-Thinning but not for the algorithm by Zhang Suen. Further explanation and discussion of the results can be found in Sections \ref{sec:Hilditch's Sequential Thinning} and \ref{sec:Zhang Suen Parallel Thinning}. \\
+
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}[b]{0.32\textwidth}
+		\includegraphics[width=\linewidth]{remove1}
+		\caption{}
+		\label{fig:remove1DenPhi}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.32\textwidth}
+		\includegraphics[width=\linewidth]{remove2}
+		\caption{}
+		\label{fig:remove2DenPhi}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.32\textwidth}
+		\includegraphics[width=\linewidth]{remove3}
+		\caption{}
+		\label{fig:remove3DenPhi}
+	\end{subfigure}
+	\captionsetup{justification=centering}
+	\caption{(a) DNA string with the selected branchpoint (green), another branchpoint (red) and the nearest endpoint (blue) to the green point\\(b) incorrect deletion of a substring (c) correct deletion}
+	\label{fig:removalsDenPhi} % you need to include this to reference the figure afterwards
+\end{figure}
+
+For every valid object the algorithm now iterates over the list of branchpoints until it is empty. With each loop an arbitrary single branch point will be extracted from the mask provided by bwmorph. Using bwdistgeodesic with this singular branchpoint mask, a distance estimation towards each endpoint is calculated. The function is only used in this case since it has no option to calculate the length with more precise estimators (like the Kulpa estimator proposed by \cite{rivetti2001accurate}) but is reliable enough to give an idea which endpoint is nearest to the current branchpoint that is critical in this step. Removing all pixels of this shortest branch should in theory be rather easy but may lead to unwanted problems. For example a strand with another branchpoint between the used branchpoint and the closest endpoint would result in two separate objects. In figure \ref{fig:removalsDenPhi} a correct and incorrect removal of a substring can be seen.\\
+To avoid this, only the pixels from the endpoint to the \textit{closest} branchpoint are removed. For this the adjacency matrix is of great help since it provides the neighbouring pixels. After deleting a point from the image, it has to be deleted from the image as well as the adjacency matrix. \\
+Another, yet unlikely, case would happen if two endpoints are of exactly the same distance from the branchpoints. Should bwdistgeodesic indeed return two valid endpoints, only the first element of the array is selected to avoid critical errors. \\
+At the end of each iteration step the branchpoint and endpoint matrices are updated as well. It is crucial that in the branchpoint mask the deleted branchpoint is altered and not necessarily the one which was initially selected by the algorithm. Also note that the branchpoint is \textit{not} removed from the image but only from the branchpoint mask.
+The initial branch will still be deleted in a later iteration step either way, so the order doesn't impact it in any negative way but can prevent critical cases as shown. \\
+
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}[b]{0.32\textwidth}
+		\includegraphics[width=\linewidth]{critical1}
+		\caption{}
+		\label{fig:critical1DenPhi}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.32\textwidth}
+		\includegraphics[width=\linewidth]{critical2}
+		\caption{}
+		\label{fig:critical2DenPhi}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.32\textwidth}
+		\includegraphics[width=\linewidth]{critical3}
+		\caption{}
+		\label{fig:critical3DenPhi}
+	\end{subfigure}
+	\captionsetup{justification=centering}
+	\caption{(a) original DNA string (b) without L-point removal (c) with L-point removal}
+	\label{fig:criticalDenPhi} % you need to include this to reference the figure afterwards
+\end{figure}
+
+Another problem that showed up during initial testing was that the algorithm sometimes didn't fully remove a certain branch, or so it seemed. This was the result of the branchpoint, after removing the shortest branch, could transform into an L-point. To avoid such behaviour, and assert a singular and unique path from end to end, it has to be checked whether the branchpoint fulfills the L-point criteria mentioned earlier in this chapter. In figure \ref{fig:criticalDenPhi} the problem is visualized. Note how the purple point in \ref{fig:critical2DenPhi} would lead to a non-unique path.\\
+With this step the processing of the strand has been almost completed. If there have been no problems up to this point, the strand seems to be a valid object and is therefore treated as such. In the case that one of the earlier mentioned abortion criteria terminated the algorithm, the dnaObject is then marked as invalid by setting the isValid flag of the object class to 0. \\
+%% Dennis 03.08
+The following steps are similiar to the algorithm described in Sections \ref{sec:PixelRecovery} and \ref{sec:Length Estimation}, and have only been slightly altered. The method is only described here for sake of completeness. 
+\\
+To improve the quality of the final estimate it should also be considered to reestimate the border regions of the strand. With the thinning algorithms, especially the region around the endpoints is usually eroded from each direction which leads to an overall shorter strand in thinned form. Various approaches have already been proposed as already described in Section \ref{intro_length_determination}. Based on the endpoints and their respective neighbouring pixels, a reestimation direction is established by taking a vector in this direction (see figure). By overlaying the original fragment with the thinned one it can now be determined whether there is another pixel in the estimation direction that belongs to the fragment. The process is repeated until it meets a pixel which is no longer part of the fragment or the image boundary is reached. \\
+The last step in the algorithm is then to calculate the partial length of each fragment, so long as they do have exactly one attached nucleosome. For this a boolean function parameter called dnaHasNucleos was introduced which lets the algorithm decide whether there are any nucleosomes attached at all. The exact number of attached nucleosomes can be referenced by the object's value 'attachedNucleo'. \\
+For these valid objects the length of each partial strand (divided by the nucleosome) is stored which results in an array of length two. \\
+For fragments without any nucleosomes, or more than one attached, the fragment length is stored as one single value.
+The final length calculation is done by using the Kulpa estimator which provides a more accurate estimate than the classic Freeman estimator \cite{rivetti2001accurate} for certain DNA lengths. \\
+For both formulas the neighborhood of the pixel is considered: Either the pixels are evenly aligned or are adjoining diagonally. By multiplying the number of each cases with a respective factor a final length can be calculated. \\
+
+Freeman estimator: $ 1 * \#EvenPixels + \sqrt{2} * \#OddPixels$ \\
+Kulpa estimator: $0.948 * \#EvenPixels + 1.343 * \#OddPixels$ \\
+
+For this purpse the following subroutine was introduced to calculate the final length:
+\begin{verbatim}
+calcKulpaLength(IndexList, ThinnedImage)
+\end{verbatim}
+For calculating subsegment-length, this function is simply called twice with the respective partial strand. \\
+The matrix indices of the pixels are split into row and column indices. Following the introduced neighborhood model, a evenly aligned pixel-pair would either have the same row or column indices. By simply substracting the difference of neighboring index-pairs it is possible to accumulate the total number of evenly aligned pixels. The number of odd pixels is easily calculated by substracting the evenly number from the total amount of pixels belonging to the strand. As a last step the length is determined by the aforementioned formula. An example is shown in figure \ref{fig:partialLengthDenPhi}.
+
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}[b]{0.34\textwidth}
+		\includegraphics[width=\linewidth]{ghostbusters1}
+		\caption{}
+		\label{fig:partialLengthDenPhi1}
+	\end{subfigure}
+	\hspace{5mm}
+	\begin{subfigure}[b]{0.34\textwidth}
+		\includegraphics[width=\linewidth]{ghostbusters2}
+		\caption{}
+		\label{fig:partialLengthDenPhi2}
+	\end{subfigure}
+	\captionsetup{justification=centering}
+	\caption{An example strand with a nucleosome}
+	\label{fig:partialLengthDenPhi} % you need to include this to reference the figure afterwards
+\end{figure}
+\newpage
+\paragraph{Results}
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}[b]{0.32\textwidth}
+		\includegraphics[width=\linewidth]{preprocessed}
+		\caption{}
+		\label{fig:preprocImageLength}
+	\end{subfigure}
+	\hspace{5mm}
+	\begin{subfigure}[b]{0.32\textwidth}
+		\includegraphics[width=\linewidth]{processed}
+		\caption{}
+		\label{fig:pastprocImageLength}
+	\end{subfigure}
+	\captionsetup{justification=centering}
+	\caption{(a) DNA string before processing (b) DNA strand after processing}
+	\label{fig:LengthsThingiesReference} % you need to include this to reference the figure afterwards
+\end{figure}
+
+In figure \ref{fig:LengthsThingiesReference} one can see the strand before and after the before mentioned algorithm processed it. One can clearly see that the L-Point in the upper left corner is removed as well as the two branches in the middle of the string. These results can be reproduced with any valid string of DNA, even if it is more complex. One can conclude that the first goal of the algorithm, which was essentially the pruning of the strand and the removal of the L-points, is working as intended. \\
+\\
+The length estimation itself returns reasonable lengths and the general calculated range of the analysed DNA strands is accurate. However, one problem of the Kulpa estimator is that it was originally developed to analyze DNA strands with a length of more than 600 base pairs \cite{rivetti2001accurate}. The DNA in the used data set has a length of about 660 base pairs. While the Kulpa should be rather accurate for this cases it seems that the length of the DNA is a bit too short for this method and as a result the Kulpa estimator deviates from the original lengths. An exact analysis of this can be found in chapter (reference).
+\\
+Overall the Kulpa estimator proved to be more stable than the Freeman estimator and for regular cases (no outliers) the deviation was significantly smaller. To be exact the deviation of the Freeman estimator was at least four percent while the Kulpa estimator only deviated by about one percent. 
+\\
+Another goal of the method was to sort out as many invalid DNA strings as possible. With the introduced constraint and the sorting out of DNA strands that have an intersection this aim was achieved and the amount of false positives could be greatly reduced. A disadvantage of this is that some valid DNA is discarded. The advantage of having the security that the result is comparable in its entirety is favourable though. Otherwise deductions like the mean would be influenced by false positives and, therefore, less reliable.
+\\
+A disadvantage of the algorithm is that the subroutine for determining the partial lengths was originally designed for algorithm C (see \ref{sec:bfs_ssp_length_estimation}) and the embedding in this code was harder than it seemed at first. Since the implementation did not return satisfying results a comparison is not possible at this point. 
+
+\newpage
+\subsubsection{Algorithm C: Erosion using Breadth-First-Search and Shortest Path Algorithms} \label{sec:bfs_ssp_length_estimation}
 Basis of this method are the conversion of DNA objects into graphs and subsequent usage of graph algorithms for branch removal. It consists of the following steps:
 \begin{enumerate}
 	\item Exclusion of invalid DNA objects
@@ -1162,6 +1394,8 @@ In all of these cases, length determination does not make sense. Such objects ar
 	\label{fig:dna_with_loop}
 \end{figure}
 \\Self-intersection of an DNA object means that the DNA is looping back on itself and then touches or crosses itself (compare Figure \ref{fig:dna_with_loop}). A consequence of this is that the DNA object can be considered to be an object with a hole. This, in turn, means that the topology of this object is different compared to an object that does not have a hole, which is reflected in the Euler number of its image. Therefore, for each DNA object the Euler number is calculated using the MATLAB function \textit{bweuler}. It returns the number of objects in an image minus the number of holes. Since for each DNA object an image exists that only contains this one object, this function efficiently can be used to distinguish between self-intersecting and non-intersecting DNA objects. If the Euler number is 0, then an object with an hole has been detected, and the DNA object is flagged as being invalid. Only if the Euler number is 1, the DNA object will be further processed.\\
+
+\paragraph{Conversion of DNA fragments into graph objects}
 
 \begin{figure}[!htbp]
 	\centering
@@ -1184,7 +1418,7 @@ In all of these cases, length determination does not make sense. Such objects ar
 		(a) From a small image containing exactly one DNA object, (b) an upper triangular adjacency matrix is created where all ones (red) represent edges between directly neighboring pixels. Only pixels containing information, i.e. white pixels, need to be considered and here, no pixel is neighbor to itself. (c) Such a matrix represents an undirected graph.}
 	\label{fig:dna_graph_creation}
 \end{figure}
-The next step is the conversion of DNA to graph objects. This approach relies on the fact that, at this stage of the entire process, the so far detected and thinned DNA objects internally are represented as chains of white pixels that belong to exactly one object. Since thinning already has taken place, this approach assumes that any pixel in such a chain is only neighbor to other pixels that represent other links of the chain.\\
+The next step is the conversion of DNA fragments to graph objects. This approach relies on the fact that, at this stage of the entire process, the so far detected and thinned DNA objects internally are represented as chains of white pixels that belong to exactly one object. Since thinning already has taken place, this approach assumes that any pixel in such a chain is only neighbor to other pixels that represent other links of the chain.\\
 Therefore, each DNA object can be transformed into a graph G (Figure \ref{fig:dna_graph_creation}). The nodes of this graph are those pixels representing the DNA object, while the graph's edges describe the direct 8-neighborhood between pixels (Figure \ref{fig:dna_obj_adjMatrix}). Since in this case neighborhood between pixels is a bijection, the resulting graph G is undirected, and it suffices to create G from an upper triangular adjacency matrix.\\
 \begin{figure}[htb!]
 	\centering
@@ -1199,7 +1433,7 @@ Therefore, each DNA object can be transformed into a graph G (Figure \ref{fig:dn
 	\end{subfigure}
 	\begin{subfigure}{0.22\textwidth}
 		\includegraphics[width=\linewidth]{small_DNA_graph_bfs2.png}
-				
+		
 		\vspace{0.2cm}
 		
 		\includegraphics[width=\linewidth]{small_DNA_obj_bfs2.png}
@@ -1208,7 +1442,7 @@ Therefore, each DNA object can be transformed into a graph G (Figure \ref{fig:dn
 	\end{subfigure}
 	\begin{subfigure}{0.22\textwidth}
 		\includegraphics[width=\linewidth]{small_DNA_graph_ssp.png}	
-				
+		
 		\vspace{0.2cm}
 		
 		\includegraphics[width=\linewidth]{small_DNA_obj_ssp.png}
@@ -1217,7 +1451,7 @@ Therefore, each DNA object can be transformed into a graph G (Figure \ref{fig:dn
 	\end{subfigure}
 	\begin{subfigure}{0.22\textwidth}
 		\includegraphics[width=\linewidth]{small_DNA_real_bfs.png}
-				
+		
 		\vspace{0.2cm}
 		
 		\includegraphics[width=\linewidth]{small_DNA_real_ssp.png}
@@ -1230,16 +1464,14 @@ Therefore, each DNA object can be transformed into a graph G (Figure \ref{fig:dn
 \end{figure}
 Having created a graph representation for each DNA object, another simple measure allows for the detection of further invalid DNA objects. At this stage of the program, a valid DNA object is expected to be a single DNA strand without any intersections. Its graph will be a tree, i.e. a graph in which each pair of nodes is connected via exactly one, and only one path. However, if smaller DNA strands intersect each other without fully forming any circle, they appear to be one large object that still can be within the size limits. Although a graph of such an object also will be a tree, this tree will have a high branching factor, which means that the difference between the number of edges and the number of nodes is larger compared to a valid DNA object as described above. Therefore, any DNA object whose graph representation does not fulfill the following criteria is also excluded from further processing and flagged as being invalid.
 \begin{center}\textit{number of edges - number of nodes $\leq$ 2}\end{center}
+
+\paragraph{Erosion of Noise Branches}\label{sec:Erosion of Noise Branches}
 Due to their graph representations, it is now possible to determine exactly those end points of the DNA objects that are the furthest apart (see Figure \ref{fig:dna_backbone_detection}). This is equivalent to determining each graph's diameter, i.e. the largest distance between any two connected nodes of a graph. It can be achieved by successively performing two breadth-first searches (bfs) on G. MATLAB already provides such a functionality (\textit{bfsearch}) that is optimised for MATLAB internal graph objects. Therefore, we specifically converted DNA objects into MATLAB graph objects. For the first bfs (compare Figure \ref{fig:dna_graph_bfs1}), a start node is chosen randomly. Due to the nature of this algorithm, the last node to be discovered can only be a node that has the largest distance to the starting node. If there are several nodes with the same largest distance, which of these is discovered last depends on the implementation of the bfs algorithm. Because all of them are equally far apart from the start node, any of these nodes is considered a correct result.\\
 This node, however, can then be used as start node in the second run of bfs (compare Figure \ref{fig:dna_graph_bfs2}). Since bfs will again return the node with the largest distance to the start node last, we now know the exact pair of nodes that are furthest apart from each other in G.\\
 This information next is used to find the shortest path between these two nodes in G (see Figure \ref{fig:dna_graph_ssp}). Also here an optimized implementation provided by MATLAB was used, \textit{graphshortestpath}. Since all graphs are undirected with uniform edge weights of 1, a shortest path algorithm specifically designed for this type of graph was used that has an overall time complexity of O(N+E), with N being the number of nodes and E being the number of edges.
 The resulting paths represent DNA backbones excluding noise branches, since for a shortest path between two nodes it holds that it connects its two extremal nodes (start and target node) in G via a path that cannot be shortened without severing the connection between both nodes.
 
-\subsubsection{Method 2: Erosion by L-Point identification}
-In this method, it was proposed to alter the DNA in a way that only one single strand remains and all side strands, which are most probably dirt or noise anyway, and some special points that are explained below are removed. After that the length of this single strand can be determined by simple length estimation algorithms as described by Rivetti and Codeluppi (reference). The most effort for this algorithm is the altering of the DNA string while the actual length estimation afterwards is a piece of cake. The huge advantage of this method is that by altering the DNA cases can be discovered in which the DNA forms a ring or overlaps with another DNA. Other length estimation algorithms have to approach this separately.
-
-
-\subsection{Recovery of lost pixel}\label{sec:PixelRecovery}
+\paragraph{Recovery of lost pixels}\label{sec:PixelRecovery}
 Having determined the true DNA backbones, it next is necessary to restore pixels that have been lost from the DNA fragments during the thinning process and that are essential for length determination. Such pixels are those that lay at the end of an DNA fragment, as can be seen in the upper image of Figure \ref{fig:end_pixel_recovery4}. This loss cannot be avoided since both tested thinning algorithms cannot differenciate between pixels that are part of the end of a fragment and pixels that constitute some other part of the DNA fragment. 
 
 \begin{figure}[htb!]
@@ -1289,7 +1521,7 @@ Having determined the true DNA backbones, it next is necessary to restore pixels
 An useful and easy to implement approach already has been indicated in Section \ref{sec:IntroPixelRestoring}. Each DNA backbone only has two ends by definition. So, for each of a DNA backbone's end, consider the last two pixels as depicted in the upper panel of Figure \ref{fig:end_pixel_recovery2}. The relation of those two pixels towards each other within the 8-neighborhood of the end pixel of the two identifies an unambiguous position at which a pixel possibly could have been lost. The information whether a pixel has been lost or not can easily be retrieved by comparing the pixel at this position with the pixel at the same position in the image of the not-yet-thinned DNA fragment (see Figure \ref{fig:end_pixel_recovery2}, lower panel). If the pixel at that position is part of the DNA fragment, it has to be restored, and can now be considered to be the new end point of this DNA fragment end. This process is repeated until no pixel can be restored anymore. At this point, the DNA backbone is complete, and its length can be computed.
 
 
-\subsection{Length Estimation}\label{sec:Length Estimation}
+\paragraph{Length Estimation}\label{sec:Length Estimation}
 Length computation generally is done as has already been described in Section \ref{intro_length_determination}. Because Rivetti and Codeluppi \cite{rivetti2001accurate} showed that the Kulpa Estimator has higher accuracy than the Freeman Estimator, is easy to implement and has only low impact on the overall runtime, we decided to use this measure for DNA fragment length calculation, as well.\\
 Length estimation has to be done differently for DNA fragments with and without nucleosome, respectively. For a DNA fragment without nucleosome, simply its entire DNA backbone needs to be considered. In the case of an DNA fragment with nucleosome, however, the DNA backbone has to be divided into exactly those two parts that point away from the nucleosome, i.e. the nucleosome's both arms. 
 \begin{figure}[htb!]
@@ -1299,7 +1531,7 @@ Length estimation has to be done differently for DNA fragments with and without 
 		Dark green pixels represent the not-yet-thinned DNA fragment with its bound nucleosome, and its DNA backbone is represented by white and light-green pixels. The nucleosome, as it was detected by the program, is shown in red.}
 	\label{fig: length_calc_two_arms}
 \end{figure}
-This can be achieved by using the same method that is used during angle measurement (compare Section \ref{sec:Angle Measurement}). Intersections of the DNA backbone with the circle (red) which is defined by the radius of the nucleosome is calculated as visualized in Figure \ref{fig:length_calc_two_arms}. Then, those parts of the backbone that are inside this circle are temporarily deleted (light green pixels), which results in only two arms remaining (white pixels). For each of these arms, now, the length is calculated similarly as it is done for the entire backbone in case of free DNA fragments. In the unlikely case that an intersection between the detected nucleus and the DNA backbone cannot be computed, no length will be determined.
+This can be achieved by using the same method that is used during angle measurement (compare Section \ref{sec:Angle Measurement}). Intersections of the DNA backbone with the circle (red) which is defined by the radius of the nucleosome is calculated as visualized in Figure \ref{fig: length_calc_two_arms}. Then, those parts of the backbone that are inside this circle are temporarily deleted (light green pixels), which results in only two arms remaining (white pixels). For each of these arms, now, the length is calculated similarly as it is done for the entire backbone in case of free DNA fragments. In the unlikely case that an intersection between the detected nucleus and the DNA backbone cannot be computed, no length will be determined.
 
 
 \subsection{Angle Measurement}\label{sec:Angle Measurement}
