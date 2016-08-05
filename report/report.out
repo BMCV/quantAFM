@@ -24,28 +24,35 @@
 \BOOKMARK [3][-]{subsubsection.3.1.1}{Manual Analysis}{subsection.3.1}% 24
 \BOOKMARK [2][-]{subsection.3.2}{Software Architecture}{section.3}% 25
 \BOOKMARK [2][-]{subsection.3.3}{Denoising}{section.3}% 26
-\BOOKMARK [2][-]{subsection.3.4}{Filtering}{section.3}% 27
-\BOOKMARK [3][-]{subsubsection.3.4.1}{Adaptive Lowpass Filter}{subsection.3.4}% 28
-\BOOKMARK [3][-]{subsubsection.3.4.2}{Description of Proposed Method}{subsection.3.4}% 29
-\BOOKMARK [3][-]{subsubsection.3.4.3}{Advantages over Other Filtering Techniques}{subsection.3.4}% 30
-\BOOKMARK [3][-]{subsubsection.3.4.4}{Results and Comparison}{subsection.3.4}% 31
-\BOOKMARK [2][-]{subsection.3.5}{Thresholding}{section.3}% 32
-\BOOKMARK [3][-]{subsubsection.3.5.1}{Adaptive Thresholding}{subsection.3.5}% 33
-\BOOKMARK [3][-]{subsubsection.3.5.2}{Level Background}{subsection.3.5}% 34
-\BOOKMARK [3][-]{subsubsection.3.5.3}{Identify and remove outliers}{subsection.3.5}% 35
-\BOOKMARK [3][-]{subsubsection.3.5.4}{Limit Threshold}{subsection.3.5}% 36
-\BOOKMARK [2][-]{subsection.3.6}{Nucleosome Detection}{section.3}% 37
-\BOOKMARK [2][-]{subsection.3.7}{Thinning}{section.3}% 38
-\BOOKMARK [3][-]{subsubsection.3.7.1}{Hilditch's Sequential Thinning}{subsection.3.7}% 39
-\BOOKMARK [3][-]{subsubsection.3.7.2}{Zhang Suen Parallel Thinning}{subsection.3.7}% 40
-\BOOKMARK [2][-]{subsection.3.8}{Erosion of Noise Branches}{section.3}% 41
-\BOOKMARK [2][-]{subsection.3.9}{Lenght Estimation}{section.3}% 42
-\BOOKMARK [2][-]{subsection.3.10}{Angle Measurement}{section.3}% 43
-\BOOKMARK [3][-]{subsubsection.3.10.1}{Measurement over Nucleosome Center}{subsection.3.10}% 44
-\BOOKMARK [3][-]{subsubsection.3.10.2}{Measurement over Fitted Lines}{subsection.3.10}% 45
-\BOOKMARK [2][-]{subsection.3.11}{Optimization}{section.3}% 46
-\BOOKMARK [1][-]{section.4}{Results}{}% 47
-\BOOKMARK [2][-]{subsection.4.1}{Validation}{section.4}% 48
-\BOOKMARK [2][-]{subsection.4.2}{Biological Significance}{section.4}% 49
-\BOOKMARK [1][-]{section.5}{Discussion}{}% 50
-\BOOKMARK [1][-]{section.6}{Conclusion and Outlook}{}% 51
+\BOOKMARK [3][-]{subsubsection.3.3.1}{Non-local Means Denoising Algorithm}{subsection.3.3}% 27
+\BOOKMARK [3][-]{subsubsection.3.3.2}{Benefits of using Non-local Means Denoising}{subsection.3.3}% 28
+\BOOKMARK [3][-]{subsubsection.3.3.3}{Technical considerations / limitations}{subsection.3.3}% 29
+\BOOKMARK [2][-]{subsection.3.4}{Filtering}{section.3}% 30
+\BOOKMARK [3][-]{subsubsection.3.4.1}{Necessity of Filtering}{subsection.3.4}% 31
+\BOOKMARK [3][-]{subsubsection.3.4.2}{The Concept of Adaptive Low Pass Filtering}{subsection.3.4}% 32
+\BOOKMARK [3][-]{subsubsection.3.4.3}{Description of Proposed Method}{subsection.3.4}% 33
+\BOOKMARK [3][-]{subsubsection.3.4.4}{Advantages over Other Filtering Techniques}{subsection.3.4}% 34
+\BOOKMARK [3][-]{subsubsection.3.4.5}{Results and Comparison}{subsection.3.4}% 35
+\BOOKMARK [2][-]{subsection.3.5}{Thresholding}{section.3}% 36
+\BOOKMARK [3][-]{subsubsection.3.5.1}{Adaptive Thresholding}{subsection.3.5}% 37
+\BOOKMARK [3][-]{subsubsection.3.5.2}{Level Background}{subsection.3.5}% 38
+\BOOKMARK [3][-]{subsubsection.3.5.3}{Identify and remove outliers}{subsection.3.5}% 39
+\BOOKMARK [3][-]{subsubsection.3.5.4}{Limit Threshold}{subsection.3.5}% 40
+\BOOKMARK [2][-]{subsection.3.6}{Nucleosome Detection}{section.3}% 41
+\BOOKMARK [2][-]{subsection.3.7}{Thinning}{section.3}% 42
+\BOOKMARK [3][-]{subsubsection.3.7.1}{Hilditch's Sequential Thinning}{subsection.3.7}% 43
+\BOOKMARK [3][-]{subsubsection.3.7.2}{Zhang Suen Parallel Thinning}{subsection.3.7}% 44
+\BOOKMARK [2][-]{subsection.3.8}{Erosion of Noise Branches}{section.3}% 45
+\BOOKMARK [3][-]{subsubsection.3.8.1}{Method 1: Erosion using Breadth-First-Search and Shortest Path Algorithms}{subsection.3.8}% 46
+\BOOKMARK [3][-]{subsubsection.3.8.2}{Method 2: Erosion by L-Point identification}{subsection.3.8}% 47
+\BOOKMARK [2][-]{subsection.3.9}{Recovery of lost pixel}{section.3}% 48
+\BOOKMARK [2][-]{subsection.3.10}{Length Estimation}{section.3}% 49
+\BOOKMARK [2][-]{subsection.3.11}{Angle Measurement}{section.3}% 50
+\BOOKMARK [3][-]{subsubsection.3.11.1}{Measurement over Nucleosome Center}{subsection.3.11}% 51
+\BOOKMARK [3][-]{subsubsection.3.11.2}{Measurement over Fitted Lines}{subsection.3.11}% 52
+\BOOKMARK [2][-]{subsection.3.12}{Optimization}{section.3}% 53
+\BOOKMARK [1][-]{section.4}{Results}{}% 54
+\BOOKMARK [2][-]{subsection.4.1}{Validation}{section.4}% 55
+\BOOKMARK [2][-]{subsection.4.2}{Biological Significance}{section.4}% 56
+\BOOKMARK [1][-]{section.5}{Discussion}{}% 57
+\BOOKMARK [1][-]{section.6}{Conclusion and Outlook}{}% 58

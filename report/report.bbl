@@ -19,6 +19,11 @@ PM~Hoffmann, A~Oral, RA~Grimble, S~Jeffery, JB~Pethica, et~al.
   Physical and Engineering Sciences}, volume 457, pages 1161--1174. The Royal
   Society, 2001.
 
+\bibitem{willemsen2000biomolecular}
+OH~Willemsen, MME Snel, A~Cambi, J~Greve, BG~De~Grooth, and CG~Figdor.
+\newblock Biomolecular interactions measured by atomic force microscopy.
+\newblock {\em Biophysical Journal}, 79(6):3267--3281, 2000.
+
 \bibitem{image11}
 Guthold M.
 \newblock Afm image of lambda dna.
@@ -30,11 +35,6 @@ Bruker corporation: Bio dynamics with atomic force microscopes.
 \newblock
   \url{https://www.bruker.com/products/surface-and-dimensional-analysis/atomic-force-microscopes/campaigns/bioafms-and-biological-applications/bio-dynamics-with-afm.html}.
 \newblock Accessed: 2016-07-05.
-
-\bibitem{willemsen2000biomolecular}
-OH~Willemsen, MME Snel, A~Cambi, J~Greve, BG~De~Grooth, and CG~Figdor.
-\newblock Biomolecular interactions measured by atomic force microscopy.
-\newblock {\em Biophysical Journal}, 79(6):3267--3281, 2000.
 
 \bibitem{image2}
 J~Battacharjee.
@@ -336,6 +336,26 @@ L~Yang, F~Albregtsen, T~L{\o}nnestad, and P~Gr{\o}ttum.
 \newblock Methods to estimate areas and perimeteres of blob-like objects: a
   comparison.
 \newblock 1994.
+
+\bibitem{itseez2016opencvman}
+{Itseez}.
+\newblock {\em {The OpenCV Reference Manual}}, 2.4.13.0 edition, May 2016.
+
+\bibitem{itseez2016opencvlib}
+Itseez.
+\newblock {Open Source Computer Vision Library}.
+\newblock \url{https://github.com/itseez/opencv}, 2016.
+
+\bibitem{ipol.2011.bcm_nlm}
+Antoni Buades, Bartomeu Coll, and Jean-Michel Morel.
+\newblock {Non-Local Means Denoising}.
+\newblock {\em {Image Processing On Line}}, 1, 2011.
+
+\bibitem{opencvInterfaceSupport}
+{OpenCV Interface Support}.
+\newblock
+  \url{http://de.mathworks.com/help/vision/opencv-interface-support-package.html},
+  2016.
 
 \bibitem{lam1992thinning}
 L~Lam, SW~Lee, and CY~Suen.

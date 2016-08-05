@@ -14,9 +14,11 @@
 \usepackage{color}
 \usepackage{transparent}
 \usepackage{pbox}
+\usepackage{float}
 \usepackage{graphicx} 
 \usepackage{listings}
-\usepackage{subcaption}
+\usepackage[font=small, labelfont=bf]{caption}
+\usepackage[font=small]{subcaption}
 \usepackage[utf8]{inputenc}
 \usepackage{pgfplots}
 \usepackage{url}
@@ -66,6 +68,7 @@ Susanne Ibing & literature research, test data creation, validation, assembling 
 Sarah Schott & literature research, test data creation, validation\\
 & Section \ref{sec: Related Work}\\[1em]
 Christian Schütz& OpenCV denoising, thresholding, length estimation, evaluation tools\\[1em]
+& Section \ref{sec: Denoising}, \ref{sec:Thresholding}, \ref{sec:Erosion of Noise Branches}, \ref{sec:PixelRecovery}\\[1em]
 Roman Spilger& literature research, test data creation, validation\\[1em]
 Oskar Staufer & literature research, test data creation \\
 & Sections \ref{sec: AFM}, \ref{sec: Epigenetics and Histones}, \ref{sec: Histone Complexes by AFM} \\[1em]
@@ -215,13 +218,13 @@ In this step, critical molecules are removed before analysing their length. Spis
 
 
 
-\subsubsection{Pixel Restoring}
+\subsubsection{Pixel Restoring}\label{sec:IntroPixelRestoring}
 
 Pixel at the skeleton ends only need to be restored if they were erroneously deleted during thinning of the fragment. The end pixels of each backbone are virtually extended in the direction of the last two pixels. If the new possible end point was part of the fragment before, the pixel is restored  \cite{spisz1998automated},  \cite{ficarra2005automated},  \cite{ficarra2002automated},  \cite{ficarra2005automatic}.
 
 
 
-\subsubsection{Length Determination}
+\subsubsection{Length Determination} \label{intro_length_determination}
 
 The determination of the length of the DNA skeletons is achieved by estimating the contour length which is defined as the polymer’s length at maximal physical extension  \cite{rivetti2001accurate}.  During digitization, the exact contour is lost. Anyhow, the accurate determination of the contour length is for many applications crucial. The Freeman estimator is the most commonly used method to determine the length  \cite{spisz1998automated},  \cite{marturelliautomated}. When the fragment is reduced to a skeleton with the width of one pixel, the connection between one and another pixel can be represented by eight directions (Figure \ref{fig: freeman}A). The Freeman estimator is adding the distance between the connected pixels from one endpoint to another. Even connections thus with vertical or horizontal direction are counting as 1, odd connections with diagonal connections are multiplied by 1.414. \\
 
@@ -370,8 +373,326 @@ The figure shows two possible angles $\alpha_1, \alpha_2$ which can be measured 
 \end{figure}
 \newpage
 \subsection{Software Architecture}\label{sec:Software Architecture}
-\subsection{Denoising}
+
+\subsection{Denoising}\label{sec:Denoising}
+The first steps in our MATLAB routine deal with preparing all images in order to binarize them with the most success, i.e. with the best DNA recognition rate as well as most accurate length estimation. This means that the routine removes as much noise and as many different kinds of noise so that it automatically and, before all else, correctly can classify any image pixel as either belonging to a DNA fragment / nucleus or as background.
+For this to achieve, we found that the initial step needs to be a noise reduction method called \textit{Non-local Means Denoising}. It is very well suited to remove white noise from images, which is a noise type that is very typical for AFM images. White noise is defined as a random signal that has a constant power spectral density. Although the image processing library of MATLAB is very extensive, no function implementing \textit{Non-local Means Denoising} could be found. Those denoising functions that are provided by MATLAB, such as \textit{wdencmp} in conjunction with \textit{ddencmp}, or \textit{wiener2}, proved not to be as suitable for denoising the here analysed images, due to their very specific noise types (which are also discussed in greater detail in Sections \ref{sec:Filtering} and \ref{sec:Thresholding}). However, the method is provided by the open source computer vision and machine learning library \textit{OpenCV} \cite{itseez2016opencvman} \cite{itseez2016opencvlib}. 
+
+\subsubsection{Non-local Means Denoising Algorithm}
+The algorithm of \textit{Non-local Means Denoising} is provided by the OpenCV library function \textit{fastNlMeansDenoising} that requires the following parameters:
+\begin{itemize}
+	\item \textit{filter strength} (float): The larger this parameter, the better noise is removed and the more details are lost. In our case we chose the value 2 since this appeared to provide a good balance between noise removal and loss of DNA details.
+	\item \textit{template window size} (int): Window size in pixels of the patch that is used to compute weights. The recommended value is 7, which we found to be sufficient.
+	\item \textit{search window size} (int): Window size in pixels of the patch that is used to compute the denoised value of the currently examined pixel from. Since this value affects performance linearly, we chose this value to be slightly smaller than the recommended value of 21, namely 17. This proved to be sufficient for good denoising results.
+\end{itemize}
+The heuristics to find these parameters were a) to achieve fastest possible runtime while b) providing satisfactory levels of denoising as measured by final DNA detection rate and length estimation accuracy. Increasing the search window size from 17 to up to 31 greatly increased the removal of background in the resulting preprocessed images. However, in conjunction with the subsequent steps of Filtering (\ref{sec:Filtering}) and Thresholding (\ref{sec:Thresholding}), this gain did not result in a notably improved detection rate of DNA objects or increased accuracy of length calculation. Since it also had a drastic negative impact on the overall runtime, we decided to keep this parameter as low as possible without loosing the benefit of denoising. Comparable observations were made when investigating the required template window size. Increasing it resulted in increased runtime without any distinct gains in image denoising. \\
+
+The great strength of this method is that for each pixel p of an image it searches for similar pixels - not in a close distance around that pixel, like many other noise reduction approaches do, but over a large portion of the image. The average value of these pixels is then calculated and set as the new, denoised value of the currently examined pixel p. In order to further increase robustness, similarity between two pixels p and q furthermore is computed by calculating a weighted Euclidean distance between square patches around these pixels, and not between only those two pixels. 
+So, the denoised value $\hat{u}(p)$ of pixel p is calculated as follows:
+\begin{center}
+	$ \hat{u}(p) = \frac{1}{C(p)}\sum_{q \in B(p,r)}u(q)w(p,q) $
+\end{center}
+with
+\begin{itemize}
+	\item u(q) being the current value of pixel q
+	\item B(p,r) being the  neighborhood of pixel p in a (2r+1) x (2r+1) large window centered at p
+	\item C(p) being a normalisation factor:
+	\begin{center} $ C(p) = \sum_{q \in B(p,r)} w(p,q) $ \end{center}
+	\item w(p,q) being a weight function with an exponential kernel for the determination of similarity between pixels p and q:
+	\begin{center}$ w(p,q) = e^{-\frac{max(d^2-2\sigma^2, 0.0)}{h^2}} $ \end{center}
+	\item $d^2$ being the square Euclidean distance of the $(2f+1) x (2f+1)$ large color patches centered at p and q, respectively:
+	\begin{center}
+		$ d^2(B(p,f), B(q,f)) = \frac{1}{3(2f+1)^2}\sum_{j \in B(0,f)}(u(p+j)-u(q+j))^2$
+	\end{center}
+	\item $\sigma$ being the standard deviation of the noise
+	\item h being a filtering parameter depending on the noise level $\sigma$
+\end{itemize}
+A much more detailed description of the algorithm can be found at \cite{ipol.2011.bcm_nlm}, which we recommend to the interested reader.
+
+\subsubsection{Benefits of using Non-local Means Denoising}
+As can be seen in Figure \ref{fig:denoising}, the denoising procedure results in a much sharper separation of DNA objects from their background than without. This is especially apparent when comparing the histogram of an yet unprocessed image with the histogram of the same image after it has been denoised (Figure \ref{fig:denoising_histograms}, upper row and lower row, respectively).
+
+...
+
+Furthermore, some artifacts already could be removed. AFM images often show long but only few pixels wide horizontal lines that stem from the cantilever skipping while scanning the image. One such example is visibile in the upper image of Figure \ref{fig:denoising_imgs} in the lower left corner. This artifact is not visible anymore in the denoised image (lower image of Figure \ref{fig:denoising_imgs}) - it was replaced by background during denoising.
+
+\begin{figure}[htb!]
+	\centering
+	\begin{subfigure}{0.28\textwidth}
+		\includegraphics[width=\linewidth]{beforeDenoise_img.png}			
+		
+		\vspace{0.1cm}
+		
+		\includegraphics[width=\linewidth]{afterDenoise_img.png}
+		\caption{}
+		\label{fig:denoising_imgs}
+	\end{subfigure}
+	\begin{subfigure}{0.7\textwidth}
+		\includegraphics[width=\linewidth]{beforeDenoise_histogram.png}
+		
+		\vspace{0.1cm}
+		
+		\includegraphics[width=\linewidth]{afterDenoise_histogram.png}
+		\caption{}
+		\label{fig:denoising_histograms}
+	\end{subfigure}
+	\caption{Effect of denoising procedure on grey scale images and their histograms.\\
+		The upper row shows an unprocessed image before denoising (a) as well as its histogram (b), while the lower row shows the same image (a) and histogram (b) after denoising. Histograms show a logarithmic y-axis. It is apparent that denoising results in a sharper separation of DNA from background, thereby increasing the image's contrast.}
+	\label{fig:denoising}
+\end{figure}
+
+\subsubsection{Technical considerations / limitations}
+As mentioned in Section \ref{Software Architecture}, our program is written using MATLAB. However, OpenCV is a C++ library, so \textit{fastNlMeansDenoising} is a C++ function. Consequently, we had to find a way to combine MATLAB with C++ code. \\
+For such cases, there exists a C++ interface library that is provided by MATLAB (see \cite{opencvInterfaceSupport}). With its help, C++ code can be compiled into so-called mex files, which themselves call OpenCV functions and which can be called like regular MATLAB functions. We succeeded in integrating such specifically compiled mex files into our main program and, thusly, in denoising all images. Unfortunately, we had to discover that the resulting, denoised images were considerably different from those that had been denoised by the original C++ function. Since we were unable to discern the reason for this unexpected behavior, we had to find other measures to use OpenCV functionality from within our MATLAB routine. Therefore, our routine makes a system call to run an C++ executable file. This file is a standard executable compiled from the C++ code containing the denoising instructions; it will read all images, denoise them, and temporarily create and write new, denoised images. These images then are read by our MATLAB routine as input for the rest of the program.
+
+\newpage
 \subsection{Filtering}\label{sec:Filtering}
+\subsubsection{Necessity of Filtering}
+%Although it is common practice to use filtering techniques as a way of preprocessing the data, it was the goal 
+At first, one needs to ask why it is necessary to use filtering techniques in the first place, as it is stated in various other papers (compare \cite{ficarra2005automated}, \cite{ficarra2005automated}). Since the goal of this work was to find a most efficient and fast solution, a heuristic approach was proposed which only took object size of connected components into account. For this the MATLAB function bwconncomp was applied to a black and white image of the thick DNA strands.\\
+Although this eliminated most of the smaller fragments, and some larger ones, obviously some objects remained that were dirt or impulsive noise. \\
+Like Ficarra et al. \cite{ficarra2005automated} pointed out, a median filter with a 3x3 mask helps eliminating these components quite well, yet there is still room for improvement. Regarding the aspect of very limited available data, it was another aim to maximize the number of sampled strings. Therefore, other, less common techniques besides the already tested filters were investigated.\\
+As it was rather soon apparent that regions with impulsive noise had a rather high frequency, a lowpass filter approach seemed suitable.
+
+\subsubsection{The Concept of Adaptive Low Pass Filtering}
+Firstly, the most prominent example for a lowpass filter is the Gaussian filter. It essentially smoothes the data, but in a relatively predictive way, since it has a predefined filtering matrix. But, since the signal-to-noise ratio is not always known , a simple Gaussian filter might only blur the edges of the outer DNA regions, instead of effectively reducing the amount of white noise. Rather than simply smoothing the image with a Gaussian filter, the idea was to eliminate regions with high contrast.  \\
+Removing such high-contrast regions is best achieved in frequency space. The freuquency domain, simply put, transforms the original image data into a decomposition of sinus waves. For the transformation between spatial domain and frequency domain the MATLAB implementation of the Fast Fourier Transformation was used. Without going into further detail, the amplitude of such a frequency representation gives a comparatively abstract, but nonetheless intuitive, visualisation of such high contrasts as shown in figure \ref{fig:step1lpf}. \\
+As one can easily observe, there is a denser circular area in the image center. This central area represents the lower frequencies which corresponds to a constant image region. This can be seen on every picture of the used dataset but is to be expected in every other dataset as well. The only difference lies in the clear distinction and brightness of the center. Since a classic lowpass filter requires a clipping region as a fixed parameter, it would not work perfectly for every picture because one would inevitably overfit for a certain set of images. Standard circular detection via circular Hough transform has not been able to sufficiently detect this area. \\
+It should be mentioned that for non-quadratic images an ellipsoid instead of a circle can be observed. In this case the algorithm differs only in one step, so for consistency and simplicity only the circular case is presented. \\
+% The huge improvement of the proposed filter is now an adaption to the low frequency area. In the following section, the method is discussed in detail.
+
+% 02.07 Dennis and Philip
+\subsubsection{Description of Proposed Method}
+
+\begin{figure}[H]
+	\begin{subfigure}[b]{0.32\textwidth}
+		\includegraphics[width=\linewidth]{step1}
+		\caption{}
+		\label{fig:step1lpf }
+	\end{subfigure}%
+	\hspace{\fill}
+	\begin{subfigure}[b]{0.32\textwidth}
+		\includegraphics[width=\linewidth]{step2}
+		\caption{}
+		\label{fig:step2lpf}
+	\end{subfigure}%
+	\hspace{\fill}
+	\begin{subfigure}[b]{0.32\textwidth}
+		\includegraphics[width=\linewidth]{step3}
+		\caption{}
+		\label{fig:step3lpf}
+	\end{subfigure}%
+	\hspace{\fill}
+	\begin{subfigure}[b]{0.32\textwidth}
+		\includegraphics[width=\linewidth]{step4}
+		\caption{}
+		\label{fig:step4lpf}
+	\end{subfigure}%
+	\hspace{\fill}
+	\begin{subfigure}[b]{0.32\textwidth}
+		\includegraphics[width=\linewidth]{step5}
+		\caption{}
+		\label{fig:step5lpf}
+	\end{subfigure}%
+	\hspace{\fill}
+	\begin{subfigure}[b]{0.32\textwidth}
+		\includegraphics[width=\linewidth]{step6}
+		\caption{}
+		\label{fig:step6lpf}
+	\end{subfigure}%
+	\hspace{\fill}
+	\begin{subfigure}[b]{0.32\textwidth}
+		\includegraphics[width=\linewidth]{step7}
+		\caption{}
+		\label{fig:step7lpf}
+	\end{subfigure}%
+	\hspace{\fill}
+	\begin{subfigure}[b]{0.32\textwidth}
+		\includegraphics[width=\linewidth]{step8}
+		\caption{}
+		\label{fig:step8lpf}
+	\end{subfigure}%
+	\hspace{\fill}
+	\begin{subfigure}[b]{0.32\textwidth}
+		\includegraphics[width=\linewidth]{step9}
+		\caption{}
+		\label{fig:step9lpf}
+	\end{subfigure}
+	\caption{Circle detection (a) Amplitude representation of the initial FFT \\transform
+		(b) Binary image
+		(c) Eroded image (d) largest connected component \\
+		(e) After hole filling for (f) Removal of spurious edges
+		(g) Dilated image (h) Final result, and (i) comparison between initial and final image}\label{fig:lowpass}
+\end{figure}
+
+
+As input, the method takes an arbitrary gray-value image which then is transformed to the frequency domain with MATLAB fft2 function. For a representation similar to figure \ref{fig:step1lpf} a shifting of the result has to be done as well. 
+% add detailed description of FFT functions and usage!
+A detailed description of the frequency functions and their specific usage can be found on Mathworks'  \href{http://www.mathworks.com/}{homepage}\footnote{http://www.mathworks.com/}. \\
+The complex result has then to be transformed into a gray-value amplitude image in which the imaginary part is discarded and the real part is visualized as a logarithmic absolute value. Now the result is generally the same as above. \\
+For the approximation of the circle it is also necessary to convert the image to a binary image. Since only a rough threshold is necessary a simple and fast algorithm for thresholding is used (%needs attention!
+built-in Otsu as described in (reference to Christian)). This rough approximation can be excused due to the clear lack of a distinct circular contour. %still needs attention
+This also explains why the implemented circular Hough transform (MATLAB imfindcircles) was not able to deliver satisfying results.\\
+\\
+In the used dataset sometimes a distinct lack of very low frequencies - equaling a sharp (yet only one pixel in width) line in the center - could be noticed. To rule out similar cases in other datasets as well, a 20x20 pixel white rectangle was inserted in the center (see result section for further discussion).
+Afterwards standard erosion with a disk shape is performed. With erosion, noise that persists in the binary image is eliminated by fitting these disks around each black pixel and coloring all pixels within this shape black as well. A detailed explanation on how to define structuring elements such as the used disk and the MATLAB imerode function can be found on \href{http://www.mathworks.com/}{Mathwork}\footnote{http://www.mathworks.com/}. \\
+Out of the remaining connected objects the circle now represents the largest one. Hence it is filtered out with MATLAB \begin{verbatim}bwareafilt(.., 1, 'largest') \end{verbatim}
+which extracts this largest region and the resulting image has only this central part colored in white. To assure a compact center another operation is performed which fills in enclosed black areas within the circular region 
+\begin{verbatim}imfill(...,'holes') \end{verbatim}
+The remaining spikes at the top and bottom of the cirlce are removed by deleting every row where there are only a certain number of white pixels. To reverse the erosion process and get a representative circle the MATLAB imdilate operation is performed with a disk structure. \\
+MATLAB's regionprops function delivers the centroid as well as the minor and major axis length of the object which then is used to calculate an approximation of the actual radius of the circle. Notice that it is also possible to extract an elliptical structure from non-quadratic images which will not be described in detail here since it does not differ from the steps for a quadratic image. \\
+% 03.07 Dennis
+For the radius approximation the following formula is used: (insert formula here) \\
+Since the removal of the spikes also flattens the circle a bit, it is important to slightly weight the major axis length a bit heavier.  For the distance to the center a 2D-grid is produced by MATLAB ndgrid, using one grid for the distance in x- and one for the distance in y-direction. Afterwards, the distance to the center point is then calculated by the ordinary circular formula to determine whether a point is within the circle (another formula here). Evaluating this formula for each point allows to select the circular region which is then stored as a binary matrix. \\
+Finally, the circular region is "cut out" of the original image by multiplying it with the initial fourier transformed image. Before retransforming the image, an inverse shift has to be done with ifftshift. After using ifft2 to recover a spatial form of the image it is also important to transform it back into a uint8 image, using only the real-valued part of the transform. A uint8 image is an image consisting of unsigned 8-bit integer values in the range of 0 to 255.\\
+This can all be put together in one code line, resulting in
+\begin{verbatim}
+image = uint8(real(ifft2(ifftshift(image))));
+\end{verbatim}
+
+% changes 03.07 Dennis order swapped with results and comparison
+\subsubsection{Advantages over Other Filtering Techniques}
+Before comparing the results of the proposed method it should also be discussed why no other filter was used instead.
+The biggest issue with filtering techniques is that it is hugely dependent on the available dataset. While others (insert papers with AFM image data here) usually have a pretty distinct noise level and try to optimize for this specific set of images, the goal of this work was to really adapt to various datasets. For different image qualities of AFM pictures, and especially for different resolutions and cutout sizes, results may vary although done by the same instrument or person. \\
+Ficarra et al. \ref{ficarra2005automated} use three distinct filtering techniques for the preprocessing step: A 3x3 median filter, an adaptive Wiener filter and a high-pass filter. As for the median filter, the proposed method was also used in this work (compare chapter Median Filter). As a side note it should be mentioned that the median filter has good results for filtering out sudden peaks of noise but is rather inefficient with larger dabs of noise in an image. \\
+The mentioned Wiener filter was not pursued any further for the following reasons. First, it works best for a constant noise level which isn't given in all datasets what ultimately let to the design of an own method. Also it is very suitable to clean up the inital data which isn't as much a requirement to this algorithm since it has a fully devoted step of image denoising before filtering out anything. Hence another denoising step would only disturb the image more than it would help remove further artifacts. \\
+The problem of the high-pass filter was a bit more subtle. Although it is helpful in providing sharper edges for the later detection of DNA strings, it also attenuates the intensity border between dirt and actual DNA strings (compare section on Histograms). As for the high pass filter itself, it does the exact opposite of a low pass filter: Namely sorting out all of the lower frequency in Fourier space. The aim of Ficarra et al. \ref{ficarra2005automated} was to eliminate noise which was rather low-freuqent but yet again this is a step usually eliminated with denoising in this algorithm. \\
+Generally the methods by Ficarra et al. would lead to a much lower rate of actual DNA in the resulting objects and therefore requiring a more subtle decision in whether or not it actually is a DNA string which is currently viewed. By sacrificing a distinct border between the DNA and background, a much lower percentage of noise will be classified as a false positive in the end.
+
+\subsubsection{Results and Comparison}
+% 8 images as comparison
+% compare the changes in the histogram before and after the filtering steps.
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}[b]{0.321\textwidth}
+		\includegraphics[width=\linewidth]{original}
+		\caption{}
+		\label{fig:origNoFilt}
+	\end{subfigure} 
+	\hspace{\fill}
+	\begin{subfigure}[b]{0.321\textwidth}
+		\includegraphics[width=\linewidth]{only_median}
+		\caption{}
+		\label{fig:onlyMedianFilt}
+	\end{subfigure}
+	\hspace{\fill}
+	\begin{subfigure}[b]{0.321\textwidth}
+		\includegraphics[width=\linewidth]{only_low}
+		\caption{}
+		\label{fig:soLowFilt}
+	\end{subfigure}
+	\captionsetup{justification=centering}
+	\caption{Comparison between different filtering techniques \\
+		(a) original image
+		(b) median filter
+		(c) low pass filter}
+	\label{fig:lowpassCompare1}
+\end{figure}
+
+In this part the described low pass filter will be compared to a standard median filter. The used median filter was implemented by Mathworks and the algorithm used is medfilt2 \footnote{http://de.mathworks.com/help/images/ref/medfilt2.html}. In the original image one can see very clearly many noticeable horizontal lines. The occuring of this lines itself makes it obvious again why a good filtering method is needed. And indeed the used median filter removes most of the lines. Only one prominent line in the middle remains. \\
+On the third image one can see the effect of the implemented low pass filter. Immediately it is obvious that this image is much darker than the other two images, especially the median filtered. This is due to the fact that the average color of the original image is rather dark. Since the low pass filter averages over the data the result is darker than the original. On AFM images this is nearly always the case. Secondly, in the low pass filterd image one can see more than one horizontal line. Each of these lines is not as prominent as the one extracted by the median filter though.  \\
+On the other hand both methods hugely decrease the background noise compared to the original image. However on the low pass filterd image the background is even more uniform.
+
+
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}[b]{0.321\textwidth}
+		\includegraphics[width=\linewidth]{original}
+		\caption{}
+		\label{fig:origNoFilt2}
+	\end{subfigure} 
+	\hspace{\fill}
+	\begin{subfigure}[b]{0.321\textwidth}
+		\includegraphics[width=\linewidth]{both_inverse_order}
+		\caption{}
+		\label{fig:MedianLowPassFilt}
+	\end{subfigure}
+	\hspace{\fill}
+	\begin{subfigure}[b]{0.321\textwidth}
+		\includegraphics[width=\linewidth]{both_right_order}
+		\caption{}
+		\label{fig:LowPassMedianFilt}
+	\end{subfigure}
+	\captionsetup{justification=centering}
+	\caption{Comparison between different filtering techniques \\
+		(a) original image
+		(b) median then low pass filter \\
+		(c) low pass then median filter}
+	\label{fig:lowpassCompare2}
+\end{figure}
+
+Since both filtering methods did not achieve an ideal outcome yet the idea came up to combine both methods. In figure \ref{fig:lowpassCompare2} one can see the original image and a combination of the two filters. On both filtered images a similar effect to above can be observed. If the median filter is applied first the number of horizontal lines are reduced greatly but the remaining line is really prominent. When the low pass filter is used before the median filter the number of lines is higher but the lines itself are smaller and do not stand out as much as in the other case. \\
+However, both methods share the advantage that the background is as uniform as the background of an only low pass filtered image. \\
+Both of these approaches were implemented and analyzed in regard to their respective results of later processing steps. It could be shown that more useful DNA strands could be extracted by using method \ref{fig:MedianLowPassFilt}. This is in accordance with what one would expect looking at the results above. As a result in this project always the median filter was applied before the low pass filter.\\
+
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}[b]{0.45\textwidth}
+		\includegraphics[width=\linewidth]{original_histo}
+		\caption{}
+		\label{fig:origNoFiltHist}
+	\end{subfigure} 
+	\\
+	\begin{subfigure}[b]{0.45\textwidth}
+		\includegraphics[width=\linewidth]{only_med_histo}
+		\caption{}
+		\label{fig:MedianFiltHist}
+	\end{subfigure}
+	\hspace{\fill}
+	\begin{subfigure}[b]{0.45\textwidth}
+		\includegraphics[width=\linewidth]{only_low_histo}
+		\caption{}
+		\label{fig:LowPassFiltHist}
+	\end{subfigure}
+	\captionsetup{justification=centering}
+	\caption{Histograms of different filtering techniques with logarithmic y-axis scaling. 
+		(a) original image
+		(b) median filter
+		(c) low pass filter}
+	\label{fig:lowpassHisto1}
+\end{figure}
+
+In figure \ref{fig:lowpassHisto1} three histograms of the original image and after the application of the two filtering techniques can be seen. As one can see in \ref{fig:origNoFiltHist} the original image is lacking an explicit distribution. Many peaks can be observed, especially a striking one at the right end of the spectrum. Obviously there is some shadowing in the distribution as well which makes the distinction between noisy and DNA regions quite hard because a patch consisting of only a few pixels of the same value might still be in range of the values the DNA consists of.\\
+In comparison the median filtered image does look very similar at first glance. However, a better distinction can be observed at lower values while at higher values the distribution does not differ as much and there is a very striking peak at 0 which is irritating but negligible. A big advantage can be seen regarding the shadowing of the values. The shadowed peak is much narrower than in the non-filtered image and the low points in medium range are not as low as before. On the other hand the slope of the peak is much higher which is useful for differentiating between background and DNA objects. \\
+The histogram of the low pass filtered image \ref{fig:LowPassFiltHist} is eliminating the shadowing problem. The distribution of the values is really smooth after this processing step. One can observe that low values below 50 are cancelled out which leads to the impression that the slope is steeper than before. In truth only the distribution of the values has changed. On the other side of the spectrum the high peak is smoothed out too which leads to higher values than in the original image. This shift to higher values leads to the herein before mentioned effect of darkening the picture. On the other hand the general distribution of the values remains the same and the peak is not narrowed as it is by using the median filter. Similar results can be observed in all images.
+
+
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}[b]{0.45\textwidth}
+		\includegraphics[width=\linewidth]{original_histo}
+		\caption{}
+		\label{fig:origNoFiltHist2}
+	\end{subfigure} 
+	\\
+	\begin{subfigure}[b]{0.45\textwidth}
+		\includegraphics[width=\linewidth]{both_inverse_histo}
+		\caption{}
+		\label{fig:MedianLowPassFiltHist}
+	\end{subfigure}
+	\hspace{\fill}
+	\begin{subfigure}[b]{0.45\textwidth}
+		\includegraphics[width=\linewidth]{both_right_histo}
+		\caption{}
+		\label{fig:LowPassMedianFiltHist}
+	\end{subfigure}
+	\captionsetup{justification=centering}
+	\caption{Histograms of different filtering techniques with logarithmic y-axis scaling.
+		(a) original image
+		(b) median then low pass filter \\
+		(c) low pass then median filter}
+	\label{fig:lowpassHisto2}
+\end{figure}
+
+In figure \ref{fig:lowpassHisto2} the result of the combination of the two filtering techniques can be observed. Both sequences share the trait of the low pass filter that there is no shadow anymore and that the values are higher overall. The high peak at the end of the spectrum has vanished in both cases too. \\
+When the low pass filter is applied before the median filter one can see a peak at 0 again. If the algorithms are executed in the reverse order this effect vanishes and pixel values below 50 exist which does not matter much but should be considered nonetheless. In case \ref{fig:MedianLowPassFiltHist} the slope between values of 50 and about 90 is a bit steeper than in case \ref{fig:LowPassMedianFiltHist} and the values are more equally distributed at pixel values betwenn 130 and 170. \\
+The steeper slope explains the results that could be observed earlier. By applying the median filter first the DNA and the background can be distinguished better. Another useful property is that the upper bounds are clearly discernible through a steep slope as well. Although this wasn't particularly helpful in the used dataset, it might come in handy for normalized datasets. The reason behind that is that a normalized dataset (with uniform gray-values for DNA strands) would allow to reject noise peaks as well. As mentioned before, in the used dataset no such normalization was performed which led to further spread values for DNA and would not allow a discernible region for noise.
+\\ One should keep in mind that the peak is not the DNA but the background. So a clear peak at values of around 100 extracts the background perfectly. The results seen in \ref{fig:MedianLowPassFiltHist} confirm the impression given earlier in figure \ref{fig:lowpassCompare2} that applying the median filter and then the low pass filter deliver the best results.
+
+
+\iffalse
+\newpage
+\subsection{Filtering_OLD}\label{sec:Filtering}
 %Although it is common practice to use filtering techniques as a way of preprocessing the data, it was the goal 
 At first, one needs to ask why it is necessary to use filtering techniques in the first place, as it is stated in various other papers (insert citation here). Since the goal was to find a most efficient and fast solution, a heuristic approach was proposed which only took object size of (MATLAB) connected components into account.\\
 Although this eliminated most of the smaller fragments, and some larger ones, obviously some objects remained that were dirt or impulsive noise. \\
@@ -475,15 +796,18 @@ Generally the methods by Ficarra would lead to a much lower rate of actual DNA i
 In (e) holes are filled. for (f) the spurious edges are removed.
 Lastly, a dilation is performed in (g) and the resulting circular selection is displayed in (h).}\label{fig:lowpass}
 \end{figure}
+\fi
 
 % 03.07 Dennis initial description and structure
 \subsection{Thresholding}\label{sec:Thresholding}
-Missing: Explain why thresholding is used.
+After denoising and the subsequent application of our filter combination, the next logical step is to determine a threshold for the binarization of each image. Binarization means that each pixel of an image can be classified either as background or as belonging to a potential DNA strand / nucleosome. It is done by computing a gray value, the threshold, each pixel's gray value is compared to in order to classify it. However, many images still contain noise types that have not yet been removed but that will have a strong influence during the computation of such a threshold. If not removed, the corresponding threshold will be so much distorted that meaningful / useful binarization will not be possible.
+Therefore, an adaptive thresholding algorithm was deployed that allowed us, on any image, to create a much more uniform background. This step is one of the reasons for the general robustness of our product towards different noise sources.
+
 
 \subsubsection{Adaptive Thresholding}
-The TIFF images often vary in intensity, distribution and scaling of the height profile of the DNA samples. This presents a couple of problems for the thresholding algorithms, such as pollution of some image regions which distort the threshold. As discussed here (\ref{sec:Thresholding}) these issues lead to a false classification of the DNA strands up to completely falsifying the results on this image.
+The TIFF images often vary in intensity, distribution and scaling of the height profile of the DNA samples. This presents a couple of problems for the thresholding algorithms, such as pollution of some image regions which distort the threshold. As discussed above, these issues lead to a false classification of the DNA strands or even to a complete loss of image information.
 Two sorts of noise persist after the initial pipelining steps  
-Opencv Denoising, LowPassFilter and Median Filter (see Section \ref{sec:Filtering}).
+Opencv Denoising, LowPassFilter and Median Filter (see Sections \ref{sec:Denoising}, \ref{sec:Filtering}).
 \begin{figure}[!htb]
 	\begin{subfigure}{0.5\textwidth}
 		\includegraphics[width=\linewidth]{noise1.png}
@@ -811,7 +1135,173 @@ The result of this algorithm differs from the result of Hilditch's algorithm as 
 \newpage
 % second approach: Zhang-Suen https://github.com/linbojin/Skeletonization-by-Zhang-Suen-Thinning-Algorithm/blob/master/thinning.m
 \subsection{Erosion of Noise Branches}\label{sec:Erosion of Noise Branches}
-\subsection{Lenght Estimation}
+At this stage of the program, each DNA object already has been isolated into a small black-and-white image that otherwise only contains this one DNA object, and both thinning algorithms have produced thinned DNA-strands. However, due to the nature of their operations, in most cases the resulting strands not only have two end points, but contain branches and multiple end points. Several examples can be seen in the right panel of Figure \ref{fig: thinning} above. In order to correctly determine DNA length, it is necessary to erode these branches so that afterwards only DNA strands without any branches and with only two ends are left. These will be called DNA backbones. Consequently, the next step in our routine is the erosion of these noise branches and the extraction of DNA backbones. This problem was approached in two different ways.\\
+\iffalse
+For Estimating the length of one DNA strand several approaches were introduced in the literature. Firstly, spline fitting was one prominent idea. For spline fitting, the DNA strand has to be subdivided into a few piece-wise strands that add up into the original strand. Out of every piecewise strand some points are taken and these points are used to interpolate with a so called spline which is a polynom of n-th degree (n equals the number of supporting points minus 1). Normally, these splines have to satisfy some more constraints to improve accuracy and smoothness of the interpolation. By interpolation of every substring it is possible to calculate the overall length of the object. The challenge of this method is to choose the best substrings and supporting points. \\
+\fi
+The problem of DNA backbone extraction was approached in two different ways.
+
+\subsubsection{Method 1: Erosion using Breadth-First-Search and Shortest Path Algorithms}
+Basis of this method are the conversion of DNA objects into graphs and subsequent usage of graph algorithms for branch removal. It consists of the following steps:
+\begin{enumerate}
+	\item Exclusion of invalid DNA objects
+	\item Conversion of pixel lists to graph representations
+	\item Determination of the two most distant end points
+	\item Determination of shortest path between those end points
+\end{enumerate}
+Invalid DNA objects are those that meet any of the following criteria:
+\begin{itemize}
+	\item Self-intersecting: The length of an DNA strand that intersects itself cannot be meaningfully determined.
+	\item Wrong size: Since the size of all DNA strands that have been used in the preparation of the AFM probe is known, any detected DNA object can be expected to be in size range of 40 to 150 pixel. If it contains less pixels, it either has been truncated during preparation of the AFM probe or it is no DNA at all. If it is made up from more pixels it either is an artifact that has not been deleted during filtering and thresholding, or it is made up from several overlapping DNA strands. 
+\end{itemize}
+In all of these cases, length determination does not make sense. Such objects are marked as being invalid and are excluded from further processing.
+\begin{figure}[htb!]
+	\centering
+	\includegraphics[width = 0.2\textwidth]{dna_with_loop.png}
+	\caption{Self-intersecting DNA object. The Euler number of this black-and-white image is 0, indicating that there is at least one object with one hole in the image.}
+	\label{fig:dna_with_loop}
+\end{figure}
+\\Self-intersection of an DNA object means that the DNA is looping back on itself and then touches or crosses itself (compare Figure \ref{fig:dna_with_loop}). A consequence of this is that the DNA object can be considered to be an object with a hole. This, in turn, means that the topology of this object is different compared to an object that does not have a hole, which is reflected in the Euler number of its image. Therefore, for each DNA object the Euler number is calculated using the MATLAB function \textit{bweuler}. It returns the number of objects in an image minus the number of holes. Since for each DNA object an image exists that only contains this one object, this function efficiently can be used to distinguish between self-intersecting and non-intersecting DNA objects. If the Euler number is 0, then an object with an hole has been detected, and the DNA object is flagged as being invalid. Only if the Euler number is 1, the DNA object will be further processed.\\
+
+\begin{figure}[!htbp]
+	\centering
+	\begin{subfigure}{0.25\textwidth}
+		\includegraphics[width=\linewidth]{small_DNA_obj.png}
+		\caption{Exemplary black-and-white image of a small DNA object}
+		\label{fig:dna_obj_example}
+	\end{subfigure}
+	\begin{subfigure}{0.25\textwidth}
+		\includegraphics[width=\linewidth]{small_DNA_obj_adj_matrix.png}
+		\caption{Corresponding upper triangular adjacency matrix}
+		\label{fig:dna_obj_adjMatrix}
+	\end{subfigure}
+	\begin{subfigure}{0.25\textwidth}
+		\includegraphics[width=\linewidth]{small_DNA_obj_graph.png}
+		\caption{Undirected graph}
+		\label{fig:dna_obj_graph}
+	\end{subfigure}
+	\caption{Simple example for the conversion of DNA objects to undirected graphs.
+		(a) From a small image containing exactly one DNA object, (b) an upper triangular adjacency matrix is created where all ones (red) represent edges between directly neighboring pixels. Only pixels containing information, i.e. white pixels, need to be considered and here, no pixel is neighbor to itself. (c) Such a matrix represents an undirected graph.}
+	\label{fig:dna_graph_creation}
+\end{figure}
+The next step is the conversion of DNA to graph objects. This approach relies on the fact that, at this stage of the entire process, the so far detected and thinned DNA objects internally are represented as chains of white pixels that belong to exactly one object. Since thinning already has taken place, this approach assumes that any pixel in such a chain is only neighbor to other pixels that represent other links of the chain.\\
+Therefore, each DNA object can be transformed into a graph G (Figure \ref{fig:dna_graph_creation}). The nodes of this graph are those pixels representing the DNA object, while the graph's edges describe the direct 8-neighborhood between pixels (Figure \ref{fig:dna_obj_adjMatrix}). Since in this case neighborhood between pixels is a bijection, the resulting graph G is undirected, and it suffices to create G from an upper triangular adjacency matrix.\\
+\begin{figure}[htb!]
+	\centering
+	\begin{subfigure}{0.22\textwidth}
+		\includegraphics[width=\linewidth]{small_DNA_graph_bfs1.png}			
+		
+		\vspace{0.2cm}
+		
+		\includegraphics[width=\linewidth]{small_DNA_obj_bfs1.png}
+		\caption{First bfs}
+		\label{fig:dna_graph_bfs1}
+	\end{subfigure}
+	\begin{subfigure}{0.22\textwidth}
+		\includegraphics[width=\linewidth]{small_DNA_graph_bfs2.png}
+				
+		\vspace{0.2cm}
+		
+		\includegraphics[width=\linewidth]{small_DNA_obj_bfs2.png}
+		\caption{Second bfs}
+		\label{fig:dna_graph_bfs2}
+	\end{subfigure}
+	\begin{subfigure}{0.22\textwidth}
+		\includegraphics[width=\linewidth]{small_DNA_graph_ssp.png}	
+				
+		\vspace{0.2cm}
+		
+		\includegraphics[width=\linewidth]{small_DNA_obj_ssp.png}
+		\caption{Shortest path }
+		\label{fig:dna_graph_ssp}
+	\end{subfigure}
+	\begin{subfigure}{0.22\textwidth}
+		\includegraphics[width=\linewidth]{small_DNA_real_bfs.png}
+				
+		\vspace{0.2cm}
+		
+		\includegraphics[width=\linewidth]{small_DNA_real_ssp.png}
+		\caption{Example DNA}
+		\label{fig:dna_real_ssp}
+	\end{subfigure}
+	\caption{Determining DNA backbones via two breadth-first searches (bfs) and a shortest path search.
+		(a) On the graph G representing a DNA object, one iteration of breadth-first search (bfs) with a randomly chosen start node (green) will return one node (red) of the pair of nodes that is connected via the longest path within G. (b) Using this node as starting node (green) in a second iteration of bfs will return the other node (red) of this pair. (c) Calculating the shortest path between these two nodes returns the DNA backbone (green edges) while excluding noise branches (red edge). The upper row of panels (a) to (c) depicts results on the graph object introduced in Figure \ref{fig:dna_graph_creation}, the lower row shows the same results in the respective DNA object representation. (d) A thinned DNA object as detected by the program is shown. The upper image indicates the pair of nodes furthest apart from each other, the lower image highlights the shortest path between them (green), a noise branch (red) and pixel that were lost during the thinning process (blue).}
+	\label{fig:dna_backbone_detection}
+\end{figure}
+Having created a graph representation for each DNA object, another simple measure allows for the detection of further invalid DNA objects. At this stage of the program, a valid DNA object is expected to be a single DNA strand without any intersections. Its graph will be a tree, i.e. a graph in which each pair of nodes is connected via exactly one, and only one path. However, if smaller DNA strands intersect each other without fully forming any circle, they appear to be one large object that still can be within the size limits. Although a graph of such an object also will be a tree, this tree will have a high branching factor, which means that the difference between the number of edges and the number of nodes is larger compared to a valid DNA object as described above. Therefore, any DNA object whose graph representation does not fulfill the following criteria is also excluded from further processing and flagged as being invalid.
+\begin{center}\textit{number of edges - number of nodes $\leq$ 2}\end{center}
+Due to their graph representations, it is now possible to determine exactly those end points of the DNA objects that are the furthest apart (see Figure \ref{fig:dna_backbone_detection}). This is equivalent to determining each graph's diameter, i.e. the largest distance between any two connected nodes of a graph. It can be achieved by successively performing two breadth-first searches (bfs) on G. MATLAB already provides such a functionality (\textit{bfsearch}) that is optimised for MATLAB internal graph objects. Therefore, we specifically converted DNA objects into MATLAB graph objects. For the first bfs (compare Figure \ref{fig:dna_graph_bfs1}), a start node is chosen randomly. Due to the nature of this algorithm, the last node to be discovered can only be a node that has the largest distance to the starting node. If there are several nodes with the same largest distance, which of these is discovered last depends on the implementation of the bfs algorithm. Because all of them are equally far apart from the start node, any of these nodes is considered a correct result.\\
+This node, however, can then be used as start node in the second run of bfs (compare Figure \ref{fig:dna_graph_bfs2}). Since bfs will again return the node with the largest distance to the start node last, we now know the exact pair of nodes that are furthest apart from each other in G.\\
+This information next is used to find the shortest path between these two nodes in G (see Figure \ref{fig:dna_graph_ssp}). Also here an optimized implementation provided by MATLAB was used, \textit{graphshortestpath}. Since all graphs are undirected with uniform edge weights of 1, a shortest path algorithm specifically designed for this type of graph was used that has an overall time complexity of O(N+E), with N being the number of nodes and E being the number of edges.
+The resulting paths represent DNA backbones excluding noise branches, since for a shortest path between two nodes it holds that it connects its two extremal nodes (start and target node) in G via a path that cannot be shortened without severing the connection between both nodes.
+
+\subsubsection{Method 2: Erosion by L-Point identification}
+In this method, it was proposed to alter the DNA in a way that only one single strand remains and all side strands, which are most probably dirt or noise anyway, and some special points that are explained below are removed. After that the length of this single strand can be determined by simple length estimation algorithms as described by Rivetti and Codeluppi (reference). The most effort for this algorithm is the altering of the DNA string while the actual length estimation afterwards is a piece of cake. The huge advantage of this method is that by altering the DNA cases can be discovered in which the DNA forms a ring or overlaps with another DNA. Other length estimation algorithms have to approach this separately.
+
+
+\subsection{Recovery of lost pixel}\label{sec:PixelRecovery}
+Having determined the true DNA backbones, it next is necessary to restore pixels that have been lost from the DNA fragments during the thinning process and that are essential for length determination. Such pixels are those that lay at the end of an DNA fragment, as can be seen in the upper image of Figure \ref{fig:end_pixel_recovery4}. This loss cannot be avoided since both tested thinning algorithms cannot differenciate between pixels that are part of the end of a fragment and pixels that constitute some other part of the DNA fragment. 
+
+\begin{figure}[htb!]
+	\centering
+	\begin{subfigure}{0.25\textwidth}
+		\includegraphics[width=\linewidth]{thin_DNA_1.png}
+		
+		\vspace{0.2cm}
+		
+		\includegraphics[width=\linewidth]{thick_DNA_1.png}
+		\caption{Initial state}
+		\label{fig:end_pixel_recovery1}
+	\end{subfigure}
+	\begin{subfigure}{0.25\textwidth}
+		\includegraphics[width=\linewidth]{thin_DNA_2.png}
+		
+		\vspace{0.2cm}
+		
+		\includegraphics[width=\linewidth]{thick_DNA_2.png}
+		\caption{First iteration}
+		\label{fig:end_pixel_recovery2}
+	\end{subfigure}
+	\begin{subfigure}{0.25\textwidth}
+		\includegraphics[width=\linewidth]{thin_DNA_4.png}
+		
+		\vspace{0.2cm}
+		
+		\includegraphics[width=\linewidth]{thick_DNA_4.png}
+		\caption{Second iteration}
+		\label{fig:end_pixel_recovery3}
+	\end{subfigure}
+	\begin{subfigure}{0.20\textwidth}
+		\includegraphics[width=\linewidth]{thick_thin_before_recovery.png}
+		
+		\vspace{0.2cm}
+		
+		\includegraphics[width=\linewidth]{thin_after_recovery.png}
+		\caption{Result}
+		\label{fig:end_pixel_recovery4}
+	\end{subfigure}
+	\caption{Recovery procedure for pixels lost during DNA thinning.\\
+		The upper row shows a thinned DNA fragment's end, the lower row the respective DNA's state before thinning. (a) After determination of the DNA backbone, those pixels that were lost from the fragment's ends during the thinning process need to be recovered. One of those ends is schematically depicted. (b) In the first iteration, a direction is derived from the last two pixels of one end. The thick DNA image is used as reference to find lost pixels. (c) In the second iteration, the newly discovered pixel is used to determine whether another pixel needs to be recovered. (d) The upper image shows an overlay of thin and thick DNA, clearly indicating that pixels were lost. The lower image shows the same DNA strand after pixel recovery. 
+	}
+	\label{fig:end_pixel_recovery}
+\end{figure}
+
+An useful and easy to implement approach already has been indicated in Section \ref{sec:IntroPixelRestoring}. Each DNA backbone only has two ends by definition. So, for each of a DNA backbone's end, consider the last two pixels as depicted in the upper panel of Figure \ref{fig:end_pixel_recovery2}. The relation of those two pixels towards each other within the 8-neighborhood of the end pixel of the two identifies an unambiguous position at which a pixel possibly could have been lost. The information whether a pixel has been lost or not can easily be retrieved by comparing the pixel at this position with the pixel at the same position in the image of the not-yet-thinned DNA fragment (see Figure \ref{fig:end_pixel_recovery2}, lower panel). If the pixel at that position is part of the DNA fragment, it has to be restored, and can now be considered to be the new end point of this DNA fragment end. This process is repeated until no pixel can be restored anymore. At this point, the DNA backbone is complete, and its length can be computed.
+
+
+\subsection{Length Estimation}\label{sec:Length Estimation}
+Length computation generally is done as has already been described in Section \ref{intro_length_determination}. Because Rivetti and Codeluppi \cite{rivetti2001accurate} showed that the Kulpa Estimator has higher accuracy than the Freeman Estimator, is easy to implement and has only low impact on the overall runtime, we decided to use this measure for DNA fragment length calculation, as well.\\
+Length estimation has to be done differently for DNA fragments with and without nucleosome, respectively. For a DNA fragment without nucleosome, simply its entire DNA backbone needs to be considered. In the case of an DNA fragment with nucleosome, however, the DNA backbone has to be divided into exactly those two parts that point away from the nucleosome, i.e. the nucleosome's both arms. 
+\begin{figure}[htb!]
+	\centering
+	\includegraphics[width = 0.5\textwidth]{length_calc_two_arms.png}
+	\caption{Intersection between the DNA backbone and the nucleosome of its DNA fragment.\\
+		Dark green pixels represent the not-yet-thinned DNA fragment with its bound nucleosome, and its DNA backbone is represented by white and light-green pixels. The nucleosome, as it was detected by the program, is shown in red.}
+	\label{fig: length_calc_two_arms}
+\end{figure}
+This can be achieved by using the same method that is used during angle measurement (compare Section \ref{sec:Angle Measurement}). Intersections of the DNA backbone with the circle (red) which is defined by the radius of the nucleosome is calculated as visualized in Figure \ref{fig:length_calc_two_arms}. Then, those parts of the backbone that are inside this circle are temporarily deleted (light green pixels), which results in only two arms remaining (white pixels). For each of these arms, now, the length is calculated similarly as it is done for the entire backbone in case of free DNA fragments. In the unlikely case that an intersection between the detected nucleus and the DNA backbone cannot be computed, no length will be determined.
+
+
 \subsection{Angle Measurement}\label{sec:Angle Measurement}
 For the DNA strands with a nucleosome, the angle between the two DNA branches is measured. DNA strands with more than one nucleosome will not be assigned an angle measurement neither will DNA strands without nucleosome. Furthermore, if the nucleosome is positioned at the end of the DNA strand as depicted in Figure \ref{fig: angle not}, the angle cannot be measured either. 
 \begin{figure}[htb]

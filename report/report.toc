@@ -7,7 +7,7 @@
 \contentsline {subsubsection}{\numberline {2.2.1}Concept}{5}{subsubsection.2.2.1}
 \contentsline {subsection}{\numberline {2.3}Epigenetics and Histones}{7}{subsection.2.3}
 \contentsline {subsubsection}{\numberline {2.3.1}Chromatin and Histone Structure}{8}{subsubsection.2.3.1}
-\contentsline {subsubsection}{\numberline {2.3.2}Histone Modifications}{8}{subsubsection.2.3.2}
+\contentsline {subsubsection}{\numberline {2.3.2}Histone Modifications}{9}{subsubsection.2.3.2}
 \contentsline {subsection}{\numberline {2.4}Histone Complexes by AFM}{10}{subsection.2.4}
 \contentsline {subsection}{\numberline {2.5}Related Work}{11}{subsection.2.5}
 \contentsline {subsubsection}{\numberline {2.5.1}Filtering}{11}{subsubsection.2.5.1}
@@ -24,28 +24,35 @@
 \contentsline {subsubsection}{\numberline {3.1.1}Manual Analysis}{17}{subsubsection.3.1.1}
 \contentsline {subsection}{\numberline {3.2}Software Architecture}{18}{subsection.3.2}
 \contentsline {subsection}{\numberline {3.3}Denoising}{18}{subsection.3.3}
-\contentsline {subsection}{\numberline {3.4}Filtering}{18}{subsection.3.4}
-\contentsline {subsubsection}{\numberline {3.4.1}Adaptive Lowpass Filter}{19}{subsubsection.3.4.1}
-\contentsline {subsubsection}{\numberline {3.4.2}Description of Proposed Method}{19}{subsubsection.3.4.2}
-\contentsline {subsubsection}{\numberline {3.4.3}Advantages over Other Filtering Techniques}{21}{subsubsection.3.4.3}
-\contentsline {subsubsection}{\numberline {3.4.4}Results and Comparison}{22}{subsubsection.3.4.4}
-\contentsline {subsection}{\numberline {3.5}Thresholding}{22}{subsection.3.5}
-\contentsline {subsubsection}{\numberline {3.5.1}Adaptive Thresholding}{22}{subsubsection.3.5.1}
-\contentsline {subsubsection}{\numberline {3.5.2}Level Background}{23}{subsubsection.3.5.2}
-\contentsline {subsubsection}{\numberline {3.5.3}Identify and remove outliers}{25}{subsubsection.3.5.3}
-\contentsline {subsubsection}{\numberline {3.5.4}Limit Threshold}{25}{subsubsection.3.5.4}
-\contentsline {subsection}{\numberline {3.6}Nucleosome Detection}{27}{subsection.3.6}
-\contentsline {subsection}{\numberline {3.7}Thinning}{31}{subsection.3.7}
-\contentsline {subsubsection}{\numberline {3.7.1}Hilditch's Sequential Thinning}{31}{subsubsection.3.7.1}
-\contentsline {subsubsection}{\numberline {3.7.2}Zhang Suen Parallel Thinning}{32}{subsubsection.3.7.2}
-\contentsline {subsection}{\numberline {3.8}Erosion of Noise Branches}{34}{subsection.3.8}
-\contentsline {subsection}{\numberline {3.9}Lenght Estimation}{34}{subsection.3.9}
-\contentsline {subsection}{\numberline {3.10}Angle Measurement}{34}{subsection.3.10}
-\contentsline {subsubsection}{\numberline {3.10.1}Measurement over Nucleosome Center}{34}{subsubsection.3.10.1}
-\contentsline {subsubsection}{\numberline {3.10.2}Measurement over Fitted Lines}{35}{subsubsection.3.10.2}
-\contentsline {subsection}{\numberline {3.11}Optimization}{36}{subsection.3.11}
-\contentsline {section}{\numberline {4}Results}{36}{section.4}
-\contentsline {subsection}{\numberline {4.1}Validation}{36}{subsection.4.1}
-\contentsline {subsection}{\numberline {4.2}Biological Significance}{36}{subsection.4.2}
-\contentsline {section}{\numberline {5}Discussion}{36}{section.5}
-\contentsline {section}{\numberline {6}Conclusion and Outlook}{36}{section.6}
+\contentsline {subsubsection}{\numberline {3.3.1}Non-local Means Denoising Algorithm}{19}{subsubsection.3.3.1}
+\contentsline {subsubsection}{\numberline {3.3.2}Benefits of using Non-local Means Denoising}{20}{subsubsection.3.3.2}
+\contentsline {subsubsection}{\numberline {3.3.3}Technical considerations / limitations}{21}{subsubsection.3.3.3}
+\contentsline {subsection}{\numberline {3.4}Filtering}{22}{subsection.3.4}
+\contentsline {subsubsection}{\numberline {3.4.1}Necessity of Filtering}{22}{subsubsection.3.4.1}
+\contentsline {subsubsection}{\numberline {3.4.2}The Concept of Adaptive Low Pass Filtering}{22}{subsubsection.3.4.2}
+\contentsline {subsubsection}{\numberline {3.4.3}Description of Proposed Method}{23}{subsubsection.3.4.3}
+\contentsline {subsubsection}{\numberline {3.4.4}Advantages over Other Filtering Techniques}{25}{subsubsection.3.4.4}
+\contentsline {subsubsection}{\numberline {3.4.5}Results and Comparison}{26}{subsubsection.3.4.5}
+\contentsline {subsection}{\numberline {3.5}Thresholding}{30}{subsection.3.5}
+\contentsline {subsubsection}{\numberline {3.5.1}Adaptive Thresholding}{30}{subsubsection.3.5.1}
+\contentsline {subsubsection}{\numberline {3.5.2}Level Background}{31}{subsubsection.3.5.2}
+\contentsline {subsubsection}{\numberline {3.5.3}Identify and remove outliers}{32}{subsubsection.3.5.3}
+\contentsline {subsubsection}{\numberline {3.5.4}Limit Threshold}{33}{subsubsection.3.5.4}
+\contentsline {subsection}{\numberline {3.6}Nucleosome Detection}{35}{subsection.3.6}
+\contentsline {subsection}{\numberline {3.7}Thinning}{38}{subsection.3.7}
+\contentsline {subsubsection}{\numberline {3.7.1}Hilditch's Sequential Thinning}{38}{subsubsection.3.7.1}
+\contentsline {subsubsection}{\numberline {3.7.2}Zhang Suen Parallel Thinning}{39}{subsubsection.3.7.2}
+\contentsline {subsection}{\numberline {3.8}Erosion of Noise Branches}{41}{subsection.3.8}
+\contentsline {subsubsection}{\numberline {3.8.1}Method 1: Erosion using Breadth-First-Search and Shortest Path Algorithms}{41}{subsubsection.3.8.1}
+\contentsline {subsubsection}{\numberline {3.8.2}Method 2: Erosion by L-Point identification}{45}{subsubsection.3.8.2}
+\contentsline {subsection}{\numberline {3.9}Recovery of lost pixel}{45}{subsection.3.9}
+\contentsline {subsection}{\numberline {3.10}Length Estimation}{46}{subsection.3.10}
+\contentsline {subsection}{\numberline {3.11}Angle Measurement}{47}{subsection.3.11}
+\contentsline {subsubsection}{\numberline {3.11.1}Measurement over Nucleosome Center}{47}{subsubsection.3.11.1}
+\contentsline {subsubsection}{\numberline {3.11.2}Measurement over Fitted Lines}{48}{subsubsection.3.11.2}
+\contentsline {subsection}{\numberline {3.12}Optimization}{50}{subsection.3.12}
+\contentsline {section}{\numberline {4}Results}{50}{section.4}
+\contentsline {subsection}{\numberline {4.1}Validation}{50}{subsection.4.1}
+\contentsline {subsection}{\numberline {4.2}Biological Significance}{50}{subsection.4.2}
+\contentsline {section}{\numberline {5}Discussion}{50}{section.5}
+\contentsline {section}{\numberline {6}Conclusion and Outlook}{50}{section.6}
