@@ -66,18 +66,18 @@ In the following the task distribution is shown. If the section is mentioned, th
 \begin{table}[htb]\label{tab: tasks}
 %\caption{The distribution of tasks and sections written by each team member.}
 \begin{tabular}{p{2.8cm}p{8.3cm}}
-Dennis Aumiller &\\[1em]
+Dennis Aumiller & length estimation (Intro and Method D)\\[1em]
 Lina Gundelwein & team leader, filtering, thinning, nucleosome detection, angle measurements, assembling report\\
 &Sections \ref{sec:Thinning}, \ref{sec:Nucleosome Detection}, \ref{sec:Angle Measurement}\\[1em]
 Philip Hausner& \\[1em]
 Philipp Jung &  software architecture, performance optimization\\
-&Section \ref{sec:Software Architecture}, \ref{sec:Adaptive Thresholding}, \ref{sec:Level Background}, \ref{sec:Identify and remove outliers}, \ref{sec:Limit Threshold}\\[1em]
+&Section \ref{sec:Software Architecture}, \ref{sec: Adaptive Thresholding}, \ref{sec: Level Background}, \ref{sec: Outlier Removal}, \ref{sec: Limit Threshold}\\[1em]
 Susanne Ibing & literature research, test data creation, validation, assembling presentation slides\\
 & Section \ref{sec: Related Work}\\[1em]
 Sarah Schott & literature research, test data creation, validation\\
 & Section \ref{sec: Related Work}\\[1em]
-Christian Schütz& OpenCV denoising, thresholding, length estimation, evaluation tools\\[1em]
-& Section \ref{sec: Denoising}, \ref{sec:Thresholding}, \ref{sec:Erosion of Noise Branches}, \ref{sec:PixelRecovery}\\[1em]
+Christian Schütz& OpenCV denoising, thresholding (investigation of Octave functions), length estimation (Intro and Method C), evaluation tools\\[1em]
+& Section \ref{sec:Denoising}, \ref{sec:Thresholding}, \ref{sec:bfs_ssp_length_estimation}, \ref{sec:PixelRecovery}\\[1em]
 Roman Spilger& literature research, test data creation, validation\\[1em]
 Oskar Staufer & literature research, test data creation \\
 & Sections \ref{sec: AFM}, \ref{sec: Epigenetics and Histones}, \ref{sec: Histone Complexes by AFM} \\[1em]
@@ -385,7 +385,7 @@ The figure shows two possible angles $\alpha_1, \alpha_2$ which can be measured 
 
 \subsection{Denoising}\label{sec:Denoising}
 The first steps in our MATLAB routine deal with preparing all images in order to binarize them with the most success, i.e. with the best DNA recognition rate as well as most accurate length estimation. This means that the routine removes as much noise and as many different kinds of noise so that it automatically and, before all else, correctly can classify any image pixel as either belonging to a DNA fragment / nucleus or as background.
-For this to achieve, we found that the initial step needs to be a noise reduction method called \textit{Non-local Means Denoising}. It is very well suited to remove white noise from images, which is a noise type that is very typical for AFM images. White noise is defined as a random signal that has a constant power spectral density. Although the image processing library of MATLAB is very extensive, no function implementing \textit{Non-local Means Denoising} could be found. Those denoising functions that are provided by MATLAB, such as \textit{wdencmp} in conjunction with \textit{ddencmp}, or \textit{wiener2}, proved not to be as suitable for denoising the here analysed images, due to their very specific noise types (which are also discussed in greater detail in Sections \ref{sec:Filtering} and \ref{sec:Thresholding}). However, the method is provided by the open source computer vision and machine learning library \textit{OpenCV} \cite{itseez2016opencvman} \cite{itseez2016opencvlib}. 
+For this to achieve, we found that the initial step needs to be a noise reduction method called \textit{Non-local Means Denoising}. It is very well suited to remove white noise from images, which is a noise type that is very typical for AFM images. White noise is defined as a random signal that has a constant power spectral density. Although the image processing library of MATLAB is very extensive, no function implementing \textit{Non-local Means Denoising} could be found. Those denoising functions that are provided by MATLAB, such as \textit{wdencmp} in conjunction with \textit{ddencmp}, or \textit{wiener2}, proved not to be as suitable for denoising the here analysed images, due to their very specific noise types (which are also discussed in greater detail in Sections \ref{sec:Filtering} and \ref{sec:Thresholding}). However, the method is provided by the open source computer vision and machine learning library \textit{OpenCV} (\cite{itseez2016opencvman} \cite{itseez2016opencvlib}). 
 
 \subsubsection{Non-local Means Denoising Algorithm}
 The algorithm of \textit{Non-local Means Denoising} is provided by the OpenCV library function \textit{fastNlMeansDenoising} that requires the following parameters:
@@ -419,9 +419,7 @@ with
 A much more detailed description of the algorithm can be found at \cite{ipol.2011.bcm_nlm}, which we recommend to the interested reader.
 
 \subsubsection{Benefits of using Non-local Means Denoising}
-As can be seen in Figure \ref{fig:denoising}, the denoising procedure results in a much sharper separation of DNA objects from their background than without. This is especially apparent when comparing the histogram of an yet unprocessed image with the histogram of the same image after it has been denoised (Figure \ref{fig:denoising_histograms}, upper row and lower row, respectively).
-
-...
+As can be seen in Figure \ref{fig:denoising}, the denoising procedure results in a much sharper separation of DNA objects from their background than without. This is especially apparent when comparing the histogram of an yet unprocessed image with the histogram of the same image after it has been denoised (Figure \ref{fig:denoising_histograms}, upper row and lower row, respectively). Before denoising, all transitions between any at least slightly bright object and the background were rather smooth as is indicated by the overall brightness of the original image and the smooth surface of its histogram. However, after denoising, these transitions have become much steeper, which is represented by the gaps in the histogram of the denoised image and which is reflected in an increase of image contrast. Although not too strong in its distinctiveness, this outcome is the primary basis for the efficacy of all subsequent noise reduction measures.\\
 
 Furthermore, some artifacts already could be removed. AFM images often show long but only few pixels wide horizontal lines that stem from the cantilever skipping while scanning the image. One such example is visibile in the upper image of Figure \ref{fig:denoising_imgs} in the lower left corner. This artifact is not visible anymore in the denoised image (lower image of Figure \ref{fig:denoising_imgs}) - it was replaced by background during denoising.
 
@@ -477,7 +475,7 @@ It should be mentioned that for non-quadratic images an ellipsoid instead of a c
 	\begin{subfigure}[b]{0.32\textwidth}
 		\includegraphics[width=\linewidth]{step1_dp}
 		\caption{}
-		\label{fig:step1lpf }
+		\label{fig:step1lpf}
 	\end{subfigure}%
 	\hspace{\fill}
 	\begin{subfigure}[b]{0.32\textwidth}
@@ -540,7 +538,7 @@ As input, the method takes an arbitrary gray-value image which then is transform
 A detailed description of the frequency functions and their specific usage can be found on Mathworks'  \href{http://www.mathworks.com/}{homepage}\footnote{http://www.mathworks.com/}. \\
 The complex result has then to be transformed into a gray-value amplitude image in which the imaginary part is discarded and the real part is visualized as a logarithmic absolute value. Now the result is generally the same as above. \\
 For the approximation of the circle it is also necessary to convert the image to a binary image. Since only a rough threshold is necessary a simple and fast algorithm for thresholding is used (%needs attention!
-built-in Otsu as described in (reference to Christian)). This rough approximation can be excused due to the clear lack of a distinct circular contour. %still needs attention
+built-in Otsu-Thresholding as described in Section \ref{sec:Thresholding}). This rough approximation can be excused due to the clear lack of a distinct circular contour. %still needs attention
 This also explains why the implemented circular Hough transform (MATLAB imfindcircles) was not able to deliver satisfying results.\\
 \\
 In the used dataset sometimes a distinct lack of very low frequencies - equaling a sharp (yet only one pixel in width) line in the center - could be noticed. To rule out similar cases in other datasets as well, a 20x20 pixel white rectangle was inserted in the center (see result section for further discussion).
@@ -563,9 +561,9 @@ image = uint8(real(ifft2(ifftshift(image))));
 \subsubsection{Advantages over Other Filtering Techniques}
 Before comparing the results of the proposed method it should also be discussed why no other filter was used instead.
 The biggest issue with filtering techniques is that it is hugely dependent on the available dataset. While others (insert papers with AFM image data here) usually have a pretty distinct noise level and try to optimize for this specific set of images, the goal of this work was to really adapt to various datasets. For different image qualities of AFM pictures, and especially for different resolutions and cutout sizes, results may vary although done by the same instrument or person. \\
-Ficarra et al. \ref{ficarra2005automated} use three distinct filtering techniques for the preprocessing step: A 3x3 median filter, an adaptive Wiener filter and a high-pass filter. As for the median filter, the proposed method was also used in this work (compare chapter Median Filter). As a side note it should be mentioned that the median filter has good results for filtering out sudden peaks of noise but is rather inefficient with larger dabs of noise in an image. \\
+Ficarra et al. \cite{ficarra2005automated} use three distinct filtering techniques for the preprocessing step: A 3x3 median filter, an adaptive Wiener filter and a high-pass filter. As for the median filter, the proposed method was also used in this work (compare chapter Median Filter). As a side note it should be mentioned that the median filter has good results for filtering out sudden peaks of noise but is rather inefficient with larger dabs of noise in an image. \\
 The mentioned Wiener filter was not pursued any further for the following reasons. First, it works best for a constant noise level which isn't given in all datasets what ultimately let to the design of an own method. Also it is very suitable to clean up the inital data which isn't as much a requirement to this algorithm since it has a fully devoted step of image denoising before filtering out anything. Hence another denoising step would only disturb the image more than it would help remove further artifacts. \\
-The problem of the high-pass filter was a bit more subtle. Although it is helpful in providing sharper edges for the later detection of DNA strings, it also attenuates the intensity border between dirt and actual DNA strings (compare section on Histograms). As for the high pass filter itself, it does the exact opposite of a low pass filter: Namely sorting out all of the lower frequency in Fourier space. The aim of Ficarra et al. \ref{ficarra2005automated} was to eliminate noise which was rather low-freuqent but yet again this is a step usually eliminated with denoising in this algorithm. \\
+The problem of the high-pass filter was a bit more subtle. Although it is helpful in providing sharper edges for the later detection of DNA strings, it also attenuates the intensity border between dirt and actual DNA strings (compare section on Histograms). As for the high pass filter itself, it does the exact opposite of a low pass filter: Namely sorting out all of the lower frequency in Fourier space. The aim of Ficarra et al. \cite{ficarra2005automated} was to eliminate noise which was rather low-freuqent but yet again this is a step usually eliminated with denoising in this algorithm. \\
 Generally the methods by Ficarra et al. would lead to a much lower rate of actual DNA in the resulting objects and therefore requiring a more subtle decision in whether or not it actually is a DNA string which is currently viewed. By sacrificing a distinct border between the DNA and background, a much lower percentage of noise will be classified as a false positive in the end.
 
 \subsubsection{Results and Comparison}
@@ -698,123 +696,13 @@ When the low pass filter is applied before the median filter one can see a peak 
 The steeper slope explains the results that could be observed earlier. By applying the median filter first the DNA and the background can be distinguished better. Another useful property is that the upper bounds are clearly discernible through a steep slope as well. Although this wasn't particularly helpful in the used dataset, it might come in handy for normalized datasets. The reason behind that is that a normalized dataset (with uniform gray-values for DNA strands) would allow to reject noise peaks as well. As mentioned before, in the used dataset no such normalization was performed which led to further spread values for DNA and would not allow a discernible region for noise.
 \\ One should keep in mind that the peak is not the DNA but the background. So a clear peak at values of around 100 extracts the background perfectly. The results seen in \ref{fig:MedianLowPassFiltHist} confirm the impression given earlier in figure \ref{fig:lowpassCompare2} that applying the median filter and then the low pass filter deliver the best results.
 
-
-\iffalse
-\newpage
-\subsection{Filtering_OLD}\label{sec:Filtering}
-%Although it is common practice to use filtering techniques as a way of preprocessing the data, it was the goal 
-At first, one needs to ask why it is necessary to use filtering techniques in the first place, as it is stated in various other papers (insert citation here). Since the goal was to find a most efficient and fast solution, a heuristic approach was proposed which only took object size of (MATLAB) connected components into account.\\
-Although this eliminated most of the smaller fragments, and some larger ones, obviously some objects remained that were dirt or impulsive noise. \\
-Like (Ficarra et al.) pointed out, a median filter with a 3x3 mask helps eliminating these components quite well, yet there is still room for improvement. Regarding the aspect of very limited available data, it was another aim to maximize the number of sampled strings. Therefore other, less common techniques besides the already tested filters were approached.\\
-As it was rather soon apparent that regions with impulsive noise had a rather high frequency in frequency domain, a lowpass filter approach seemed like the way to go.
-
-%\subsubsection{High Pass Filter}\label{sec:High Pass Filter}
-%Low frequency noise can occur in AFM images due to vibrations in the operating environment of the AFM. To filter out the low frequency noise a Butterworth high pass filter was implemented. It has a maximally flat frequency response in the pass band.
-
-\subsubsection{Adaptive Lowpass Filter}\label{sec:Adaptive Lowpass Filter}
-Firstly, the most prominent example for a lowpass filter is the Gaussian filter. It essentially smoothes the data out, but in a relatively predictive way, since it has a predefined filtering matrix, similar to the median filter. But, since it is not always known just how high the signal-to-noise ratio really is, a simple Gaussian filter might only blur the edges of the outer DNA regions, instead of effectively reducing the amount of stray noise. Rather than simply smoothing the image with a Gaussian filter, the idea was to eliminate regions with high contrast.  \\
-Filtering out exactly such high-contrast regions is best achieved in frequency space. The freuquency domain, simply put, transforms the original image data into a decomposition of sinus waves. For the transformation between spatial domain and frequency domain the MATLAB implementation of the Fast Fourier Transformation was used. Without going into further detail, the amplitude of such a frequency representation now gives a comparatively abstract, but nonetheless intuitive, visualisation of such high contrasts as shown in (figure x). \\
-As one can easily observe, there is a denser circular area in the image center. This central area represents the lower frequencies which corresponds to a constant image region. This can be seen on every picture of the used dataset but is to be expected in every other dataset as well. The only difference lies in the clear distinction and brightness of the center. Since a classic lowpass filter requires a clipping region as a fixed parameter, it would not work perfectly for every picture because one would inevitably overfit for a certain set of images. Standard circular detection via circular Hough transform has not been able to sufficiently detect this area. \\
-It should be mentioned that for non-quadratic images an ellipsoid instead of a circle can be observed. In this case the algorithm differs only in one step, so for consistency and simplicity only the circular case is presented. \\
-% The huge improvement of the proposed filter is now an adaption to the low frequency area. In the following section, the method is discussed in detail.
-
-% 02.07 Dennis and Philip
-\subsubsection{Description of Proposed Method}\label{sec:Description of Proposed Method}
-% -> figure with images might come in later and will be referenced after each processing step.
-As input, the method takes an arbitrary grayvalued image which then is transformed to the frequency domain with MATLAB fft2 function. For a representation similar to above a shifting of the result has to be done as well. A detailed description of the frequency functions and their specific useage can be found on mathworks' homepage (insert link). \\
-The complex result has then to be transformed into a grayvalue amplitude image in which the imaginary part is thrown out and the real part is visualized as a logarithmic absolute value. Now the result is generally the same as above. \\
-For the approximation of the circle it is also necessary to convert the image to a binary image. Since only a rough threshold is really necessary a simple and fast algorithm for thresholding is used (built-in Otsu as described in (reference to Christian)). This rough approximation can be excused due to the clear lack of a distinct circular contour. This also explains why the implemented circular Hough transform (MATLAB imfindcircles) was not able to deliver satisfying results.\\
-\\
-In the used dataset sometimes a distinct lack of very low frequencies - equaling a sharp (yet only one pixel in width) line in the center - could be noticed. To rule out similar cases in other datasets as well, a 20x20 white rectangle was inserted in the center (see result section for further discussion).
-Afterwards a standard erosion with a disk shape is performed. With erosion noise that persists in the binary image is eliminated by fitting these disks around each black pixel and coloring all pixels within this shape black as well. A detailed explanation on how to define structuring elements such as the used disk and the MATLAB imerode function can be found on (mathworks link here) as well. \\
-Of the remaining connected objects the circle now represents the largest one. Hence it is filtered out with MATLAB bwareafilt(.., 1, 'largest') which extracts this largest region and the resulting image has only this central part colored in white. To assure a compact center another operation is performed which fills in enclosed black areas within the circular region (imfill(...,'holes')). \\
-The remaining spikes at the top and bottom of the cirlce are removed by deleting every row where there are only a certain number of white pixels. To reverse the erosion process and get a representative circle the MATLAB imdilate operation is performed with a disk structure. \\
-MATLAB's regionprops function delivers the centroid as well as the minor and major axis length of the object which then is used to calculate an approximation of the actual radius of the circle. Notice that it is also possible to extract an ellipsoid structure from non-quadratic images which will not be described in detail here since it does not differ from the steps for a quadratic image. \\
-% 03.07 Dennis
-For the radius approximation the following formula is used: (insert formula here) \\
-Since the removal of the spikes also flattens the circle a bit, it is important to slightly weight the major axis length a bit heavier.  For the distance to the center a 2D-grid is produced by MATLAB ndgrid, using one grid for the distance in x- and one for the distance in y-direction. Following up on this, the distance to the center point is then calculated by the ordinary circular formula to determine whether a point is within the circle (another formula here).Now evaluationg said formula for each point allows to select the circular region which is then stored as a binary matrix. \\
-To finalize the steps, the circular region is "cut out" of the original image by multiplying it with the initial fourier transformed image. Before retransforming the image, an inverse shift has to be done with ifftshift. After using ifft2 to recover a spatial form of the image it is also important to transform it back into a uint8 image, using only the real-valued part of the transform. \\
-This can all be put together in one code line, resulting in
-\begin{lstlisting}
-image = uint8(real(ifft2(ifftshift(image))));
-\end{lstlisting}
-
-% changes 03.07 Dennis order swapped with results and comparison
-\subsubsection{Advantages over Other Filtering Techniques}\label{sec:Advantages over Other Filtering Techniques}
-Before comparing the results of the proposed method it should also be discussed why there was no other filter used instead.
-The biggest issue with filtering techniques is that it is hugely dependent on the available dataset. While others (insert papers with AFM image data here) usually have a pretty distinct noise level and try to optimize for this specific set of images, it was the goal to really adapt to various datasets. For different qualities of AFM pictures, and especially for different resolutions and cutout sizes, results may vary although done by the same instrument or person. \\
-(Ficarra et al.) use three distinct filtering techniques for the preprocessing step: A 3x3 median filter, an adaptive Wiener filter and a high-pass filter. As for the median filter, the proposed method was also used as described (later or earlier) in this paper. As a side note it should be mentioned that the median filter has good results for filtering out sudden peaks of noise but is rather inefficient with larger dabs of noise in an image. \\
-The mentioned Wiener method wasn't pursued any further for the following reasons. For one, it works best for a constant noise level which isn't given in all datasets what ultimately let to the design of an own method. Also it is very suitable to clean up the inital data which isn't as much a requirement to this algorithm since it has a fully devoted step of image denoising before filtering out anything. Hence another denoising step would only disturb the image more than it would help remove further artifacts. \\
-The problem of the high-pass filter was a bit more subtle. Although it is helpful in providing sharper edges for the later detection of DNA strings, it also attenuates the intensity border between dirt and actual DNA strings (compare section on Histograms). As for the high-pass filter itself, it does the exact opposite of a low-pass filter: Namely sorting out all of the lower frequency in fourier space. The aim of Ficarra et al. was to eliminate noise which was rather low-freuqent but yet again this is a step usually eliminated with denoising in this algorithm. \\
-Generally the methods by Ficarra would lead to a much lower rate of actual DNA in the resulting objects and therefore requiring a more subtle decision in whether or not it actually is a DNA string which is currently viewed. By sacrificing a distinct border between the DNA and background, a much lower percentage of noise will be classified as a false positive in the end.
-
-\subsubsection{Results and Comparison}\label{sec:Results and Comparison}
-% 8 images as comparison
-% compare the changes in the histogram before and after the filtering steps.
-
-\begin{figure}[!htb]
-        \begin{subfigure}[b]{0.24\textwidth}
-                \includegraphics[width=\linewidth]{step1}
-                \caption{}
-                \label{fig:initial amplitude }
-        \end{subfigure}%
-        \hspace{\fill}
-        \begin{subfigure}[b]{0.24\textwidth}
-                \includegraphics[width=\linewidth]{step2}
-                \caption{}
-                \label{fig:gull2}
-        \end{subfigure}%
-        \hspace{\fill}
-        \begin{subfigure}[b]{0.24\textwidth}
-                \includegraphics[width=\linewidth]{step3}
-                \caption{}
-                \label{fig:tiger}
-        \end{subfigure}%
-        \hspace{\fill}
-        \begin{subfigure}[b]{0.24\textwidth}
-                \includegraphics[width=\linewidth]{step4}
-                \caption{}
-                \label{fig:mouse}
-        \end{subfigure}
-        \begin{subfigure}[b]{0.24\textwidth}
-                \includegraphics[width=\linewidth]{step5}
-                \caption{}
-                \label{fig:gull}
-        \end{subfigure}%
-        \hspace{\fill}
-        \begin{subfigure}[b]{0.24\textwidth}
-                \includegraphics[width=\linewidth]{step6}
-                \caption{}
-                \label{fig:gull2}
-        \end{subfigure}%
-        \hspace{\fill}
-        \begin{subfigure}[b]{0.24\textwidth}
-                \includegraphics[width=\linewidth]{step7}
-                \caption{}
-                \label{fig:tiger}
-        \end{subfigure}%
-        \hspace{\fill}
-        \begin{subfigure}[b]{0.24\textwidth}
-                \includegraphics[width=\linewidth]{step8}
-                \caption{}
-                \label{fig:mouse}
-        \end{subfigure}
-        \caption{Step-by-step view of circle detection. (a) shows the amplitude representation of the initial fft transform.
-(b) is the binary image.
-(c) is showing the eroded image with (d) being only the largest connected component.
-In (e) holes are filled. for (f) the spurious edges are removed.
-Lastly, a dilation is performed in (g) and the resulting circular selection is displayed in (h).}\label{fig:lowpass}
-\end{figure}
-\fi
-
-% 03.07 Dennis initial description and structure
 \subsection{Thresholding}\label{sec:Thresholding}
 After denoising and the subsequent application of our filter combination, the next logical step is to determine a threshold for the binarization of each image. Binarization means that each pixel of an image can be classified either as background or as belonging to a potential DNA strand / nucleosome. It is done by computing a specific gray value, the threshold, each pixel's gray value is compared to in order to classify it.\\
 In a first approach, we tried several different thresholding algorithms, such as Intermeans-, Moments-, Intermodes-, Maxentropy-, Minerror-, Percentile- and Otsu-Thresholding. Except for the last, all of these were adapted from GNU Octave (\cite{GNUOctave}), since MATLAB only provides the Otsu-Thresholding method. GNU Octave is an open source high-level numerical computation language comparable to MATLAB. Some of them determine a global threshold, some a local. However, after several tests especially in conjunction with the rest of our Thresholding algorithm we found that Otsu-Thresholding provided us with the best results (data not shown).\\
 The greatest problem was that many images still contained noise types that have not yet been removed but that had a strong influence during the computation of these thresholds. If not removed, the corresponding threshold will be so much distorted that meaningful / useful binarization will not be possible.\\
-Therefore, an adaptive thresholding algorithm (see \ref{sec: AdaptiveThresholding}) was designed that allowed us, on any image, to create a much more uniform background. This step is one of the main reasons for the general robustness of our routine towards different noise sources.
+Therefore, an adaptive thresholding algorithm (see \ref{sec: Adaptive Thresholding}) was designed that allowed us, on any image, to create a much more uniform background. This step is one of the main reasons for the general robustness of our routine towards different noise sources.
 
-\subsubsection{Adaptive Thresholding}\label{sec: AdaptiveThresholding}
+\subsubsection{Adaptive Thresholding}\label{sec: Adaptive Thresholding}
 The TIFF images often vary in intensity, distribution and scaling of the height profile of the DNA samples. This presents a couple of problems for the thresholding algorithms, such as pollution of some image regions which distort the threshold. As discussed above, these issues lead to a false classification of the DNA strands or even to a complete loss of image information.
 Two sorts of noise persist after the initial pipelining steps  
 Opencv Denoising, LowPassFilter and Median Filter (see Sections \ref{sec:Denoising}, \ref{sec:Filtering}).
@@ -845,7 +733,7 @@ In order to tackle these issues the following three step method is proposed:
 	\item Identify and remove polluted image regions and outliers in the upper intensity values.
 	\item Limit the threshold to an appropriate range.
 \end{enumerate}
-\subsubsection{Level Background}
+\subsubsection{Level Background}\label{sec: Level Background}
 
 Figure \ref{fig:HistThresh} shows a histogram of the height values of a representative original image from the dataset.
 In the observed dataset DNA-strands can only be found in an intensity range from about 110 to 160, while nuclei can be found between 160 and 200.
@@ -877,7 +765,7 @@ The resulting image shown in Figure \ref{fig:background} yields a more consisten
 	\end{subfigure}%
 	\caption{(a)Before leveling (b)After leveling }\label{fig:background}
 \end{figure}
-\subsubsection{Identify and remove outliers}
+\subsubsection{Identify and remove outliers} \label{sec: Outlier Removal}
 At first a global threshold algorithm like the Otsu method (see section \ref{sec:Thresholding}) is used to create a binary image.
 All objects that could be a DNA object are removed based on size. Now only noise and other non-DNA objects are left.
 
@@ -922,7 +810,7 @@ By using this approach it is now possible to analyze pictures with the first typ
 	\caption{Comparison with previous method, noise type 1}\label{fig:compareThresh}
 \end{figure}
 
-\subsubsection{Limit Threshold}
+\subsubsection{Limit Threshold}\label{sec: Limit Threshold}
 The first two steps focused on keeping the noise and distribution of the height values in a tolerable range on image to image basis. The third and final step of this method aims at limiting the thresholds over the entire dataset.
 For this technique a larger dataset of at least 50 images is required.
 The histogram of all 105 test images shown in Figure \ref{fig:HistogramThresholds} shows that step one and two already improve the thresholds to a smaller range.
