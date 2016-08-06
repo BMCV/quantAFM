@@ -1,5 +1,23 @@
 \begin{thebibliography}{10}
 
+\bibitem{sharma2008dna}
+Shantanu Sharma and Nikolay~V Dokholyan.
+\newblock Dna sequence mediates nucleosome structure and stability.
+\newblock {\em Biophysical journal}, 94(1):1--3, 2008.
+
+\bibitem{sato1999atomic}
+Masa~H Sato, Kiyoe Ura, Ken~I Hohmura, Fuyuki Tokumasu, Shige~H Yoshimura,
+  Fumio Hanaoka, and Kunio Takeyasu.
+\newblock Atomic force microscopy sees nucleosome positioning and histone
+  h1-induced compaction in reconstituted chromatin.
+\newblock {\em FEBS letters}, 452(3):267--271, 1999.
+
+\bibitem{lowary1998new}
+PT~Lowary and Jonathan Widom.
+\newblock New dna sequence rules for high affinity binding to histone octamer
+  and sequence-directed nucleosome positioning.
+\newblock {\em Journal of molecular biology}, 276(1):19--42, 1998.
+
 \bibitem{fischbach2001new}
 E~Fischbach, DE~Krause, VM~Mostepanenko, and M~Novello.
 \newblock New constraints on ultrashort-ranged yukawa interactions from atomic
@@ -337,6 +355,11 @@ L~Yang, F~Albregtsen, T~L{\o}nnestad, and P~Gr{\o}ttum.
   comparison.
 \newblock 1994.
 
+\bibitem{UBHD-67466516}
+Jochen Ludewig and Horst Lichter.
+\newblock {\em Software Engineering}.
+\newblock dpunkt-Verl., Heidelberg, 3., korr. aufl. edition, 2013.
+
 \bibitem{itseez2016opencvman}
 {Itseez}.
 \newblock {\em {The OpenCV Reference Manual}}, 2.4.13.0 edition, May 2016.
@@ -393,5 +416,39 @@ JF~Kepert, KF~T{\'o}th, M~Caudron, N~M{\"u}cke, J~Langowski, and K~Rippe.
 \newblock Conformation of reconstituted mononucleosomes and effect of linker
   histone h1 binding studied by scanning force microscopy.
 \newblock {\em Biophysical Journal}, 85(6):4012--4022, 2003.
+
+\bibitem{bussiek2007organisation}
+Malte Bussiek, Gabriele M{\"u}ller, Waldemar Waldeck, Stephan Diekmann, and
+  J{\"o}rg Langowski.
+\newblock Organisation of nucleosomal arrays reconstituted with repetitive
+  african green monkey $\alpha$-satellite dna as analysed by atomic force
+  microscopy.
+\newblock {\em European Biophysics Journal}, 37(1):81--93, 2007.
+
+\bibitem{davey2002solvent}
+Curt~A Davey, David~F Sargent, Karolin Luger, Armin~W Maeder, and Timothy~J
+  Richmond.
+\newblock Solvent mediated interactions in the structure of the nucleosome core
+  particle at 1.9 {\aa} resolution.
+\newblock {\em Journal of molecular biology}, 319(5):1097--1113, 2002.
+
+\bibitem{montel2007atomic}
+F~Montel, E~Fontaine, P~St-Jean, M~Castelnovo, and C~Faivre-Moskalenko.
+\newblock Atomic force microscopy imaging of swi/snf action: mapping the
+  nucleosome remodeling and sliding.
+\newblock {\em Biophysical Journal}, 93(2):566--578, 2007.
+
+\bibitem{nazarov2016afm}
+I~Nazarov, I~Chekliarova, G~Rychkov, AV~Ilatovskiy, C~Crane-Robinson, and
+  A~Tomilin.
+\newblock Afm studies in diverse ionic environments of nucleosomes
+  reconstituted on the 601 positioning sequence.
+\newblock {\em Biochimie}, 121:5--12, 2016.
+
+\bibitem{nishikawa2012selective}
+J~Nishikawa and T~Ohyama.
+\newblock Selective association between nucleosomes with identical dna
+  sequences.
+\newblock {\em Nucleic Acids Research}, page gks1269, 2012.
 
 \end{thebibliography}

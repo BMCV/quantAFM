@@ -54,10 +54,13 @@
 
 \input{deckblatt.tex} 
 \newpage
+%
+\begin{abstract}
+	Atomic force microscopy (AFM) enables for exquisite spatial resolution providing users with topographic maps that resolve even single atoms, underlining this dynamometric probe scanning technique as an extremely valuable method to explore structural features of macromolecular complexes. Particularly the interlaced architecture of complexes involved within biological processes can be adequately probed by the AFM technology. Here, especially the parceling interactions between DNA molecules and molecular spools known as histones has intensively been studied by AFM imaging. These approaches have however been exceedingly limited by the lack of appropriate tools for automated evaluation of the molecular interplays within nucleosomes (DNA - Histone complexes), forcing users to perform time consuming manual data evaluation. Major bottlenecks challenging the development of software for effective automated evaluation were not only the discrimination between AFM typical prominent sprinkled artifact signals and nucleosome complexes but also the accurate determination of critical nucleosome features like histone binding strength, DNA entering/ exiting angles or DNA turns per histone. Therefor, we here report on our recent advances on the development of an algorithm designed for fast and automated nucleosome feature extraction (ANuFE algorithm) from AFM data. By applying adaptive low pass filtering for elimination of highly contrasted regions and non - local means denoising techniques, ANuFE allows for thoroughly deletion of artifact signals. Based on adaptive thresholding and 3 dimensional Hogh voting, ANuFE is furthermore able to discriminate between free DNA and nucleosome complexes, which allows for subsequent extraction and quantification of nucleosome features. The algorithm was designed not only to perform expeditious on frequently used TIFF image data but also to handle high variations in image quality, which are typical for AFM data. By applying ANuFE on test data displaying nucleosomes harboring either wild type or mutant histones, we were able to accurately identify significant differences in nucleosome features between the two classes, pointing to an impairment of nucleosome stability by the inserted mutations. 
+\end{abstract}
+\newpage
 \tableofcontents
 \newpage
-%
-
 \section{Organisation}
 
 \subsection{Distribution of Tasks}
@@ -71,18 +74,18 @@ Lina Gundelwein & team leader, filtering, thinning, nucleosome detection, angle 
 &Sections \ref{sec:Thinning}, \ref{sec:Nucleosome Detection}, \ref{sec:Angle Measurement}\\[1em]
 Philip Hausner& \\[1em]
 Philipp Jung &  software architecture, performance optimization\\
-&Section \ref{sec:Software Architecture}, \ref{sec: Adaptive Thresholding}, \ref{sec: Level Background}, \ref{sec: Outlier Removal}, \ref{sec: Limit Threshold}\\[1em]
+&Section \ref{sec:Software Architecture}, \ref{sec: Adaptive Thresholding}, \ref{sec: Level Background}, \ref{sec: Outlier Removal}, \ref{sec: Limit Threshold}, \ref{sec:Software Architecture}, \ref{sec:Runtime Optimization}\\[1em]
 Susanne Ibing & literature research, test data creation, validation, assembling presentation slides\\
 & Section \ref{sec: Related Work}\\[1em]
 Sarah Schott & literature research, test data creation, validation\\
 & Section \ref{sec: Related Work}\\[1em]
 Christian Schütz& OpenCV denoising, thresholding (investigation of Octave functions), length estimation (Intro and Method C), evaluation tools\\[1em]
-& Section \ref{sec:Denoising}, \ref{sec:Thresholding}, \ref{sec:bfs_ssp_length_estimation}, \ref{sec:PixelRecovery}\\[1em]
+& Section \ref{sec:Denoising}, \ref{sec:Thresholding}, \ref{sec:bfs_ssp_length_estimation}, \ref{sec:PixelRecovery}, \ref{sec:Final Length Estimation}\\[1em]
 Roman Spilger& literature research, test data creation, validation\\[1em]
 Oskar Staufer & literature research, test data creation \\
 & Sections \ref{sec: AFM}, \ref{sec: Epigenetics and Histones}, \ref{sec: Histone Complexes by AFM} \\[1em]
 Martin Würtz & team leader, literature research, test data creation, validation, assembling presentation slides\\
-&Section \ref{sec:Test Data Creation}\\
+&Section \ref{sec:Manual Analysis}\\
 \end{tabular}
 \end{table}
 
@@ -100,13 +103,28 @@ In general, Figure \ref{fig: timeline} shows that with the number of team member
 \label{fig: timeline} 
 \end{figure}
 
-\begin{abstract}
-This report summarizes ...
-
-\end{abstract}
-
 \section{Introduction}\label{sec: Introduction}
 \subsection{Motivation}\label{sec: Motivation}
+
+DNA-histone interactions are of major importance for fundamental biological processes like epigenetic silencing or chromatin condensation and remodeling. However, probing nucleosome dynamics on a single molecule level has remained challenging and has until now mostly been tackled by studies relaying on in vivo FRET (Förster resonance energy transfer) or FCS (fluorescence correlations spectroscopy) \cite{sharma2008dna} analysis or in vitro AFM topographic imaging, where intracellular dynamics with moderate resolution or more artificial environments on a high resolution can be measured respectively. 
+
+
+Here, several histones residues located within the DNA-docking domains have been identified as key players in DNA–histone interactions, as their replacement by neutral or negatively charged amino acids strongly weakens the electrostatic interaction strength perceivable in destabilization of nucleosome complexes (unpublished data). 
+
+
+High throughput analysis of nucleosome stability on single molecule scale could therefor provide greater insides into a variety of pathological processes involved in inflammatory diseases or cancer malignancy. 
+
+
+Even if AFM has been successfully applied to image DNA–histone interactions on high resolutions, tedious manual data analysis has yet hampered large scales analysis \cite{sato1999atomic}. We therefor aimed to implement a fully automated algorithm to analysis nucleosome dynamics based on AFM data. Our ANuFe (Automated Nucleosome Feature Extraction) algorithm automatically extracts features like DNA length, DNA entering and exiting angles and nucleosome volume, based on single nucleosome resolved AFM data, thus enabling for nucleosome stability analysis on high throughputs. 
+
+
+In order to evolve the ANuFE, AFM images from the Langowski Lab of the DFKZ, which is interested in nucleosome dynamics, have been used. In detail the stability of wild type and H2A histone mutants (R81A, R88A, R81E and R88E) have been investigated. Thereby the mutations being located in the docking domain of H2A were proved to be good tools to analyze the stability and the opening behavior of nucleosomes on single molecule level. Single particle Förster resonance energy transfer (spFRET) studies already demonstrated that these mutants are significantly destabilized compared to wild-type nucleosomes (unpublished data). 
+
+
+For AFM investigations, the described H2A histone mutants were bound to a 660 bp DNA strand containing the 170 bp Widom 601 histone octamere positioning sequence \cite{lowary1998new} 199 bp apart from one end of the fragment. The DNA and the different nucleosomes were measured in air on a poly-L-lysine coated mica with different nm to pixel ratios. 
+
+
+ANuFe was designed to extract nucleosome features from AFM data of conventional quality (moderate to high background signals and varying nm to pixel ratios) and quantity (moderate to high nucleosome densities with intra-/ intermolecular DNA crossing) from frequently used TIFF data to address the diversity of requirements in varying experimental setups.
 
 
 \subsection{AFM}\label{sec: AFM}
@@ -353,9 +371,7 @@ modified distance between the points with coordinates x and y
 
 
 \section{Methods}\label{sec:Methods}
-\subsection{Test Data Creation}\label{sec:Test Data Creation}
-Missing: Description of the images we are using
-\subsubsection{Manual Analysis}\label{sec:Manual Analysis}
+\subsection{Manual Analysis}\label{sec:Manual Analysis}
 To annotate and evaluate the results of the algorithm the open source program ImageJ (2.0.0-rc-46/1.50g) was used. Therefore, the features from a sample of objects or from whole images, were analyzed manually with the tools of ImageJ.
 For the objects, which were single DNA-strands and mono nucleosomes, the location and the couture length were determined. For nucleosomes, also the angle between the two DNA-strands entering the nucleosome core, the approximate area of the nucleosome core and the mean gray value of the nucleosome core were measured.
 To annotate the manual data from one object to the results of the algorithm the centre of mass was used. Therefore a binary image was created by thresholding. Then the "Analyze Particle Tool" was used to read out the x-y coordinates of the centre of mass from the different objects. 
@@ -383,6 +399,76 @@ The figure shows two possible angles $\alpha_1, \alpha_2$ which can be measured 
 \newpage
 \subsection{Software Architecture}\label{sec:Software Architecture}
 
+
+\subsubsection{Processing Pipeline}
+All images of the dataset are processed in a sequential way by the following nine steps:
+
+\begin{enumerate}
+	\item Denoise
+	\item Filter
+	\item Create binary image
+	\item Detect nucleosomes %?
+	\item Detect DNA strands 
+	\item Calculate length of DNA strands
+	\item Calculate angle between arms of a DNA strand if it possesses exactly one nucleus
+	\item Save Results as CSV file
+	\item Write processed image to disk
+	
+\end{enumerate}
+
+At first every image is denoised by the OpenCV function fastNlMeansDenoising \footnote{http://docs.opencv.org/2.4/modules/photo/doc/denoising.html}
+(see Section \ref{sec:Denoising}) and passed on to the MATLAB main pipeline(see figure \ref{fig:PipelineDiagram}).
+Inside the MATLAB pipeline an object-oriented approach is used.
+This has the advantage that fields can be accessed easily like this:
+\[
+imageObject.property
+\]
+Also the data is stored in a structured way which not only provides accessibility and modularity but also ensures maintainability and expandability.
+
+Each image is instantiated as a object of the image class (figure \ref{fig:ClassDiagram}) which can hold essential properties such as a dnaList for detected DNA strands and numerous other information about the detected objects.
+All data gathered during the process, such as the filtered image, the binary image, the thinned DNA strands, is stored as an instance variable.
+Therefore all processing steps can be reviewed separately later on.
+For example the denoising and filtering steps where improved by examining the intensity histograms of the pre-processed images.
+Also different thresholds can be tested and assessed directly.
+After being filtered by a median filter(see section \ref{sec:Filtering}) the lowPassFilter(see section \ref{sec: Adaptive Lowpass Filter}) function is applied to each image. 
+To reduce noise even further the background is subtracted from the original image by the MATLAB imOpen \footnote{http://www.mathworks.com/help/images/ref/imopen.html} method.
+The threshold distribution over the entire dataset is required in step three. Therefore all images have to be pre-processed by step one denoising and step two filtering before step three can proceed further. 
+To create the binary image the adaptive thresholding function(see section \ref{sec: Adaptive Thresholding}) is used.
+After that every image is scanned for nuclei by the findNuklei(see section \ref{sec:Nucleosome Detection})function which also stores them as centers and radii as fields of the current image instance.
+Remaining objects are classified as DNA strands and therefore instances of the DNA class are created and saved in the DnaList field.
+Each DNA strand is either stored as DNAFree if no attached nucleus was detected or as DNABound if at least one attached nucleus was detected.
+\begin{figure}[!ht]
+	
+	\includegraphics[width=1\linewidth]{ClassDiagram.png}
+	
+	\caption{class diagram of the pipeline of the program} %??
+	\label{fig:ClassDiagram} % you need to include this to reference the figure afterwards
+\end{figure}
+Since all objects which persist after the three initial steps are classified as DNA strands, polluted image regions with a similar size are misclassified as DNA.
+%a lot of noise which happens to have an acceptable size are misclassified as DNA as well.
+To solve this problem DNA strands are marked as invalid if they do not meet certain criteria such as number of pixels, length and number of attached nucleus.
+Only DNA objects with zero or one nuclei are permitted.
+%Some Misshaped DNA objects are already marked as invalid during the findNuclii function. 
+Step six, calculating the length of the DNA strands also marks DNA objects as invalid based on their length (see section \ref{sec:Length Estimation}).
+In order to calculate the length correctly it is necessary to thin the DNA strands first and remove the branches which arise during this thinning.
+Step seven(Section \ref{sec:Angle Measurement})  calculates the angle between the two arms of the DNA strand, this only applies to DNA strands with an attached nucleus which are stored as DNABound in the dnaList variable.
+DNA strands with more than one attached nucleus are marked as invalid.
+The features length, angle, position on the image, position of the attached nucleus, radius of attached nucleus and the isValid flag are exported as a CSV file with filename,''meaning the name of the file''  \cite{UBHD-67466516},  [numberOfImage]-test.CSV.
+
+
+By exporting the isValid flag invalid DNA strands can be ignored during the evaluation but still persist in order to analyze difficulties, increase detection rate and improve performance.
+At last all images created during this process, such as the binary image, are written to the disk.
+
+
+\begin{figure} [!ht]
+	
+	\includegraphics[width=1\linewidth]{Pipeline.png}
+	
+	\caption{sequence diagram of the pipeline of the program} %??
+	\label{fig:PipelineDiagram} 
+\end{figure}
+
+\newpage
 \subsection{Denoising}\label{sec:Denoising}
 The first steps in our MATLAB routine deal with preparing all images in order to binarize them with the most success, i.e. with the best DNA recognition rate as well as most accurate length estimation. This means that the routine removes as much noise and as many different kinds of noise so that it automatically and, before all else, correctly can classify any image pixel as either belonging to a DNA fragment / nucleus or as background.
 For this to achieve, we found that the initial step needs to be a noise reduction method called \textit{Non-local Means Denoising}. It is very well suited to remove white noise from images, which is a noise type that is very typical for AFM images. White noise is defined as a random signal that has a constant power spectral density. Although the image processing library of MATLAB is very extensive, no function implementing \textit{Non-local Means Denoising} could be found. Those denoising functions that are provided by MATLAB, such as \textit{wdencmp} in conjunction with \textit{ddencmp}, or \textit{wiener2}, proved not to be as suitable for denoising the here analysed images, due to their very specific noise types (which are also discussed in greater detail in Sections \ref{sec:Filtering} and \ref{sec:Thresholding}). However, the method is provided by the open source computer vision and machine learning library \textit{OpenCV} (\cite{itseez2016opencvman} \cite{itseez2016opencvlib}). 
@@ -426,19 +512,19 @@ Furthermore, some artifacts already could be removed. AFM images often show long
 \begin{figure}[htb!]
 	\centering
 	\begin{subfigure}{0.28\textwidth}
-		\includegraphics[width=\linewidth]{beforeDenoise_img.png}			
-		
+		\includegraphics[width=\linewidth]{beforeDenoise_img.png}
+
 		\vspace{0.1cm}
-		
+
 		\includegraphics[width=\linewidth]{afterDenoise_img.png}
 		\caption{}
 		\label{fig:denoising_imgs}
 	\end{subfigure}
 	\begin{subfigure}{0.7\textwidth}
 		\includegraphics[width=\linewidth]{beforeDenoise_histogram.png}
-		
+
 		\vspace{0.1cm}
-		
+
 		\includegraphics[width=\linewidth]{afterDenoise_histogram.png}
 		\caption{}
 		\label{fig:denoising_histograms}
@@ -461,7 +547,7 @@ Although this eliminated most of the smaller fragments, and some larger ones, ob
 Like Ficarra et al. \cite{ficarra2005automated} pointed out, a median filter with a 3x3 mask helps eliminating these components quite well, yet there is still room for improvement. Regarding the aspect of very limited available data, it was another aim to maximize the number of sampled strings. Therefore, other, less common techniques besides the already tested filters were investigated.\\
 As it was rather soon apparent that regions with impulsive noise had a rather high frequency, a lowpass filter approach seemed suitable.
 
-\subsubsection{The Concept of Adaptive Low Pass Filtering}
+\subsubsection{The Concept of Adaptive Low Pass Filtering} \label{sec: Adaptive Lowpass Filter}
 Firstly, the most prominent example for a lowpass filter is the Gaussian filter. It essentially smoothes the data, but in a relatively predictive way, since it has a predefined filtering matrix. But, since the signal-to-noise ratio is not always known , a simple Gaussian filter might only blur the edges of the outer DNA regions, instead of effectively reducing the amount of white noise. Rather than simply smoothing the image with a Gaussian filter, the idea was to eliminate regions with high contrast.  \\
 Removing such high-contrast regions is best achieved in frequency space. The freuquency domain, simply put, transforms the original image data into a decomposition of sinus waves. For the transformation between spatial domain and frequency domain the MATLAB implementation of the Fast Fourier Transformation was used. Without going into further detail, the amplitude of such a frequency representation gives a comparatively abstract, but nonetheless intuitive, visualisation of such high contrasts as shown in figure \ref{fig:step1lpf}. \\
 As one can easily observe, there is a denser circular area in the image center. This central area represents the lower frequencies which corresponds to a constant image region. This can be seen on every picture of the used dataset but is to be expected in every other dataset as well. The only difference lies in the clear distinction and brightness of the center. Since a classic lowpass filter requires a clipping region as a fixed parameter, it would not work perfectly for every picture because one would inevitably overfit for a certain set of images. Standard circular detection via circular Hough transform has not been able to sufficiently detect this area. \\
@@ -1033,7 +1119,7 @@ The result of this algorithm differs from the result of Hilditch's algorithm as 
 \newpage
 % second approach: Zhang-Suen https://github.com/linbojin/Skeletonization-by-Zhang-Suen-Thinning-Algorithm/blob/master/thinning.m
 
-\subsection{Length Estimation}
+\subsection{Length Estimation}\label{sec:Length Estimation}
 At this stage of the program, each DNA object already has been isolated into a small black-and-white image that otherwise only contains this one DNA object, and both thinning algorithms have produced thinned DNA-strands. However, due to the nature of their operations, in most cases the resulting strands not only have two end points, but contain branches and multiple end points. Several examples can be seen in the right panel of Figure \ref{fig: thinning} above. In order to correctly determine DNA length, it is necessary to erode these branches so that afterwards only DNA strands without any branches and with only two ends are left. These will be called DNA backbones. Consequently, the next step in our routine is the erosion of these noise branches and the extraction of DNA backbones. \\
 
 % Spline fitting
@@ -1194,7 +1280,7 @@ The initial branch will still be deleted in a later iteration step either way, s
 Another problem that showed up during initial testing was that the algorithm sometimes didn't fully remove a certain branch, or so it seemed. This was the result of the branchpoint, after removing the shortest branch, could transform into an L-point. To avoid such behaviour, and assert a singular and unique path from end to end, it has to be checked whether the branchpoint fulfills the L-point criteria mentioned earlier in this chapter. In figure \ref{fig:criticalDenPhi} the problem is visualized. Note how the purple point in \ref{fig:critical2DenPhi} would lead to a non-unique path.\\
 With this step the processing of the strand has been almost completed. If there have been no problems up to this point, the strand seems to be a valid object and is therefore treated as such. In the case that one of the earlier mentioned abortion criteria terminated the algorithm, the dnaObject is then marked as invalid by setting the isValid flag of the object class to 0. \\
 %% Dennis 03.08
-The following steps are similiar to the algorithm described in Sections \ref{sec:PixelRecovery} and \ref{sec:Length Estimation}, and have only been slightly altered. The method is only described here for sake of completeness. 
+The following steps are similiar to the algorithm described in Sections \ref{sec:PixelRecovery} and \ref{sec:Final Length Estimation}, and have only been slightly altered. The method is only described here for sake of completeness. 
 \\
 To improve the quality of the final estimate it should also be considered to reestimate the border regions of the strand. With the thinning algorithms, especially the region around the endpoints is usually eroded from each direction which leads to an overall shorter strand in thinned form. Various approaches have already been proposed as already described in Section \ref{intro_length_determination}. Based on the endpoints and their respective neighbouring pixels, a reestimation direction is established by taking a vector in this direction (see figure). By overlaying the original fragment with the thinned one it can now be determined whether there is another pixel in the estimation direction that belongs to the fragment. The process is repeated until it meets a pixel which is no longer part of the fragment or the image boundary is reached. \\
 The last step in the algorithm is then to calculate the partial length of each fragment, so long as they do have exactly one attached nucleosome. For this a boolean function parameter called dnaHasNucleos was introduced which lets the algorithm decide whether there are any nucleosomes attached at all. The exact number of attached nucleosomes can be referenced by the object's value 'attachedNucleo'. \\
@@ -1284,6 +1370,7 @@ In all of these cases, length determination does not make sense. Such objects ar
 \\Self-intersection of an DNA object means that the DNA is looping back on itself and then touches or crosses itself (compare Figure \ref{fig:dna_with_loop}). A consequence of this is that the DNA object can be considered to be an object with a hole. This, in turn, means that the topology of this object is different compared to an object that does not have a hole, which is reflected in the Euler number of its image. Therefore, for each DNA object the Euler number is calculated using the MATLAB function \textit{bweuler}. It returns the number of objects in an image minus the number of holes. Since for each DNA object an image exists that only contains this one object, this function efficiently can be used to distinguish between self-intersecting and non-intersecting DNA objects. If the Euler number is 0, then an object with an hole has been detected, and the DNA object is flagged as being invalid. Only if the Euler number is 1, the DNA object will be further processed.\\
 
 \paragraph{Conversion of DNA fragments into graph objects}
+The next step is the conversion of DNA fragments to graph objects. This approach relies on the fact that, at this stage of the entire process, the so far detected and thinned DNA objects internally are represented as chains of white pixels that belong to exactly one object. Since thinning already has taken place, this approach assumes that any pixel in such a chain is only neighbor to other pixels that represent other links of the chain.\\
 
 \begin{figure}[!htbp]
 	\centering
@@ -1306,42 +1393,41 @@ In all of these cases, length determination does not make sense. Such objects ar
 		(a) From a small image containing exactly one DNA object, (b) an upper triangular adjacency matrix is created where all ones (red) represent edges between directly neighboring pixels. Only pixels containing information, i.e. white pixels, need to be considered and here, no pixel is neighbor to itself. (c) Such a matrix represents an undirected graph.}
 	\label{fig:dna_graph_creation}
 \end{figure}
-The next step is the conversion of DNA fragments to graph objects. This approach relies on the fact that, at this stage of the entire process, the so far detected and thinned DNA objects internally are represented as chains of white pixels that belong to exactly one object. Since thinning already has taken place, this approach assumes that any pixel in such a chain is only neighbor to other pixels that represent other links of the chain.\\
 Therefore, each DNA object can be transformed into a graph G (Figure \ref{fig:dna_graph_creation}). The nodes of this graph are those pixels representing the DNA object, while the graph's edges describe the direct 8-neighborhood between pixels (Figure \ref{fig:dna_obj_adjMatrix}). Since in this case neighborhood between pixels is a bijection, the resulting graph G is undirected, and it suffices to create G from an upper triangular adjacency matrix.\\
 \begin{figure}[htb!]
 	\centering
 	\begin{subfigure}{0.22\textwidth}
-		\includegraphics[width=\linewidth]{small_DNA_graph_bfs1.png}			
-		
+		\includegraphics[width=\linewidth]{small_DNA_graph_bfs1.png}
+
 		\vspace{0.2cm}
-		
+
 		\includegraphics[width=\linewidth]{small_DNA_obj_bfs1.png}
 		\caption{First bfs}
 		\label{fig:dna_graph_bfs1}
 	\end{subfigure}
 	\begin{subfigure}{0.22\textwidth}
 		\includegraphics[width=\linewidth]{small_DNA_graph_bfs2.png}
-		
+
 		\vspace{0.2cm}
-		
+
 		\includegraphics[width=\linewidth]{small_DNA_obj_bfs2.png}
 		\caption{Second bfs}
 		\label{fig:dna_graph_bfs2}
 	\end{subfigure}
 	\begin{subfigure}{0.22\textwidth}
-		\includegraphics[width=\linewidth]{small_DNA_graph_ssp.png}	
-		
+		\includegraphics[width=\linewidth]{small_DNA_graph_ssp.png}
+
 		\vspace{0.2cm}
-		
+
 		\includegraphics[width=\linewidth]{small_DNA_obj_ssp.png}
 		\caption{Shortest path }
 		\label{fig:dna_graph_ssp}
 	\end{subfigure}
 	\begin{subfigure}{0.22\textwidth}
 		\includegraphics[width=\linewidth]{small_DNA_real_bfs.png}
-		
+
 		\vspace{0.2cm}
-		
+
 		\includegraphics[width=\linewidth]{small_DNA_real_ssp.png}
 		\caption{Example DNA}
 		\label{fig:dna_real_ssp}
@@ -1350,7 +1436,7 @@ Therefore, each DNA object can be transformed into a graph G (Figure \ref{fig:dn
 		(a) On the graph G representing a DNA object, one iteration of breadth-first search (bfs) with a randomly chosen start node (green) will return one node (red) of the pair of nodes that is connected via the longest path within G. (b) Using this node as starting node (green) in a second iteration of bfs will return the other node (red) of this pair. (c) Calculating the shortest path between these two nodes returns the DNA backbone (green edges) while excluding noise branches (red edge). The upper row of panels (a) to (c) depicts results on the graph object introduced in Figure \ref{fig:dna_graph_creation}, the lower row shows the same results in the respective DNA object representation. (d) A thinned DNA object as detected by the program is shown. The upper image indicates the pair of nodes furthest apart from each other, the lower image highlights the shortest path between them (green), a noise branch (red) and pixel that were lost during the thinning process (blue).}
 	\label{fig:dna_backbone_detection}
 \end{figure}
-Having created a graph representation for each DNA object, another simple measure allows for the detection of further invalid DNA objects. At this stage of the program, a valid DNA object is expected to be a single DNA strand without any intersections. Its graph will be a tree, i.e. a graph in which each pair of nodes is connected via exactly one, and only one path. However, if smaller DNA strands intersect each other without fully forming any circle, they appear to be one large object that still can be within the size limits. Although a graph of such an object also will be a tree, this tree will have a high branching factor, which means that the difference between the number of edges and the number of nodes is larger compared to a valid DNA object as described above. Therefore, any DNA object whose graph representation does not fulfill the following criteria is also excluded from further processing and flagged as being invalid.
+Having created a graph representation for each DNA object, another simple measure allows for the detection of further invalid DNA objects. At this stage of the program, a valid DNA object is expected to be a single DNA strand without any intersections. Its graph will be a tree, i.e. a graph in which each pair of nodes is connected via exactly one, and only one path. However, if smaller DNA strands intersect each other without fully forming any circle, they appear to be one large object that still can be within the size limits. Although a graph of such an object also will be a tree, this tree will have a high branching factor, which means that the difference between the number of edges and the number of nodes is larger compared to a valid DNA object as described above. Therefore, any DNA object whose graph representation does not fulfill the following criterion is also excluded from further processing and flagged as being invalid.
 \begin{center}\textit{number of edges - number of nodes $\leq$ 2}\end{center}
 
 \paragraph{Erosion of Noise Branches}\label{sec:Erosion of Noise Branches}
@@ -1409,16 +1495,17 @@ Having determined the true DNA backbones, it next is necessary to restore pixels
 An useful and easy to implement approach already has been indicated in Section \ref{sec:IntroPixelRestoring}. Each DNA backbone only has two ends by definition. So, for each of a DNA backbone's end, consider the last two pixels as depicted in the upper panel of Figure \ref{fig:end_pixel_recovery2}. The relation of those two pixels towards each other within the 8-neighborhood of the end pixel of the two identifies an unambiguous position at which a pixel possibly could have been lost. The information whether a pixel has been lost or not can easily be retrieved by comparing the pixel at this position with the pixel at the same position in the image of the not-yet-thinned DNA fragment (see Figure \ref{fig:end_pixel_recovery2}, lower panel). If the pixel at that position is part of the DNA fragment, it has to be restored, and can now be considered to be the new end point of this DNA fragment end. This process is repeated until no pixel can be restored anymore. At this point, the DNA backbone is complete, and its length can be computed.
 
 
-\paragraph{Length Estimation}\label{sec:Length Estimation}
-Length computation generally is done as has already been described in Section \ref{intro_length_determination}. Because Rivetti and Codeluppi \cite{rivetti2001accurate} showed that the Kulpa Estimator has higher accuracy than the Freeman Estimator, is easy to implement and has only low impact on the overall runtime, we decided to use this measure for DNA fragment length calculation, as well.\\
-Length estimation has to be done differently for DNA fragments with and without nucleosome, respectively. For a DNA fragment without nucleosome, simply its entire DNA backbone needs to be considered. In the case of an DNA fragment with nucleosome, however, the DNA backbone has to be divided into exactly those two parts that point away from the nucleosome, i.e. the nucleosome's both arms. 
+\paragraph{Final Length Estimation}\label{sec:Final Length Estimation}
+Length computation generally is done as has already been described in Section \ref{intro_length_determination}. Because Rivetti and Codeluppi \cite{rivetti2001accurate} showed that the Kulpa Estimator has higher accuracy than the Freeman Estimator, is easy to implement and has only low impact on the overall runtime, we decided to use this measure for DNA fragment length calculation, as well.
 \begin{figure}[htb!]
 	\centering
 	\includegraphics[width = 0.5\textwidth]{length_calc_two_arms.png}
-	\caption{Intersection between the DNA backbone and the nucleosome of its DNA fragment.\\
+	\caption{Intersection between a DNA backbone and the nucleosome of its DNA fragment.\\
 		Dark green pixels represent the not-yet-thinned DNA fragment with its bound nucleosome, and its DNA backbone is represented by white and light-green pixels. The nucleosome, as it was detected by the program, is shown in red.}
 	\label{fig: length_calc_two_arms}
 \end{figure}
+
+Length estimation has to be done differently for DNA fragments with and without nucleosome, respectively. For a DNA fragment without nucleosome, simply its entire DNA backbone needs to be considered. In the case of an DNA fragment with nucleosome, however, the DNA backbone has to be divided into exactly those two parts that point away from the nucleosome, i.e. the nucleosome's both arms. 
 This can be achieved by using the same method that is used during angle measurement (compare Section \ref{sec:Angle Measurement}). Intersections of the DNA backbone with the circle (red) which is defined by the radius of the nucleosome is calculated as visualized in Figure \ref{fig: length_calc_two_arms}. Then, those parts of the backbone that are inside this circle are temporarily deleted (light green pixels), which results in only two arms remaining (white pixels). For each of these arms, now, the length is calculated similarly as it is done for the entire backbone in case of free DNA fragments. In the unlikely case that an intersection between the detected nucleus and the DNA backbone cannot be computed, no length will be determined.
 
 
@@ -1475,12 +1562,424 @@ c_y &= m_1 c_x + t_1 = m_2 c_x + t_2\, .
 %a least squares polynomial 
 
 
-\subsection{Optimization}\label{sec:Optimization}
+\subsection{Runtime Optimization}\label{sec:Runtime Optimization}
+The main pipeline of the program (see section \ref{sec:Software Architecture}) takes up a total amount of 405 seconds for 105 images with a resolution of 1920x1920  on a standard workstation.
+That means each image needs about 3.9 seconds to be processed from a raw image to a fully evaluated binary image with detected features as described in section \ref{sec:Software Architecture}.
+3.9 seconds is already a short time period but the use cases for this kind of software usually contains processing thousands of these images.
+Therefore ''the faster the better'' applies as long as the quality of the results is not reduced.
+In order to optimize the runtime three steps were taken:
+
+\begin{enumerate}
+	\item optimize the use of MATLAB commands and indexing
+	\item parallelize the execution of the pipeline and use multiple CPU cores
+	\item use GPU for time consuming function calls
+\end{enumerate}
+
+To locate time consuming factors the MATLAB profiler \footnote{http://www.mathworks.com/help/matlab/matlab\_prog/profiling-for-improving-performance.html} was used.
+
+At first inefficient array and matrix indexing like:
+\[
+list(find(list > value))
+\]
+was optimized by using logical indexing instead of the find function.
+Also some for-loops could be accelerated by using vector or matrix operations which MATLAB handles very well.
+Since five different developers worked on the program some values, such as the connected Components were calculated more than ones which could be improved by storing the values as an instance variable.
+This process already improved the executing time from 405 seconds down to 350 seconds over the entire dataset(figure \ref{fig:OptWorkstation}) or from 3,9 seconds to 3,4 seconds per image.
+\begin{figure}[!htbp]
+	
+	\includegraphics[width=1\linewidth]{OptWorkstation.png}
+	
+	\caption{Processing time over 105 images on a workstation (6 CPU Cores)} %??
+	\label{fig:OptWorkstation} 
+\end{figure}
+
+As a second step the pipeline was parallelized such that multiple images could be processed at once.
+Using the the parfor  \footnote{http://www.mathworks.com/help/distcomp/parfor.html}  command from the MATLAB parallel computing toolbox \footnote{http://www.mathworks.com/products/parallel-computing/} multiple workers/threads are started where each worker can handle one loop pass at a time.
+The number of workers is limited by the number of CPU Cores available on the workstation used which were six in this case.
+It is important to ensure that all workers only access disjoint parts of the data they work on.
+Ideally the processing time is divided by six when not accounting for the multithreading overhead. Practically the processing time is quartered which means gong down from 350 seconds to 87 seconds over all 
+and from 3.4 seconds to 0.83 seconds per image (figure \ref{fig:OptWorkstation}).
+Such an improvement is only achievable when using large datasets of more than 100 images.
+\begin{figure}[!ht]
+	
+	\includegraphics[width=1\linewidth]{OptLaptop.png}
+	
+	\caption{Processing time over 105 images on a consumer laptop (2CPU Cores)} %??
+	\label{fig:OptLaptop} 
+\end{figure}
+
+The MATLAB parallel computing toolbox also provides GPU implementations for some functions such as bwmorph \footnote{http://www.mathworks.com/help/images/ref/bwmorph.html}
+which is used during the thinning of the DNA strands (see section \ref{sec:Thinning}).
+This approach reduced computation time from 87 seconds to 80 seconds respectively from 0.83 seconds to 0.76 seconds per picture.
+
+All steps combined reduce execution time by 80.2 \% on a standard workstation.
+Using a consumer grade laptop with two CPU cores holds far less potential for performance optimization.
+Still, computing time can be reduced by 34\% over the entire dataset which corresponds to a performance gain of 1.4 seconds per image or an improvement from 433 seconds to 286 seconds for 105 images(figure \ref{fig:OptLaptop}).
+These values improves by the size of the dataset because the multithread and GPU overhead is independent of the size of the dataset.
+
+\newpage
 \section{Results}\label{sec: Results}
-\subsection{Validation}\label{sec:Validation}
-\subsection{Biological Significance}\label{sec: Biological Significance}
+\subsection{Evaluation}\label{sec:Evalution}
+
+To evaluate the performance of our four algorithms we use a test data set of six images generated as described in chapter \ref{sec: Motivation}. These images (figure \ref{fig: validation1}) are randomly selected of data that are of a sufficiently high quality to be relevant for drawing a biological conclusion by a manual evaluation. AFM images with a much too high DNA density are not considered. An example of this is shown in figure \ref{fig: validation8}.
+%
+\begin{figure}[!htb]
+	\begin{center}
+		\includegraphics[width = 1 \textwidth]{validation1}
+	\end{center}
+	\caption{Images used for evaluation of the algorithms. Images are selected of data that are of a sufficiently high quality to be relevant for drawing a biological conclusion.}
+	\label{fig: validation1} % you need to include this to reference the figure afterwards
+\end{figure}
+%
+\begin{figure}[!htb]
+	\begin{center}
+		\includegraphics[width = 0.4\textwidth]{validation8}
+	\end{center}
+	\caption{Example for an image not used for algorithm evaluation. An image like this was not considered to the evaluation of our algorithms due to a very poor quality. The DNA density is much too high and therefore such an image has no biological relevance.}
+	\label{fig: validation8} % you need to include this to reference the figure afterwards
+\end{figure}
+
+
+
+In the following the two algorithms using breadth first search for length determination are referred to as algorithm C and the two using Kulpa-estimator for length determination are referred to algorithm D. The additional description fast or slow gives information on the applied thinning method. Fast means Hilditch‘s sequential thinning and slow means Zhang Suen‘s thinning. The differences of our algorithms are listed in table \ref{tab:validation_table1}.
+
+% Table generated by Excel2LaTeX from sheet 'Tabelle1'
+\begin{table}[!htbp]
+	\centering
+	\caption{Overview of the algorithms. The four algorithms differ in their implemented thinning or length determination method.}
+	\begin{tabular*}{\textwidth}{lll} \hline
+		
+		\textbf{Abbreviation} & \textbf{Thinning method} & \textbf{Length determination method} \\ \hline
+		
+		Algorithm C fast & Hilditch & Graph-based approach \\
+		Algorithm C slow & Zhang Suen & Graph-based approach \\
+		Algorithm D fast & Hilditch & Iterative length estimation \\
+		Algorithm D slow & Zhang Suen & Iterative length estimation \\ \hline
+		
+	\end{tabular*}%
+	\label{tab:validation_table1}%
+\end{table}%
+
+
+Each of the three persons generating test data determines three times the length and the angle of the same ten objects for examination the reproducibility of the manual measurements. The results are shown in table \ref{tab:validation_table2}. The variance of the manual length determination is relatively low suggesting a good precision of the method. However, the manual angle measurement seems to be much more inexact due to a very high standard deviation. 
+
+
+% Table generated by Excel2LaTeX from sheet 'Tabelle2'
+\begin{table}[!htbp]
+	\centering
+	\caption{Reproducibility of the manual measurements. The length of ten and the angle of seven objects are measured three times by each of the three persons generating test data.}
+	\begin{tabular*}{\textwidth}{lllll} \hline
+		\textbf{Object} & \textbf{Average of} & \textbf{Standard deviation} & \textbf{Average} & \textbf{Standard} \\ 
+		& \textbf{the length} & \textbf{of the length} & \textbf{of the} & \textbf{deviation of} \\ 
+		& \textbf{[pixel]} & \textbf{[pixel]} & \textbf{angle [$^\circ$]} & \textbf{the angel [$^\circ$]} \\ \hline
+		1     & 95.1  & 2.5   & -     & - \\
+		2     & 95.1  & 3.5   & -     & - \\
+		3     & 81.3  & 3.3   & 75    & 19.5 \\
+		4     & 79.9  & 3.3   & 56.3  & 26.3 \\
+		5     & 95.7  & 1.7   & -     & - \\
+		6     & 79    & 2.5   & 69    & 21.5 \\
+		7     & 78.9  & 2.1   & 56.7  & 39.4 \\
+		8     & 79.4  & 2.9   & 68    & 20.6 \\
+		9     & 79.4  & 2.9   & 68    & 20.6 \\
+		10    & 76.9  & 3.1   & 113.1 & 20.8 \\ \hline
+	\end{tabular*}%
+	\label{tab:validation_table2}%
+\end{table}%
+
+
+Each output of our four algorithms is compared to the test data set. Both for manual and algorithmic measurements, objects with a determined length $\leq$ 130 nm are not considered as DNA. Figure \ref{fig: validation2} shows the amount of correct detected free DNA molecules, objects falsely identified as DNA and nucleosome bound DNA wrongly classified as free DNA. Algorithm D slow detects no free and no bound DNA. Therefore, this algorithm is not taken into further considerations within this evaluation. 54.2 \% (algorithm C slow), 49.6 \% (algorithm C fast) and 49.0 \% (algorithm D fast) of 349 free DNA molecules within the test data are correct identified. Meanwhile, 29.5 \% (algorithm C slow), 32.7 \% (algorithm C fast) and 30.5 \% (algorithm D fast) of the identified objects are falsely detected as free DNA.
+%
+\begin{figure}[!htb]
+	\begin{center}
+		\includegraphics[width = 0.9 \textwidth]{validation2}
+	\end{center}
+	\caption{Classification of the objects identified by the algorithms as free DNA. Green bars indicate correct detected free DNA molecules, red bars indicate objects falsely identified as DNA and red hatched bars indicate nucleosome bound DNA wrongly classified as free DNA. The black line marks the actual amount of free DNA in the test data set.}
+	\label{fig: validation2} % you need to include this to reference the figure afterwards
+\end{figure}
+
+Figure \ref{fig: validation3} shows the same statistics for nucleosome bound DNA. 32.7 \% (algorithm C slow), 30.6 \% (algorithm C fast) and 28.6 \% (algorithm D fast) of 196 bound DNA molecules within the test data are correct identified. Meanwhile, 36.0 \% (algorithm C slow), 28.4 \% (algorithm C fast) and 35.3 \% (algorithm D fast) of the identified objects are falsely detected as bound DNA.
+%
+\begin{figure}[!htb]
+	\begin{center}
+		\includegraphics[width = 0.9\textwidth]{validation3}
+	\end{center}
+	\caption{Classification of the objects identified by the algorithms as nucleosome bound DNA. Green bars indicate correct detected bound DNA molecules, red bars indicate objects falsely identified as DNA and red hatched bars indicate free DNA wrongly classified as bound DNA. The black line marks the actual amount of bound DNA in the test data set.}
+	\label{fig: validation3} % you need to include this to reference the figure afterwards
+\end{figure}
+
+For each algorithm, the computed length of the correct identified DNA molecules is plotted against the corresponding manual determined length. Free DNA and nucleosome bound DNA is considered separately. The scatter plots for automatic against manual measurements are shown in figure \ref{fig: validation4} and \ref{fig: validation5}.
+%
+\begin{figure}[!htb]
+	\begin{center}
+		\includegraphics[width = 0.9\textwidth]{validation4}
+	\end{center}
+	\caption{Scatter plots for automatic against manual length determination of free DNA. The lengths of free DNA molecules determined by manual measurements are plotted against the corresponding length calculated by algorithm A) C fast B) D fast C) C slow. Different colors of the points indicate the six different images in our test data set. The black line is the line through the origin and the red line is the linear fit of the scatter plot. Just DNA molecules identified correct by the algorithms are considered in this part of the evaluation.}
+	\label{fig: validation4} % you need to include this to reference the figure afterwards
+\end{figure}
+%
+\begin{figure}[!htb]
+	\begin{center}
+		\includegraphics[width = 0.8\textwidth]{validation5}
+	\end{center}
+	\caption{Scatter plots for automatic against manual length determination of nucleosome bound DNA. The lengths of nucleosome bound DNA molecules determined by manual measurements are plotted against the corresponding length calculated by algorithm A) C fast B) D fast C) C slow. Different colors of the points indicate the six different images in our test data set. The black line is the line through the origin and the red line is the linear fit of the scatter plot. Just nucleosome bound DNA molecules identified correct by the algorithms are considered in this part of the evaluation.}
+	\label{fig: validation5} % you need to include this to reference the figure afterwards
+\end{figure}
+
+
+The scatter plots and the according R2 indicate that using breadth first search for length determination combined with Hilditch‘s sequential thinning is best to measure more exact lengths of DNA molecules. For each algorithm the angle distribution of all correct identified nucleosome bound DNA molecules is shown on figure \ref{fig: validation6}. Also the corresponding angle distributions of the manual evaluation are visualized.
+%
+\begin{figure}[!htb]
+	\begin{center}
+		\includegraphics[width = 0.9\textwidth]{validation6}
+	\end{center}
+	\caption{Angle distribution of correct identified nucleosome bound DNA. The number of values is plotted against the angle between the short and long arm of nucleosome bound DNA molecules determined by algorithm A) C fast B) D fast C) C slow (gray bars). The distribution of the corresponding manual measured angles is also shown (black bars) in the diagrams.}
+	\label{fig: validation6} % you need to include this to reference the figure afterwards
+\end{figure}
+
+The distribution of the angles determined by the algorithms seems to be relatively equal between 20 $^\circ$ and 120 $^\circ$. Lower and higher angles are relatively rare. Manual measured angles have a peak between 50 $^\circ$ and 90 $^\circ$ but also do not really conform to a normal distribution. These observations make a meaningful evaluation impossible. Synthetic test data are therefore needed. Furthermore, for each algorithm the distribution of the length of the short arms is shown on figure \ref{fig: validation7}. Again, just correct identified nucleosome bound DNA molecules are considered. The corresponding short arm length distributions of the manual measurements are also visualized.
+%
+\begin{figure}[!htb]
+	\begin{center}
+		\includegraphics[width = 0.9\textwidth]{validation7}
+	\end{center}
+	\caption{Short arm length distribution of correct identified nucleosome bound DNA molecules. The number of values is plotted against the short arm length of nucleosome bound DNA molecules determined by algorithm A) C fast B) D fast C) C slow (gray bars). The distribution of the corresponding manual measured short arm length is also shown (black bars) in the diagrams.}
+	\label{fig: validation7} % you need to include this to reference the figure afterwards
+\end{figure}
+
+
+The distributions of manual measured short arm lengths and short arm lengths determined by the algorithms are very similar. All conform to a normal distribution with a low standard deviation and a mean between 60 and 70 nm. These observations suggest that our method to measure the length of short arms works very well and precise. Table \ref{tab:validation_table3} and \ref{tab:validation_table4} give a final overview of all evaluation results for free DNA and bound DNA. Formula \ref{eq: formula1}, \ref{eq: formula2} and \ref{eq: formula3} describe the calculation of the recovery rate, true positive rate and false positive rate. \\
+%
+\begin{equation}
+recovery \; rate = \dfrac{objects \; correct \; identified \; by \; the \; algorithm}{objects \; identified \; by \; manual \; measurements} \\
+\label{eq: formula1}
+\end{equation}
+%
+\begin{equation}
+true \; positive \; rate = \dfrac{objects \; correct \; identified \; by \; the \; algorithm}{objects \; identified \; by \; algorithm} \\
+\label{eq: formula2}
+\end{equation}
+%
+\begin{equation}
+false \; positive \; rate = \dfrac{objects \; false \; identifies \; by \; the \; algorithm}{objects \; identified \; by \; algorithm} \\
+\label{eq: formula3}
+\end{equation}
+
+% Table generated by Excel2LaTeX from sheet 'Tabelle3'
+\begin{table}[!htbp]
+	\centering
+	\caption{Overview of the evaluation results for free DNA molecules. Algorithm D slow detects no free DNA. Therefore, this algorithm is not taken into considerations of the evaluation. Manual measurements identified 349 free DNA molecules with a mean length of 220.0 $\pm$ 37.1 nm in our test data set.}
+	\begin{tabular*}{\textwidth}{llll} \hline
+		\textbf{} & \textbf{Algorithm C} & \textbf{Algorithm D} & \textbf{Algorithm C} \\
+		\textbf{} & \textbf{fast} & \textbf{fast} & \textbf{slow} \\ \hline
+		Identified objects & 257   & 246   & 268 \\
+		True positive objects & 173   & 171   & 189 \\
+		Recovery rate & 0.5   & 0.49  & 0.54 \\
+		True positive rate & 0.67  & 0.7   & 0.71 \\
+		False positive rate & 0.33  & 0.3   & 0.29 \\
+		Correlation coefficient  & & &  \\
+		with manual length & 0.79  & 0.72  & 0.63 \\
+		determination (R) & & & \\
+		Mean of true positive & 213.7 & 203.1 & 205.8 \\
+		objects & $\pm$ 28.1 nm & $\pm$ 25.4 nm & $\pm$ 31.1 nm \\
+		Mean of all identified & 201.9  & 193.5 & 197.8  \\ 
+		objects & $\pm$ 34.4 nm & $\pm$ 31.4 nm & $\pm$ 34.4 nm \\ \hline
+	\end{tabular*}%
+	\label{tab:validation_table3}%
+\end{table}%
+
+% Table generated by Excel2LaTeX from sheet 'Tabelle4'
+\begin{table}[!htbp]
+	\centering
+	\caption{Overview of the evaluation results for nucleosome bound DNA. Algorithm D slow detects no bound DNA. Therefore, this algorithm is not taken into considerations of the evaluation. Manual measurements identified 196 nucleosome bound DNA molecules with a mean length of 178.4 $\pm$ 23.8 nm in our test data set.}
+	\begin{tabular*}{\textwidth}{llll} \hline
+		\textbf{} & \textbf{Algorithm C} & \textbf{Algorithm D} & \textbf{Algorithm C} \\ 
+		\textbf{} & \textbf{fast} & \textbf{fast} & \textbf{slow} \\ \hline
+		Identified objects & 88    & 85    & 100 \\
+		True positive objects & 60    & 56    & 64 \\
+		Recovery rate & 0.31  & 0.29  & 0.33 \\
+		True positive rate & 0.68  & 0.66  & 0.64 \\
+		False positive rate & 0.32  & 0.34  & 0.36 \\
+		Correlation coefficient & & & \\
+		with manual length & 0.75  & 0.7   & 0.75  \\
+		determination (R) & & & \\
+		Mean of true positive & 159.4  & 160.0  & 160.4  \\
+		objects & $\pm$ 42.4 nm & $\pm$ 44.3 nm & $\pm$ 41.1 nm \\
+		Mean of all identified & 161.9  & 166.8  & 166.4  \\ 
+		objects & $\pm$ 39.1 nm & $\pm$ 48.9 nm & $\pm$ 45.6 nm \\ \hline
+	\end{tabular*}%
+	\label{tab:validation_table4}%
+\end{table}%
+
+The results are very similar for all three algorithms and in most cases they differ only minimally. It seems to be that breadth first search for length determination and Zhang Suen‘s thinning causes an increased object detection. The combination of both methods (algorithm C slow) has the best recovery rate. However, the true positive rate and false positive rate seems to be unaffected. For free DNA molecules the true positive rate decreases from algorithm C slow via algorithm D fast to algorithm C fast. But for nucleosome bound DNA it is the reverse. The best correlation with manual length determination is reached by algorithm C fast (Hilditch‘s sequential thinning + breadth first search) for both object types. Algorithm C slow has for free DNA a significantly worse correlation than the other algorithm. However, for nucleosome bound DNA is this not the case. The mean length of all DNA molecules determined by the algorithms is for both object types always around 15 nm shorter than the manual determined mean value.
+
+%%%%Zusatz Susanne Martin an Romans Part
+
+Due to problems during execution of different steps of the algorithm and unsatisfactory results, we only evaluated the Hilditch thinning method combined with the length determination method C and D. For the further comparison of the two algorithms with the manually measured results, we calculated independent mean values in reasonable ranges. Only free DNA molecules between 130 and 240 nm were considered in order to exclude fragments that are not important for our biological evaluation. This range has enough space for fluctuation around the expected value between 190 nm and 225 nm. For histone bound DNA, a range between 100 and 223 nm was chosen because the mean value of bound DNA should be shifted to shorter distances. 
+All valid objects of the eight test data images in the described nm ranges were used for the independent mean values (see table \ref{tab:means}).
+The mean values for free DNA, histone bound DNA and the short DNA arm are similar to the calculated mean values of the validation where only correlating values were considered. The length of free DNA, bound DNA and the short DNA arm are shorter in both automatic length determination methods. For this comparison, manually determined values are not corrected. The table also shows the mean values of the radii of the nucleosome core measured automatically and manually. They are lying close together around a value of 11 nm. This results in nearly twice the theoretical diameter of the nucleosome core particle with which the length of the manual evaluation was corrected so far. These results show that the correction for the manual data set was too short. Considering the actual distance on the images, the lengths of free and bound DNA of the manually and automatically generated data are comparable.
+%
+% Table generated by Excel2LaTeX from sheet 'Tabelle5'
+\begin{table}[!htbp]
+	\centering
+	\caption{Mean values of the length of the free DNA fragments, bound DNA fragments, the short DNA arm of bound DNA and the radius of the nucleosome core particle in the range from 130 nm - 240 nm for free DNA and 100 nm – 223 nm for bound DNA. The values were determined manually for eight test data images and compared with the automatically measured length with algorithm C and algorithm D. Both algorithms work with the Hilditch thinning method include different length determination methods.}
+	\begin{tabular*}{\textwidth}{llll} \hline
+		\textbf{} & \textbf{Manual evaluation} & \textbf{Method C} & \textbf{Method D} \\ 
+		\textbf{} & \textbf{[nm]} & \textbf{[nm]} & \textbf{[nm]} \\ \hline
+		Free DNA & 218   & 196   & 189 \\
+		Bound DNA & 176   & 147   & 145 \\
+		Short DNA arm & 69    & 49    & 51 \\
+		Radius Nucleosome & 10.4  & 11.7  & 11.6 \\ \hline
+	\end{tabular*}%
+	\label{tab:means}%
+\end{table}%
+
+To get a better idea of the false positively (FP) detected nucleosomes of the data set with our algorithm without manual review, we had a look on six images containing only free DNA. Table \ref{tab: freeDNA} shows the results of the algorithm in the proposed length ranges. The numbers of wrongly detected nucleosomes were around 30 objects compared to 630 overall detected objects on the images. Similar to the comparison of the manual and automatically data, the algorithm detected nucleosomes on these images where no nucleosomes should be detected. The here measured false positive rate shows to be around 10 \% if we consider the correct detected free DNA objects in the corresponding range. The length determination method D has a smaller error rate. Anyhow, this error cannot be set as fixed value of the algorithm. The image data set is a very heterogeneous and we have not examined how the used just free DNA containing images represent the full data set. However, this error has to be considered by looking at the following results, especially because the examined image data set has different nm/ pixel ratios and a lot of noise and dirt.
+The mean length of free DNA in a range of 130 to 223 nm averaged over both length determination methods is 196.5 nm (Method C 197.5 nm $ \pm $ 27.9; Method D 195.5 nm $ \pm $ 23.1 nm)
+%
+% Table generated by Excel2LaTeX from sheet 'Tabelle6'
+\begin{table}[htbp]
+	\centering
+	\caption{Six images containing just free DNA fragments were analysed by algorithm C and D, respectively, in order to determine the number and length of detected DNA fragments. All detected bound DNA fragments in the 130 nm -223 nm range can be counted as false positive nucleosomes.}
+	\begin{tabular*}{\textwidth}{lll} \hline
+		\textbf{Valid Objects} & \textbf{Algorithm C} & \textbf{Algorithm D} \\ \hline
+		Detected as bound DNA  & 28    & 26 \\
+		(130 nm  - 223 nm long) &    &  \\
+		Detected as free DNA  & 211   & 287 \\
+		(130 nm  - 223 nm long) &   &  \\
+		Total Objects & 620   & 658 \\ \hline
+	\end{tabular*}%
+	\label{tab: freeDNA}%
+\end{table}%
+
+\subsection{Biological Relevance}\label{sec: Biological Relevance}
+
+Our initial biological question was to compare the DNA binding characteristics of the wild type and mutated histones. In order to examine whether there is a difference in the number of detected nucleosomes, the bound DNA length, the positon of the nucleosome core and the distribution of the angles of the entering DNA arms, we evaluated the data set of in total 76 images with the Hilditch thinning algorithm and with the two length determination methods (algorithm C fast and algorithm D). 
+The images were containing wild type, H2A R81A R88A and H2A R81E R88E nucleosomes. All nucleosomes were reconstituted on a 660 bp long DNA fragment containing the Widom 601 positioning sequence. This evaluation was done to proof that the results of the algorithm applied on that heterogeneous set of images lead to reasonable values for the investigated DNA and nucleosomes, without checking each objects for correctness. Since we did not control the images manually, only objects in the length regions mentioned before were considered. We focused on the intersect of the two ranges which lead to a range from 130 nm - 223 nm. The results of the length determination were converted into nanometres. Afterwards, the free DNA objects and the nucleosome objects of each histone type for each length determination method were sorted in eight groups. Inside this group the mean values and the standard deviations of the parameter of interest were calculated and the distribution of the lengths and angles were plotted.
+
+
+\subsection{Free DNA}\label{sec: Free DNA}
+
+The mean values of the length of free DNA varies between the different nucleosome types more than between the two length determination algorithms C and D. But mainly the number of analysed DNA objects on the H2A R81A R88A images indicates that the two methods can detect a clearly distinct number of objects in that wide nm range (see figure \ref{fig:free DNA}). This wide range leads also to a standard deviation from 24 nm to 29 nm and to a shift of the mean value to shorter distances. The lengths distribution of the free DNA in the investigated range shows very clear that both methods have a defined peak in the expected region from 190 nm to 223 nm. For all three types of nucleosome images the algorithm detected around 100 free DNA objects in the range between 223 nm and 240 nm which were not considered in our evaluation. Besides the differences of the image qualities, the exact experimental conditions during the AFM experiment of the different types of nucleosomes might have differed which has a high, not really estimable impact on the here shown results. However, the shift of the mean value of free DNA on wild type nucleosome images is also influenced by an accumulation of lengths around 150 nm, which is not that present on the images of the two mutant nucleosomes (see figure \ref{fig:hfree DNA}). 
+%
+\begin{figure}[!htb]
+	\begin{center}
+		\includegraphics[width = 0.9\textwidth]{free_DNA}
+	\end{center}
+	\caption{The mean values in nm of the length of the detected free DNA on wild type nucleosome (WT), H2A R81A R88A nucleosome (8188A) and H2A R81E R88E nucleosome (8188E) images for the both length determination methods C and D are plotted. The error bars represent the standard deviation. The exact values, as well as the number of analysed objects are listed below. For each method of the algorithm all detected free DNA objects in a nm range between 130 nm and 223 nm were used for this evaluation without any further controlling step. 70 images were included in this analysis.}
+	\label{fig:free DNA} % you need to include this to reference the figure afterwards
+\end{figure}
+%
+\begin{figure}[!htb]
+	\begin{center}
+		\includegraphics[width = 1\textwidth]{hfree_DNA}
+	\end{center}
+	\caption{ The values of lengths of the detected free DNA objects on wild type nucleosome (WT), H2A R81A R88A nucleosome (8188A) and H2A R81E R88E nucleosome (8188E) images for the both length determination methods C and D are plotted in 5 nm steps All detected nucleosome objects of 76 images in a nm range between 130 nm and 223 nm were used for this evaluation without any further controlling step for algorithm C and D, respectively.}
+	\label{fig:hfree DNA} % you need to include this to reference the figure afterwards
+\end{figure}
+
+\subsection{Bound DNA}\label{sec: Bound DNA}
+
+The results of the length measurements of histone bound DNA are shown in figures \ref{fig: bound DNA} and \ref{fig: hbound DNA}. The number of detected wild type nucleosomes is for both algorithm C and D dramatically higher than the number of the two mutant nucleosomes. Furthermore, the bound DNA length of wild type nucleosomes is significantly shorter than the bound DNA length of the two mutant nucleosomes. The bound DNA lengths of wild type nucleosomes are normally distributed around the mean value with only a low amount of longer lengths (over 180 nm). The left end of the distribution, which are bound DNAs shorter than 130 nm, is not considered here (around 257 DNA fragments between 100 nm and 130 nm). The distributions of mutant nucleosomes result in higher mean value around 175 nm. The standard deviations in that range for bound DNA is around 20 nm and smaller compared to the free DNA length. The two algorithms show the same tendencies as the results of the free DNA measurement. Algorithm C measures longer lengths then algorithm D. The distribution, especially from wild type nucleosomes indicate clearly an accumulation of values in a distinct region. This is also the case for mutant nucleosomes, but the total number of detected objects is far lower.  
+%
+\begin{figure}[!htb]
+	\begin{center}
+		\includegraphics[width = 0.9\textwidth]{bound_DNA}
+	\end{center}
+	\caption{ The mean values in nm of the length of the detected bound DNA on wild type nucleosome (WT), H2A R81A R88A nucleosome (8188A) and H2A R81E R88E nucleosome (8188E) images for the both length determination methods C and D are plotted. The error bars represent the standard deviation. The exact values, as well as the number of analysed objects are listed below. For each method of the algorithm all detected nucleosome objects in a nm range between 130 nm and 223 nm were used for this evaluation without any further controlling step. 70 images were included in this analysis.}
+	\label{fig: bound DNA} % you need to include this to reference the figure afterwards
+\end{figure}
+%
+\begin{figure}[!htb]
+	\begin{center}
+		\includegraphics[width = 0.9\textwidth]{hbound_DNA}
+	\end{center}
+	\caption{The values of the lengths of the detected bound DNA on wild type nucleosome (WT), H2A R81A R88A nucleosome (8188A) and H2A R81E R88E nucleosome (8188E) images for the both length determination methods C and D are plotted in 5 nm steps. All detected nucleosome objects of 76 images in a nm range between 130 nm and 223 nm were used for this evaluation without any further controlling step for algorithm C and D, respectively.}
+	\label{fig: hbound DNA} % you need to include this to reference the figure afterwards
+\end{figure}
+
+The automatically measured lengths of the short DNA arm of the bound DNA also shows differences between wild type and the mutants (see figure \ref{fig: arm}). The mean value of the length of the short DNA arm on wild type images is approximately 60 nm, whereas the short DNA arm of the detected objects with mutated nucleosomes is around 40 nm. The two methods lead to almost the same mean values for wild type and H2A R81A R88A nucleosomes. For the H2A R81E R88E mutated nucleosome images, algorithm C results in a mean value that is 5 nm shorter than the mean value of algorithm D. The standard deviations indicate that the values of the mutant nucleosomes fluctuated more than the values of wild type nucleosomes.
+%
+\begin{figure}[!htb]
+	\begin{center}
+		\includegraphics[width = 0.6\textwidth]{arm}
+	\end{center}
+	\caption{The mean values in nm of the length of the short DNA arm of the detected bound DNA on wild type nucleosome (WT), H2A R81A R88A nucleosome (8188A) and H2A R81E R88E nucleosome (8188E) images for the both length determination methods C and D are plotted. The error bars represent the standard deviation. The exact values, as well as the number of analysed objects are listed below. For each method of the algorithm all detected nucleosome objects in a nm range between 130 nm and 223 nm were used for this evaluation without any further controlling step. 70 images were included in this analysis.}
+	\label{fig: arm} % you need to include this to reference the figure afterwards
+\end{figure}
+
+\subsection{Radius}\label{sec: Radius}
+
+The expected values for the nucleosome core radii from our manual evaluation are displayed in the automatically generated results (see figure \ref{fig: radius}). The radius of nucleosomes core is around 11 nm for wild type and H2A R81A R88A nucleosomes and for H2A R81E R88E almost 10 nm. Both algorithm C and algorithm D measure similar radii for each nucleosome type with low fluctuations. 
+%
+\begin{figure}[!htb]
+	\begin{center}
+		\includegraphics[width = 0.6\textwidth]{radius}
+	\end{center}
+	\caption{The mean values in nm of the length of the nucleosome cores on wild type nucleosome (WT), H2A R81A R88A nucleosome (8188A) and H2A R81E R88E nucleosome (8188E) images for the both length determination methods C and D are plotted. The error bars represent the standard deviation. The exact values, as well as the number of analysed objects are listed below. For each method of the algorithm all detected nucleosome objects in a nm range between 130 nm and 223 nm were used for this evaluation without any further controlling step. 70 images were included in this analysis.
+	}
+	\label{fig: radius} % you need to include this to reference the figure afterwards
+\end{figure}
+
+\subsection{Angle}\label{sec: Angle}
+
+The distribution of angles between the two DNA arms, entering the nucleosome core, measured in with the two methods is displayed in figure \ref{fig: hangle}. Only the histogram of the automatic detection via algorithm C is shown. The histograms for method 1 confirm the during manual evaluation observed accumulation of angle over 100 $^\circ$ and only a low amount of acute angles. The histograms for angle method 2 shows a more dominant appearance of acute angles. For wild type nucleosomes there is a peak around 80 $^\circ$. The histogram of the two mutants are based on a lower amount of angles due to fewer detected nucleosomes. The distribution for algorithm C and D are comparable for both methods of angle determination.
+%
+\begin{figure}[!htb]
+	\begin{center}
+		\includegraphics[width = 0.9\textwidth]{hangle}
+	\end{center}
+	\caption{The distribution of angles of the DNA arms at the nucleosome core from the detected bound DNA objects on wild type nucleosome (WT), H2A R81A R88A nucleosome (8188A) and H2A R81E R88E nucleosome (8188E) images for the both length determination methods C and D is plotted in 5 $^\circ$ steps. All detected nucleosome objects of 76 images in a nm range between 130 nm and 223 nm were used for this evaluation without any further controlling step for algorithm C and D, respectively.}
+	\label{fig: hangle} % you need to include this to reference the figure afterwards
+\end{figure}
+
 \section{Discussion}\label{sec: Discussion}
+
+\subsection{Discussion of the Algorithm}
+During test data analysis, the contour length was measured through the centre of the nucleosome core. Since the algorithm gives us the values for the DNA arms without the nucleosome core, the length results of the manual measurements should be in longer than the ones measured automatically. The diameter of the nucleosome core particle is in that context an important correction factor for the manually measured DNA counter length as well as for the length of the short DNA arm. Therefore, the test data results were also corrected by the factor of 11 nm which is the known distance of the nucleosome core particle \cite{bussiek2007organisation}, \cite{davey2002solvent} before comparing it with the contour length of the algorithm.
+
+Due to the heterogeneity of the investigated AFM images and the different nanometer to pixel ratios, we focused our evaluation on valid objects of the test data images. The free DNA on the investigated images should have a length of 660 bp. The length of nucleosome objects should be up to 150 bp shorter than the free DNA.  Since the known distance for one base pair of canonical DNA is 0.34 nm, the length of the free DNA should be in a range of 223 nm. Since the images of our project are vitiated by an experimental error of the AFM measurements, the measured distances can differ from theoretical distances.
+
+We showed mean values of the length parameters from single images to answer the biological question with the results from the algorithm and manual analysis. Therefore, we compared the mean values of the contour length of free DNA molecules, the contour lengths of nucleosomes and the positioning of nucleosomes with the short arm of the free DNA in nucleosome objects. For the mean values we excluded objects differing too much from the expected DNA. 
+Our work shows that the results of our algorithm clearly depends on the quality of the images. The images are in Tagged Image File Format (TIFF), which leads to the loss of most of the height information. Therefore, it was very hard to handle dirt, which is in the range of our fixed DNA parameters. A confirmation by an operator controlling the found objects is a possibility to reduce FP and FN. The algorithm produces a new image with the found objects, which allows a relatively easy controlling. 
+The most critical comparison of our training data and the automatically measured data are the angle values. The angle measuring tool in ImageJ is not a very precise tool, small changes of the initial points result in huge changes of the final angle. Therefore, we tested two different methods of measuring the angles. Anyhow, the manually measured values, mainly the ones of method 1, differ too much among each other. For this purpose, synthetic data would have been a useful tool to evaluate the algorithm. The generation of synthetic DNA skeletons has previously been described by Rivetti and Codeluppi. They simulated two-dimensional polymers with defined length as a connected chaincode and then converted the binary image into a AFM-like image by grating it hypothetically with an AFM tip \cite{rivetti2001accurate}. Extending this algorithm with a feature that occasionally positions a circular object (nucleosome) at defined sharp corners of the polymer and defined distances to the endpoints could generate synthetic data that is suitable to evaluate the algorithm. 
+
+\subsection{Discussion of the biological Data}
+
+The results of the evaluation of the complete image data set with our algorithm will be discussed in the following. 
+The exact biological evaluation with wrapping length and calculation of exact base pair values are strongly influenced from the experimental conditions. Therefore, we focused on the basic order of the results. The experimental conditions, for instance the exact condition of the coating of the surface, should be constant for all image acquisitions. Anyhow, the different qualities of the images and the different types of noise and artefacts indicate that they might not have been exactly the same. Additionally, the different scan-size settings during the recording of the different images could have influenced the apparent length parameters on the images. However, we considered all relevant images, converted the lengths into nm and analysed the results of the algorithm for the three types of nucleosomes.
+Our data set consists of images with very heterogeneous quality, a lot of background noise and artefacts. The aim was to generate an algorithm with the capacity to, despite the circumstances, was robust enough to analyse those images. For the biological data analysis, we did not control every measured object but worked with all detected objects within the expected range. 
+First of all, we needed to decide, which ranges were appropriate for free and bound DNA. The objects under or above this range were not considered. These drastic limitations were necessary due to the complicated data set with a high amount of dirt and artefacts, and short DNA-fragments that would have a significant evaluation impossible. Still, the chosen range was wide enough to cover possible fluctuations around the expected length value. For a more detailed analysis one should also consider the nm range from 223 nm – 230 nm for free DNA, and the range from around 110 nm – 130 nm for nucleosomes. The here shown approximate evaluation with mean values and qualitative description of the distributions is sufficient for the investigated range and order of results.
+The rate of falsely detected nucleosomes of roughly 10 \% on images containing only free DNA cannot represent an accurate error of the algorithm, again due to the heterogeneity of the images. It is more a combination of the real false positive rate of the algorithm and the errors from the quality of the images used. Indeed, not every detected nucleosome in the investigated nm range is a valid object, but the error rate strongly correlates with the quality of the images. So this 10 \% error is somehow relevant for this data set but not for the algorithm itself. Nevertheless, the error of false detection is an important factor of such an algorithm and has to be further improved. Although the data set is complicated and one have to calculate with an error of false detected objects, the algorithm leads to reasonable results. The order of the results of the different parameters of interest are in the expected range which clearly indicates that the algorithm can analyse such a complicated data set. 
+
+\subsection{Free DNA}
+
+The distributions of the length of free DNA demonstrate that the algorithm is able to correctly measure the lengths by using both method C and method D. The expected length of free DNA is between 190 nm and 223 nm. Here, the length of free DNA might have been influenced trough interactions histone proteins. Meaning that not octamer/hexamer histone protein could somehow interact with DNA, which could influence the length. Inside the 130 nm to 223 nm range, we checked also the distributions of the different length values. This shows that mainly the resulted mean value of the free DNA is shifted, because of that wide range. Mainly the free DNA length of wild-type nucleosomes is influenced from an accumulation of lengths in the range of 150 nm. This length lies in the range of bound DNA and probably derive from bound DNA objects which were not detected correctly. Anyway, with a smaller range around 190 nm – 223 nm this influence would be reduced. The calculated mean value of the length of free DNA on images only containing DNA is around 200 nm. This mean value could be more representative for the actual free DNA length.
+
+\subsection{Bound DNA}
+
+The length of bound DNA was measured automatically by adding the length of the two DNA arms beside the nucleosome core, as previously described \cite{montel2007atomic}. Due to different radii of different nucleosomes, measuring through the nucleosome core would lead to more error-prone results. For our purpose, the results of the length measurement were satisfactory. However, for different applications with images of higher resolution, measuring the length through the nucleosome core might be an interesting or necessary feature. Our algorithm is already able to produce those results as well. As for free DNA, the measured parameter in the 130 nm - 223 nm range for bound DNA matches with the expected values. The bound DNA length of wild-type nucleosomes results in a distribution around the mean of a reasonable shortening through wrapping DNA around the octamer. As mentioned before one can also consider the left side of the distribution below 130 nm. And because of the heterogeneous data set we calculate not exact values for wrapping length. The distribution for wild-type nucleosomes and the peak around 150 nm is similar to the results found in literature under comparable experiment conditions, such as the AFM instrument and the theoretical free DNA length \cite{kepert2003conformation}. 
+The same is for the distribution of the angles of the DNA arms at the nucleosome core determined with method 2. The accumulation of angles from 70$^\circ$- 100$^\circ$ was also observed for wild-type nucleosomes \cite{kepert2003conformation}.
+The positioning of histones on the 601 positioning sequence can be determined by measuring the length of the short DNA arm of bound fragments. Here, for wild type nucleosomes it is in the expected range. Different studies demonstrated that the strong positioning of nucleosomes on that positioning sequence is also detectable via AFM \cite{nazarov2016afm}, \cite{nishikawa2012selective}. The positioning sequence is 199 bp – 369 bp apart from one end of the DNA, which would correspond to a short arm of the bound DNA starting at 68 nm. The measured value of around 60 nm matches very good with the theoretical value. One has to consider that not all nucleosomes are positioned at that sequence. Together with the shortening of the measured lengths during the AFM measurements the results of the short arm of wild type nucleosomes together with the length of bound DNA clearly indicates that the algorithm actually measures real nucleosome objects in a precise manner.
+
+\subsection{Differences between wild Type and mutated Nucleosomes}
+
+The most valid result of the comparison between wild type nucleosomes images and the two mutant nucleosome images, during the AFM experiments, was the different rate free DNA to the bound DNA. By checking the images by eye, one can clearly see that inside the investigated nm range, the number of nucleosomes is significant lower on the images with mutant nucleosomes than the number of free DNA objects. On wild type images the rate of bound DNA to free DNA is clearly higher. The tendency of this observation was also confirmed by our algorithm. For images of the mutants, the detected number of bound DNA is clearly lower than the detected number of free DNA. On the contrary, on wild type images the numbers of bound DNA is comparable to the number of free DNA. Although that rates are strongly influenced by the false detected object, as discussed before, the order of results of the algorithm completely agrees with the expected results. 
+Also the other parameters of the mutant nucleosomes indicate that there could be differences to wild type nucleosomes. Since these mutants were not investigated in AFM experiments before, it is hard to classify the results of the algorithm. Previous experiments with these mutants let suggest that there could be a difference in the length of bound DNA (unpublished data). AFM-Experiments of Montel.et indicate that nucleosomes with the H2A.Bbd variant wrapped less base pairs around the histone octamer compared to wild-type nucleosome \cite{montel2007atomic} which underlies the hypothesis.
+Our results from the algorithm for the images with mutant histones indicate that there is a difference compared to wild-type nucleosomes. The mean value of the length of bound DNA of the two mutants is clearly higher than the mean value of wild-type nucleosomes. Also distribution of the bound DNA length indicate that longer lengths are present. This agrees with the hypothesis that the wrapping length of the mutants is smaller than by wild-type nucleosomes.
+The radii of the nucleosome core were also in the expected range from the manual evaluation. They show that the nucleosome cores of the image data set are broaden compared to the theoretical value, due to the resolution of the measurements as described before \cite{bussiek2005dna}. The radii of H2A R81E R88E seems to be smaller than those of the wild-type and the H2A R81A R88A nucleosomes. This could be also interesting observation, which one should consider for further experiments.
+Also the results of the short DNA arm of bound DNA show differences to wild-type nucleosomes. On mutant nucleosome objects the fluctuation of the short DNA arm is more present compared to wild type nucleosome. Also the mean value of the length is clearly apart from the theoretical value of positioning on the Widom 601 sequence. These differences in the results of wild type and mutant nucleosomes of the algorithm indicate a significant difference. But since the results were from a difficult image data set, which also lead to false detected objects, one has to consider them with caution. Because it is the first time investigating these mutants on AFM one has to further control the data and experimental conditions, for reliable results. That biological question need a more detailed look on the data. Furthermore, there have to be more experiments with more comparable conditions and a better quality to proof this results, which is not part of this project. But the results of the mutant nucleosome images demonstrate that one can get also for the mutant nucleosomes information out of the investigated data set. Further that it is possible that one can find out precise and valid differences on the basis of a better image data set. Anyway the fact that the results for mutant nucleosome images are different to the results wild type data, demonstrate the power of the algorithm to analyse AFM images of wild type nucleosomes. The aim of our project, which was to implement an algorithm which can analyse a difficult image data set, that one can compare wild type and mutant nucleosomes, is fully accomplished in that context.
+
+\subsection{Length Determination Method C and D}
+
+Since the algorithm can determine the length of DNA and nucleosome objects in two different methods (C and D) we have two results for every object. Until this point we discussed the general biological results, because the results of the two length determination methods are that close together. Due to our evaluation, where we consider every object for every method which is in the nm range the mean values do not consist of completely identical objects. This different numbers of objects lead to the fact that we focus on the overall results for each of the two methods independent form the other method. The differences between the two methods of length determination is also influenced by evaluated nm range.
+The detected objects from method D result in shorter lengths compared to method C. This is indicated by the mean values as well as the shift in the distributions. In all three types of nucleosome images, method D has more free DNA objects in the investigated nm range. For free DNA objects of H2A R81A R88A images the mean value of method C is lower. The distribution shows that method D detected more objects in the 190- 223 nm region. But in the results of method C the highest number of objects is in the 220 nm range, whereas the peak of the distribution in the results of method D is at lower lengths. This results lead to the assumption that method D measures shorter length of free DNA than method C. In that context, the clear different number of object on the H2A R81A R88A images have to be investigated further. But the distribution of both methods are still very similar.
+Also the evaluation of bound DNA lead to comparable results with slightly shorter lengths measured by method D. Here, method C detects more bound DNA objects on all types of nucleosome images. This switch in the detection compared to free DNA indicates a different precision between the two methods, which has to be further investigated and improved. Also the difference in the length of the short DNA arm of H2A R81E R88E nucleosomes indicate that the different detection and probably the number of the detected objects may be the reason for bigger fluctuation between the two methods. 
+The angle distribution was only shown for method C. The angle distributions of angle determination method 1 and 2 showed to be in the expected ranges. However, method 1 has not the biological impact as method 2, because this angle does not represent the actual entering DNA arms. One could think of further evaluations, combining the approximate region of the angle with the wrapping length for each nucleosome, to better analyse the exact state of the nucleosomes \cite{nishikawa2012selective}..
+All in all, two different methods of length determination is a big power of our algorithm. Since both the results from method C and D are in a reliable region and close together, it is hard to tell if one method is better than the other. Moreover, a combination of both methods could bring the best results. One can also think of only consider the intersect of both methods which was not done in this evaluation. If there is a significant difference declaring objects as valid, which the numbers of detected objects indicate, the consideration of objects which both method detect could be the best solution which also could reduce the error. Therefore, it is necessary to further evaluate the difference between the two algorithm. The reason why the two algorithms detected different numbers of valid objects in the investigated nm range is still unclear and has to be further analysed. The switch in the higher number of detected objects between the two methods and free to bound DNA is also an interesting observation which could further lead to an optimization of the error rate.
+
 \section{Conclusion and Outlook}\label{sec: Conclusion and Outlook}
+
+The evaluation of the whole image data set proofed that our algorithm can analyse full automatically the images. Without any controlling of the detected objects, the user can get reasonable values for the investigated DNA or nucleosome objects. Here it is important to mention that on images with better quality also the errors rates of the algorithm are decreased. Furthermore, the algorithm gives the user, with the overlay image with the numbered detected objects as output additionally to the table with the results, the possibility to control the results. Since our algorithm was implemented for images converted into TIFF format, exact height and dilatation criteria, which are also possible parameter for the evaluation of AFM experiments, were not considered to analyse nucleosome objects with our algorithm \cite{kepert2003conformation}, \cite{montel2007atomic}, \cite{nazarov2016afm}. Therefore, users of AFM imaging of DNA/nucleosomes can get very fast and easy information about their objects on the image, independent from the setup they use. Furthermore, it is thinkable that the algorithm can analyse other objects like intermediate filaments or DNA/nucleosomes on EM images.
 
 \newpage
 \bibliography{sources}
