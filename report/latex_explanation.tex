@@ -1,0 +1,109 @@
+% This is LLNCS.DEM the demonstration file of
+% the LaTeX macro package from Springer-Verlag
+% for Lecture Notes in Computer Science,
+% version 2.4 for LaTeX2e as of 16. April 2010
+%
+\documentclass{article}
+%
+\usepackage{makeidx}  % allows for indexgeneration
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{color}
+\usepackage{transparent}
+\usepackage{pbox}
+\usepackage{pgfplots}
+\usetikzlibrary{calc} 
+\pgfplotsset{compat=1.8}
+%\usepackage{array}
+%
+\begin{document}
+
+%
+\pagestyle{headings}  % switches on printing of running heads
+%\addtocmark{Hamiltonian Mechanics} % additional mark in the TOC
+%
+%\tableofcontents
+%
+
+%
+
+\title{Automatic length and angle calculation of DNA on AFM images}
+
+\author{Insert authors' names here}
+
+\maketitle  
+\newpage
+\tableofcontents
+\newpage
+%
+\begin{abstract}
+This report summarizes ...
+
+\end{abstract}
+
+\section{Introduction}
+This is how you cite \cite{ficarra2005automated}.
+The sources are saved in sources.bib. If you find a paper/article/book on googlescholar, click "cite" and copy the bibtex cite style into the source file. It will looks something like this:
+\begin{verbatim}
+@article{ficarra2005automated,
+  title={Automated DNA fragments recognition and sizing through AFM image processing},
+  author={Ficarra, Elisa and Benini, Luca and Macii, Enrico and Zuccheri, Giampaolo},
+  journal={Information Technology in Biomedicine, IEEE Transactions on},
+  volume={9},
+  number={4},
+  pages={508--517},
+  year={2005},
+  publisher={IEEE}
+}
+\end{verbatim}
+Alternatively just save them in a text document and we will merge all of them in the end. 
+
+
+\section{Methods}
+This is how you include tables:
+\begin{table}[htb]
+\begin{center}
+\caption{My Table Caption.}
+\label{tab: example} % you need to include this to reference the table afterwards
+\begin{tabular}{|l|l|l|l|l|l|}
+\hline
+x & y & z & $\alpha$
+& $\beta$
+& $\gamma$\\\hline
+30 & 0.82 & 38.4 & 35.7 & 154 & 320 \\
+60 & 0.67 & 42.1 & 34.7 & 138 & 340 \\
+120 & 0.52 & 45.1 & 34.0 & 124 & 370 \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}\\
+And this is how you reference a table: See Table \ref{tab: example}.\\
+\newpage
+
+This is how you include figures:
+\begin{figure}[htb]
+\begin{center}
+\includegraphics[width = 0.3\textwidth]{icon.png}
+\end{center}
+\caption{My Figure Caption.}
+\label{fig: example} % you need to include this to reference the figure afterwards
+\end{figure}
+
+This is how you reference a Figure: See Figure \ref{fig: example}. \\
+And this is how you reference a section: See Section \ref{sec: Results}.
+\subsection{Software Architecture}
+\subsection{Algorithm}
+\subsection{Optimization}
+\subsection{Test Data Creation}
+\section{Results}\label{sec: Results}
+\subsection{Validation}
+\subsection{Biological Significance}
+\section{Discussion}
+\section{Conclusion and Outlook}
+
+\section{References}
+%
+\bibliography{sources}
+\bibliographystyle{plain}
+
+\end{document}

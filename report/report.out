@@ -1,0 +1,66 @@
+\BOOKMARK [1][-]{section.1}{Organisation}{}% 1
+\BOOKMARK [2][-]{subsection.1.1}{Distribution of Tasks}{section.1}% 2
+\BOOKMARK [2][-]{subsection.1.2}{Time Schedule}{section.1}% 3
+\BOOKMARK [1][-]{section.2}{Introduction}{}% 4
+\BOOKMARK [2][-]{subsection.2.1}{Motivation}{section.2}% 5
+\BOOKMARK [2][-]{subsection.2.2}{AFM}{section.2}% 6
+\BOOKMARK [3][-]{subsubsection.2.2.1}{Concept}{subsection.2.2}% 7
+\BOOKMARK [2][-]{subsection.2.3}{Epigenetics and Histones}{section.2}% 8
+\BOOKMARK [3][-]{subsubsection.2.3.1}{Chromatin and Histone Structure}{subsection.2.3}% 9
+\BOOKMARK [3][-]{subsubsection.2.3.2}{Histone Modifications}{subsection.2.3}% 10
+\BOOKMARK [2][-]{subsection.2.4}{Histone Complexes by AFM}{section.2}% 11
+\BOOKMARK [2][-]{subsection.2.5}{Related Work}{section.2}% 12
+\BOOKMARK [3][-]{subsubsection.2.5.1}{Filtering}{subsection.2.5}% 13
+\BOOKMARK [3][-]{subsubsection.2.5.2}{Segmentation}{subsection.2.5}% 14
+\BOOKMARK [3][-]{subsubsection.2.5.3}{Thinning}{subsection.2.5}% 15
+\BOOKMARK [3][-]{subsubsection.2.5.4}{Removal of Corner Pixel}{subsection.2.5}% 16
+\BOOKMARK [3][-]{subsubsection.2.5.5}{Removal of Objects Across the Image Boundary}{subsection.2.5}% 17
+\BOOKMARK [3][-]{subsubsection.2.5.6}{Pruning}{subsection.2.5}% 18
+\BOOKMARK [3][-]{subsubsection.2.5.7}{Removal of Invalid Fragments}{subsection.2.5}% 19
+\BOOKMARK [3][-]{subsubsection.2.5.8}{Pixel Restoring}{subsection.2.5}% 20
+\BOOKMARK [3][-]{subsubsection.2.5.9}{Length Determination}{subsection.2.5}% 21
+\BOOKMARK [1][-]{section.3}{Methods}{}% 22
+\BOOKMARK [2][-]{subsection.3.1}{Manual Analysis}{section.3}% 23
+\BOOKMARK [2][-]{subsection.3.2}{Software Architecture}{section.3}% 24
+\BOOKMARK [3][-]{subsubsection.3.2.1}{Processing Pipeline}{subsection.3.2}% 25
+\BOOKMARK [2][-]{subsection.3.3}{Denoising}{section.3}% 26
+\BOOKMARK [3][-]{subsubsection.3.3.1}{Non-local Means Denoising Algorithm}{subsection.3.3}% 27
+\BOOKMARK [3][-]{subsubsection.3.3.2}{Benefits of using Non-local Means Denoising}{subsection.3.3}% 28
+\BOOKMARK [3][-]{subsubsection.3.3.3}{Technical considerations / limitations}{subsection.3.3}% 29
+\BOOKMARK [2][-]{subsection.3.4}{Filtering}{section.3}% 30
+\BOOKMARK [3][-]{subsubsection.3.4.1}{Necessity of Filtering}{subsection.3.4}% 31
+\BOOKMARK [3][-]{subsubsection.3.4.2}{The Concept of Adaptive Low Pass Filtering}{subsection.3.4}% 32
+\BOOKMARK [3][-]{subsubsection.3.4.3}{Description of Proposed Method}{subsection.3.4}% 33
+\BOOKMARK [3][-]{subsubsection.3.4.4}{Advantages over Other Filtering Techniques}{subsection.3.4}% 34
+\BOOKMARK [3][-]{subsubsection.3.4.5}{Results and Comparison}{subsection.3.4}% 35
+\BOOKMARK [2][-]{subsection.3.5}{Thresholding}{section.3}% 36
+\BOOKMARK [3][-]{subsubsection.3.5.1}{Adaptive Thresholding}{subsection.3.5}% 37
+\BOOKMARK [3][-]{subsubsection.3.5.2}{Level Background}{subsection.3.5}% 38
+\BOOKMARK [3][-]{subsubsection.3.5.3}{Identify and remove outliers}{subsection.3.5}% 39
+\BOOKMARK [3][-]{subsubsection.3.5.4}{Limit Threshold}{subsection.3.5}% 40
+\BOOKMARK [2][-]{subsection.3.6}{Nucleosome Detection}{section.3}% 41
+\BOOKMARK [2][-]{subsection.3.7}{Thinning}{section.3}% 42
+\BOOKMARK [3][-]{subsubsection.3.7.1}{Hilditch's Sequential Thinning}{subsection.3.7}% 43
+\BOOKMARK [3][-]{subsubsection.3.7.2}{Zhang Suen Parallel Thinning}{subsection.3.7}% 44
+\BOOKMARK [2][-]{subsection.3.8}{Length Estimation}{section.3}% 45
+\BOOKMARK [3][-]{subsubsection.3.8.1}{Algorithm D: Iterative length estimation}{subsection.3.8}% 46
+\BOOKMARK [3][-]{subsubsection.3.8.2}{Algorithm C: Erosion using Breadth-First-Search and Shortest Path Algorithms}{subsection.3.8}% 47
+\BOOKMARK [2][-]{subsection.3.9}{Angle Measurement}{section.3}% 48
+\BOOKMARK [3][-]{subsubsection.3.9.1}{Measurement over Nucleosome Center}{subsection.3.9}% 49
+\BOOKMARK [3][-]{subsubsection.3.9.2}{Measurement over Fitted Lines}{subsection.3.9}% 50
+\BOOKMARK [2][-]{subsection.3.10}{Runtime Optimization}{section.3}% 51
+\BOOKMARK [1][-]{section.4}{Results}{}% 52
+\BOOKMARK [2][-]{subsection.4.1}{Evaluation}{section.4}% 53
+\BOOKMARK [2][-]{subsection.4.2}{Biological Relevance}{section.4}% 54
+\BOOKMARK [2][-]{subsection.4.3}{Free DNA}{section.4}% 55
+\BOOKMARK [2][-]{subsection.4.4}{Bound DNA}{section.4}% 56
+\BOOKMARK [2][-]{subsection.4.5}{Radius}{section.4}% 57
+\BOOKMARK [2][-]{subsection.4.6}{Angle}{section.4}% 58
+\BOOKMARK [1][-]{section.5}{Discussion}{}% 59
+\BOOKMARK [2][-]{subsection.5.1}{Discussion of the Algorithm}{section.5}% 60
+\BOOKMARK [2][-]{subsection.5.2}{Discussion of the biological Data}{section.5}% 61
+\BOOKMARK [2][-]{subsection.5.3}{Free DNA}{section.5}% 62
+\BOOKMARK [2][-]{subsection.5.4}{Bound DNA}{section.5}% 63
+\BOOKMARK [2][-]{subsection.5.5}{Differences between wild Type and mutated Nucleosomes}{section.5}% 64
+\BOOKMARK [2][-]{subsection.5.6}{Length Determination Method C and D}{section.5}% 65
+\BOOKMARK [1][-]{section.6}{Conclusion and Outlook}{}% 66

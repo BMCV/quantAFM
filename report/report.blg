@@ -1,0 +1,49 @@
+This is BibTeX, Version 0.99d (TeX Live 2015/Arch Linux)
+Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
+The top-level auxiliary file: report.aux
+The style file: unsrt.bst
+Database file #1: sources.bib
+Warning--can't use both volume and number fields in hoffmann2001direct
+Warning--empty journal in yang1994methods
+You've used 74 entries,
+            1791 wiz_defined-function locations,
+            906 strings with 18382 characters,
+and the built_in function-call counts, 18728 in all, are:
+= -- 1617
+> -- 1063
+< -- 4
++ -- 384
+- -- 310
+* -- 1540
+:= -- 3040
+add.period$ -- 223
+call.type$ -- 74
+change.case$ -- 74
+chr.to.int$ -- 0
+cite$ -- 76
+duplicate$ -- 669
+empty$ -- 1691
+format.name$ -- 310
+if$ -- 3993
+int.to.chr$ -- 0
+int.to.str$ -- 74
+missing$ -- 66
+newline$ -- 372
+num.names$ -- 69
+pop$ -- 146
+preamble$ -- 1
+purify$ -- 0
+quote$ -- 0
+skip$ -- 282
+stack$ -- 0
+substring$ -- 1468
+swap$ -- 112
+text.length$ -- 4
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 0
+warning$ -- 2
+while$ -- 186
+width$ -- 76
+write$ -- 802
+(There were 2 warnings)
