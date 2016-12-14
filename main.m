@@ -27,10 +27,10 @@ medianTheshold = 0.4353;
 sigmaThreshold = 0.0124;
 setMeanThreshold  = 0;% Bool wether to calculate and set new mean ad Sigma values
 
-par = 1; %bool wether to use multiple cores or not
-gpu = 1; %bool wether to use gpu or not
+par = 0; %bool wether to use multiple cores or not
+gpu = 0; %bool wether to use gpu or not
 
-
+%{
 if(par)
 parfor index = 1:imageCount %% this is required for Archlinux
     if or( strcmp(imageFolderObj(index).name , '.'), strcmp(imageFolderObj(index).name, '..') )
@@ -272,7 +272,7 @@ parfor index = 1:imageCount
 end
 
 else
-    
+    %}
     
     
     
@@ -467,8 +467,8 @@ for index = 1:imageCount
             % Currently, each DNA object has an isValid flag. This is set
             % if after length determination the DNA backbone does not fit
             % the generally specified DNA length criteria
-            imageList{index}.dnaList{dnaIndex} = getDNALength(imageList{index}.dnaList{dnaIndex}, true);
-%              imageList{index}.dnaList{dnaIndex} = determineDnaLength2(imageList{index}.dnaList{dnaIndex}, true);
+  %          imageList{index}.dnaList{dnaIndex} = getDNALength(imageList{index}.dnaList{dnaIndex}, true);
+              imageList{index}.dnaList{dnaIndex} = determineDnaLength2(imageList{index}.dnaList{dnaIndex}, true);
             %          Calculate angle between the Nukleii and the arms(the DNA Arms
             [ imageList{index}.dnaList{dnaIndex}.angle1, ...
                 imageList{index}.dnaList{dnaIndex}.angle2] = ...
@@ -480,8 +480,8 @@ for index = 1:imageCount
                 imageList{index}.connectedThickDna.PixelIdxList{dnaIndex}, ...
                 detail_thickDna,...
                 imageList{index}.region(dnaIndex,:));
-             imageList{index}.dnaList{dnaIndex} = getDNALength(imageList{index}.dnaList{dnaIndex}, false);
-%              imageList{index}.dnaList{dnaIndex} = determineDnaLength2(imageList{index}.dnaList{dnaIndex}, false);
+%             imageList{index}.dnaList{dnaIndex} = getDNALength(imageList{index}.dnaList{dnaIndex}, false);
+              imageList{index}.dnaList{dnaIndex} = determineDnaLength2(imageList{index}.dnaList{dnaIndex}, false);
 
         end
         %         Set the dnaIndex as Number for the DNA strand object
@@ -513,8 +513,11 @@ for index = 1:imageCount
          imwrite(imfuse(imageList{index}.rawImage , imageList{index}.bwImgThickDna), ['../pictures/overlays_thick/' 'overlay__' imageFolderObj(index).name ]);
     end
     %% write output: image with detected objects, csv file with results for each object
+
     writeToCsvFile([imageFolderObj(index).name '_fast_ChrLen.csv'], imageList{index});
-end
+
 
 end
+
+%end
 
