@@ -1,4 +1,5 @@
 function [dnaObj] = determineDnaLength2(dnaObj, dnaHasNucleos)
+    global MINLENGTH_FREE MAXLENGTH_FREE MINLENGTH_BOUND MAXLENGTH_BOUND;
     currPxlList = dnaObj.connectedThinned;
     bwImgThin = dnaObj.bwImageThinned;
     bwImgThick = dnaObj.bwImage;

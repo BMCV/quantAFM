@@ -13,6 +13,7 @@ function [ dnaObj ] = getDNALength( dnaObj, dnaHasNucleos )
 
 % Around the picture a quad of 0s is inserted so we dont have to check if
 % a point is at the edge of the picture
+global MINLENGTH_FREE MAXLENGTH_FREE MINLENGTH_BOUND MAXLENGTH_BOUND;
 picture = logical(padarray(dnaObj.bwImageThinned, [1 1]));
 [height, width] = size(picture);
 cc = bwconncomp(picture);
