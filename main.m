@@ -1,11 +1,21 @@
+config;
+global PIXELLENGTH PIXELPERNM MINLENGTH_FREE MAXLENGTH_FREE MINLENGTH_BOUND MAXLENGTH_BOUND;
+PIXELLENGTH = (scansize * 1000) / xResolution;
+PIXELPERNM = 1 / PIXELLENGTH;
+
+MINLENGTH_FREE = minLength_free * PIXELPERNM;
+MAXLENGTH_FREE = maxLength_free * PIXELPERNM;
+
+MINLENGTH_BOUND = minLength_bound * PIXELPERNM;
+MAXLENGTH_BOUND = maxLength_bound * PIXELPERNM;
 
 if( strcmp(getenv('OS'),'Windows_NT'))
-    addpath(genpath('..\denoised_imgs'));
-    currentImageDir = '..\denoised_imgs\p_Wildtyp\*.tif';
+    addpath(genpath(workingDirWindows));
+    currentImageDir = currentImageDirWindows;
     
 else
-    addpath(genpath('../denoised_imgs'));
-    currentImageDir = '../denoised_imgs/handausgewertet/';
+    addpath(genpath(workingDirLinux));
+    currentImageDir = currentImageDirLinux;
 end
 
 addpath(genpath('LengthEstimation'));
@@ -13,22 +23,23 @@ imageFolderObj = dir(currentImageDir);
 imageCount = size(dir(currentImageDir),1);
 imageList = cell(1,imageCount);
 
-threshAlgo = 'otsu';
+threshAlgo = threshAlgorithm1;
 %maxentropy - no good
 %intermodes - better than maxentropy, but still bad
 %minerror - no good
-threshAlgo1 = 'otsu'; 
+threshAlgo1 = threshAlgorithm2; 
 
-manThresh = 95;
+manThresh = backgroundThreshold;
 thresh1 =  zeros(1,imageCount);
 thresh2 =  zeros(1,imageCount);
 % median and sigma over ALL thresholds of ALL images
 medianTheshold = 0.4353;
 sigmaThreshold = 0.0124;
-setMeanThreshold  = 0;% Bool wether to calculate and set new mean ad Sigma values
 
-par = 0; %bool wether to use multiple cores or not
-gpu = 0; %bool wether to use gpu or not
+
+par = parallel; %bool wether to use multiple cores or not
+% gpu = gpu; %bool wether to use gpu or not
+
 
 
     
