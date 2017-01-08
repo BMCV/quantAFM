@@ -45,6 +45,7 @@ function done = writeToCsvFile(filename, imageObj)
                short_arm(dnaIndex,1) = 0;
                long_arm(dnaIndex,1) = curr.length{1};
            end 
+        end
     end
     T = table(number, xm, ym, length, hasNucleus, short_arm, long_arm ,...
         radius, isValid, angle1, angle2, numNucleosomes);
