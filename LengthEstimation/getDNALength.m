@@ -1,8 +1,4 @@
 function [ dnaObj ] = getDNALength( dnaObj, dnaHasNucleos )
-    MINLENGTH_FREE = 0;
-    MINLENGTH_BOUND = 0;
-    MAXLENGTH_FREE = 50;
-    MAXLENGTH_BOUND = 50;
 % @author: Dennis Aumiller, Philip Hausner
 % This function evaluates the length of an DNA object in a picture clipping
 % The function needs a picture in which exactly one DNA string is visible
