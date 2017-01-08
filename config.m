@@ -14,7 +14,7 @@ workingDirLinux = '../denoised_imgs';
 % Respective subfolder whose pictures are to be analyzed with regard to the
 % current operating system
 currentImageDirWindows = '..\denoised_imgs\p_Wildtyp\*.tif';
-currentImageDirLinux = '../denoised_imgs/handausgewertet/';
+currentImageDirLinux = '../denoised_imgs/p_Wildtyp/';
 
 % Set to 1 if the main DNA backbone should be reconstructed after thinning 
 % (i.e. recovery of 'lost' pixels ,0 else
@@ -28,9 +28,13 @@ maxLength_free = 250; % Default: 250
 minLength_bound = 100; % Default: 100
 maxLength_bound = 200; % Default: 200
 
+% set min and max bounds for radius of nuclei in nm
+minRadius = 9.375; % Default: 9.375
+maxRadius = 14.0625; % Default: 14.0625
+
 % set length of the picture scanline in x-Direction, i.e. from left to
-% right in µm
-scansize = 4;
+% right in ï¿½m
+scansize = 3;
 
 % give the x-resolution of the images
 xResolution = 1280;
