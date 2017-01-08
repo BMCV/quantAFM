@@ -1,8 +1,8 @@
 function [ dnaObj ] = getDNALength( dnaObj, dnaHasNucleos )
-    minLength_free = 0;
-    minLength_bound = 0;
-    maxLength_free = 50;
-    maxLength_bound = 50;
+    MINLENGTH_FREE = 0;
+    MINLENGTH_BOUND = 0;
+    MAXLENGTH_FREE = 50;
+    MAXLENGTH_BOUND = 50;
 % @author: Dennis Aumiller, Philip Hausner
 % This function evaluates the length of an DNA object in a picture clipping
 % The function needs a picture in which exactly one DNA string is visible
@@ -259,14 +259,14 @@ if(dnaHasNucleos && numel(dnaObj.attachedNukleo) >= 1) % dna has 1 nucleosome, s
  
     fragmentLen_ = sum([fragmentLen{:}]);
 
-    if fragmentLen_> maxLength_bound || fragmentLen_ < minLength_bound
+    if fragmentLen_> MAXLENGTH_BOUND || fragmentLen_ < MINLENGTH_BOUND
         dnaObj.isValid = 0;
     end
     
 % no or multiple nucleosome(s), so calculate entire fragment's length
 
     fragmentLen{1} = calcKulpaLength(dnaObj.connectedThinnedRemoved, dnaObj.bwImageThinnedRemoved);
-    if fragmentLen{1}> maxLength_free || fragmentLen{1} < minLength_free
+    if fragmentLen{1}> MAXLENGTH_FREE || fragmentLen{1} < MINLENGTH_FREE
         dnaObj.isValid = 0;
     end
 end
