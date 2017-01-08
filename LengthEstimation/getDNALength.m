@@ -246,11 +246,15 @@ cc = bwconncomp(picture);
 dnaObj.connectedThinnedRemoved = cc.PixelIdxList{1};
 
 % calculate the fragment lengths, if there is exactly 1 nucleo bound to it
-if(dnaHasNucleos && numel(dnaObj.attachedNukleo) == 1) % dna has 1 nucleosome, so calc length for both arms
+if(dnaHasNucleos && numel(dnaObj.attachedNukleo) >= 1) % dna has 1 nucleosome, so calc length for both arms
     arms = getArmsNucleoIntersection(dnaObj);
     for armIdx = 1:arms.NumObjects % for each arm, ...
         currArm = arms.PixelIdxList{armIdx}; % ... get PixelIdxList ...
-        fragmentLen{armIdx} = calcKulpaLength(currArm, dnaObj.bwImageThinnedRemoved); % ... and calc its length
+        fragmentLen{armIdx+1} = calcKulpaLength(currArm, dnaObj.bwImageThinnedRemoved); % ... and calc its length
+    end
+    fragmentLen{1} = sum(fragmentLen(2:end));
+    if fragmentLen{1}> maxLength_bound || fragmentLen{1} < minLenght_bound
+        dnaObj.isValid = 0;
     end
 % no valid DNA
 elseif ~dnaObj.isValid
@@ -258,6 +262,9 @@ elseif ~dnaObj.isValid
 % no or multiple nucleosome(s), so calculate entire fragment's length
 else
     fragmentLen{1} = calcKulpaLength(dnaObj.connectedThinnedRemoved, dnaObj.bwImageThinnedRemoved);
+    if fragmentLen{1}> maxLength_free || fragmentLen{1} < minLenght_free
+        dnaObj.isValid = 0;
+    end
 end
 
 % hack because of order of function calls

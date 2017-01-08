@@ -1,4 +1,4 @@
-function [lengths, backboneIdxList] = determineDnaLength(PixelIdxList, bwImgThin, bwImgThick)
+function [lengths, backboneIdxList] = determineDnaLength(PixelIdxList, bwImgThin, bwImgThick, dnaHasNucleos)
     len = size(PixelIdxList,2);
     res = zeros(size(bwImgThin)); %can be deleted later, only for visualization
     lengths = zeros(size(PixelIdxList));

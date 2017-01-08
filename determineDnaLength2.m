@@ -1,4 +1,8 @@
 function [dnaObj] = determineDnaLength2(dnaObj, dnaHasNucleos)
+    minLength_free = 0;
+    minLength_bound = 0;
+    maxLength_free = 50;
+    maxLength_bound = 50;
     currPxlList = dnaObj.connectedThinned;
     bwImgThin = dnaObj.bwImageThinned;
     bwImgThick = dnaObj.bwImage;
@@ -50,14 +54,20 @@ function [dnaObj] = determineDnaLength2(dnaObj, dnaHasNucleos)
                     fragmentLen{armIdx+1} = calcKulpaLength(currArm, bwImgThinnedRemoved); % ... and calc its length
                 end
             end
+
+            % set invalid if length of DNA out of specified bounds
+            if fragmentLen{1}> maxLength_bound || fragmentLen{1} < minLength_bound
+                dnaObj.isValid = 0;
+            end
+        else % no or multiple nucleosome(s), so calculate entire fragment's length
+            fragmentLen{1} = calcKulpaLength(singlePath, bwImgThinnedRemoved);
+            % set invalid if length of DNA out of specified bounds
+            if fragmentLen{1}> maxLength_free || fragmentLen{1} < minLength_free
+                dnaObj.isValid = 0;
+            end
         end
         dnaObj.connectedThinnedRemoved = singlePath;
         
-        % set invalid flag if DNA object does not fit length criteria
-        if ((size(singlePath, 1) < dnaObj.MIN_LENGTH) || ...
-            (size(singlePath, 1) > dnaObj.MAX_LENGTH))
-            dnaObj.isValid = 0;
-        end
     else
         fragmentLen{1} = 0;
         dnaObj.isValid = 0;
