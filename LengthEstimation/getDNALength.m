@@ -257,16 +257,14 @@ if(dnaHasNucleos && numel(dnaObj.attachedNukleo) >= 1) % dna has 1 nucleosome, s
         fragmentLen{armIdx+1} = calcKulpaLength(currArm, dnaObj.bwImageThinnedRemoved); % ... and calc its length
     end
  
-    fragmentLen{1} = sum([fragmentLen{:}]);
+    fragmentLen_ = sum([fragmentLen{:}]);
 
-    if fragmentLen{1}> maxLength_bound || fragmentLen{1} < minLength_bound
+    if fragmentLen_> maxLength_bound || fragmentLen_ < minLength_bound
         dnaObj.isValid = 0;
     end
-% no valid DNA
-elseif ~dnaObj.isValid
-    fragmentLen{1} = 0;
+    
 % no or multiple nucleosome(s), so calculate entire fragment's length
-else
+
     fragmentLen{1} = calcKulpaLength(dnaObj.connectedThinnedRemoved, dnaObj.bwImageThinnedRemoved);
     if fragmentLen{1}> maxLength_free || fragmentLen{1} < minLength_free
         dnaObj.isValid = 0;
