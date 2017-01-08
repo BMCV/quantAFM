@@ -32,8 +32,13 @@ function [dnaObj] = determineDnaLength2(dnaObj, dnaHasNucleos)
         dnaObj.bwImageThinnedRemoved = bwImgThinnedRemoved;
         dnaObj.connectedThinnedRemoved = singlePath;
         
+        
+        
         %% for each arm or for entire fragment, calculate length with Kulpa Estimator
-        if(dnaHasNucleos && numel(dnaObj.attachedNukleo) == 1) % dna has 1 nucleosome, so calc length for both arms
+        % calculate entire fragment's length
+        fragmentLen{1} = calcKulpaLength(singlePath, bwImgThinnedRemoved);
+        % dna has 1 nucleosome, so calc length for both arms
+        if(dnaHasNucleos && numel(dnaObj.attachedNukleo) == 1) 
             arms = getArmsNucleoIntersection(dnaObj);
             % no arms found => only big blob that resembles nucleus
             if(arms.NumObjects == 0)
@@ -42,11 +47,9 @@ function [dnaObj] = determineDnaLength2(dnaObj, dnaHasNucleos)
             else
                 for armIdx = 1:arms.NumObjects % for each arm, ...
                     currArm = arms.PixelIdxList{armIdx}; % ... get PixelIdxList ...
-                    fragmentLen{armIdx} = calcKulpaLength(currArm, bwImgThinnedRemoved); % ... and calc its length
+                    fragmentLen{armIdx+1} = calcKulpaLength(currArm, bwImgThinnedRemoved); % ... and calc its length
                 end
             end
-        else % no or multiple nucleosome(s), so calculate entire fragment's length
-            fragmentLen{1} = calcKulpaLength(singlePath, bwImgThinnedRemoved);
         end
         dnaObj.connectedThinnedRemoved = singlePath;
         
@@ -58,7 +61,6 @@ function [dnaObj] = determineDnaLength2(dnaObj, dnaHasNucleos)
     else
         fragmentLen{1} = 0;
         dnaObj.isValid = 0;
-
     end
     dnaObj.length = fragmentLen;
 %    imshow(imfuse(bwImgThick, bwImgThinnedRemoved));

@@ -5,6 +5,7 @@ function done = writeToCsvFile(filename, imageObj)
     ym = zeros(dnaCount,1) -1;
     radius = zeros(dnaCount,1) -1;
     length = zeros(dnaCount,1) -1;
+    length_botharms = zeros(dnaCount,1) -1;
     short_arm = zeros(dnaCount,1) -1;
     long_arm = zeros(dnaCount,1) -1;
     hasNucleus = zeros(dnaCount,1) -1;
@@ -19,21 +20,21 @@ function done = writeToCsvFile(filename, imageObj)
         ym(dnaIndex,1) = curr.position(1);
         hasNucleus(dnaIndex,1) = curr.hasNucleus;
         isValid(dnaIndex,1) = curr.isValid;
-        if (curr.hasNucleus == 0 )
+        if (curr.hasNucleus == 0 ) % no nucleosome detected
             angle1(dnaIndex,1) = 0;
             angle2(dnaIndex,1) = 0;
             radius(dnaIndex,1) = 0;
             length(dnaIndex,1) = curr.length{1};
+            length_botharms(dnaIndex,1) = 0;
             short_arm(dnaIndex,1) = 0;
             long_arm(dnaIndex,1) = 0;
             numNucleosomes(dnaIndex,1) = 0;
-        else
+        else  % at least one nucleosome present
            angle1(dnaIndex,1) = curr.angle1;
            angle2(dnaIndex,1) = curr.angle2;
            radius(dnaIndex,1) = curr.attachedNukleo{1}.rad;
            numNucleosomes(dnaIndex,1) =  numel(curr.attachedNukleo) ;
-           length(dnaIndex,1) = 0;
-           if size(curr.length, 2) == 2
+           if size(curr.length, 2) == 2 % one short and one long arm found
                 if curr.length{1} > curr.length{2}
                     short_arm(dnaIndex,1) = curr.length{2};
                     long_arm(dnaIndex,1) = curr.length{1};
@@ -41,9 +42,11 @@ function done = writeToCsvFile(filename, imageObj)
                     short_arm(dnaIndex,1) = curr.length{1};
                     long_arm(dnaIndex,1) = curr.length{2};
                 end
+                length(dnaIndex,1) = curr.length{1}+curr.length{2};
            else
                short_arm(dnaIndex,1) = 0;
                long_arm(dnaIndex,1) = curr.length{1};
+               length(dnaIndex,1) = curr.length{1};
            end 
         end
     end
