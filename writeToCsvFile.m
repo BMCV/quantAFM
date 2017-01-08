@@ -19,7 +19,7 @@ function done = writeToCsvFile(filename, imageObj)
         ym(dnaIndex,1) = curr.position(1);
         hasNucleus(dnaIndex,1) = curr.hasNucleus;
         isValid(dnaIndex,1) = curr.isValid;
-        if (curr.hasNucleus == 0 || numel(curr.attachedNukleo) ~= 1)
+        if (curr.hasNucleus == 0 )
             angle1(dnaIndex,1) = 0;
             angle2(dnaIndex,1) = 0;
             radius(dnaIndex,1) = 0;
@@ -31,7 +31,7 @@ function done = writeToCsvFile(filename, imageObj)
            angle1(dnaIndex,1) = curr.angle1;
            angle2(dnaIndex,1) = curr.angle2;
            radius(dnaIndex,1) = curr.attachedNukleo{1}.rad;
-           numNucleosomes(dnaIndex,1) = size(curr.attachedNukleo, 2);
+           numNucleosomes(dnaIndex,1) =  numel(curr.attachedNukleo) ;
            length(dnaIndex,1) = 0;
            if size(curr.length, 2) == 2
                 if curr.length{1} > curr.length{2}
