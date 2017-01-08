@@ -1,8 +1,4 @@
 function [dnaObj] = determineDnaLength2(dnaObj, dnaHasNucleos)
-    minLength_free = 0;
-    minLength_bound = 0;
-    maxLength_free = 50;
-    maxLength_bound = 50;
     currPxlList = dnaObj.connectedThinned;
     bwImgThin = dnaObj.bwImageThinned;
     bwImgThick = dnaObj.bwImage;
@@ -35,15 +31,17 @@ function [dnaObj] = determineDnaLength2(dnaObj, dnaHasNucleos)
         bwImgThinnedRemoved(singlePath) = 1;
         dnaObj.bwImageThinnedRemoved = bwImgThinnedRemoved;
         dnaObj.connectedThinnedRemoved = singlePath;
-        
-        
-        
+               
         %% for each arm or for entire fragment, calculate length with Kulpa Estimator
         % calculate entire fragment's length
         fragmentLen{1} = calcKulpaLength(singlePath, bwImgThinnedRemoved);
+        % set invalid if length of DNA out of specified bounds
+        if fragmentLen{1}> MAXLENGTH_FREE || fragmentLen{1} < MINLENGTH_FREE
+            dnaObj.isValid = 0;
+        end
         % dna has 1 nucleosome, so calc length for both arms
-        if(dnaHasNucleos && numel(dnaObj.attachedNukleo) == 1) 
-            arms = getArmsNucleoIntersection(dnaObj);
+        if(dnaHasNucleos && numel(dnaObj.attachedNukleo) == 1)
+            arms = getArmsNucleoIntersection(dnaObj); %%% check whether this code works with > 1 nucleosome
             % no arms found => only big blob that resembles nucleus
             if(arms.NumObjects == 0)
                 fragmentLen{1} = 0;
@@ -56,13 +54,8 @@ function [dnaObj] = determineDnaLength2(dnaObj, dnaHasNucleos)
             end
 
             % set invalid if length of DNA out of specified bounds
-            if fragmentLen{1}> maxLength_bound || fragmentLen{1} < minLength_bound
-                dnaObj.isValid = 0;
-            end
-        else % no or multiple nucleosome(s), so calculate entire fragment's length
-            fragmentLen{1} = calcKulpaLength(singlePath, bwImgThinnedRemoved);
-            % set invalid if length of DNA out of specified bounds
-            if fragmentLen{1}> maxLength_free || fragmentLen{1} < minLength_free
+            summedFragmentLengths = sum([fragmentLen{2:end}]);
+            if summedFragmentLengths > MAXLENGTH_BOUND || summedFragmentLengths < MINLENGTH_BOUND
                 dnaObj.isValid = 0;
             end
         end
