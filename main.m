@@ -242,7 +242,7 @@ for index = 1:imageCount
             % if after length determination the DNA backbone does not fit
             % the generally specified DNA length criteria
            imageList{index}.dnaList{dnaIndex} = getDNALength(imageList{index}.dnaList{dnaIndex}, true);
-%               imageList{index}.dnaList{dnaIndex} = determineDnaLength2(imageList{index}.dnaList{dnaIndex}, true);
+%             imageList{index}.dnaList{dnaIndex} = determineDnaLength2(imageList{index}.dnaList{dnaIndex}, true);
             %          Calculate angle between the Nukleii and the arms(the DNA Arms
             [ imageList{index}.dnaList{dnaIndex}.angle1, ...
                 imageList{index}.dnaList{dnaIndex}.angle2] = ...

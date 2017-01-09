@@ -34,18 +34,24 @@ function done = writeToCsvFile(filename, imageObj)
            angle2(dnaIndex,1) = curr.angle2;
            radius(dnaIndex,1) = curr.attachedNukleo{1}.rad;
            numNucleosomes(dnaIndex,1) =  numel(curr.attachedNukleo) ;
-           if size(curr.length, 2) == 2 % one short and one long arm found
-                if curr.length{1} > curr.length{2}
-                    short_arm(dnaIndex,1) = curr.length{2};
-                    long_arm(dnaIndex,1) = curr.length{1};
-                else
-                    short_arm(dnaIndex,1) = curr.length{1};
+           if size(curr.length, 2) == 3 % one short and one long arm found
+                if curr.length{2} > curr.length{3}
+                    short_arm(dnaIndex,1) = curr.length{3};
                     long_arm(dnaIndex,1) = curr.length{2};
+                else
+                    short_arm(dnaIndex,1) = curr.length{2};
+                    long_arm(dnaIndex,1) = curr.length{3};
                 end
-                length(dnaIndex,1) = curr.length{1}+curr.length{2};
+                % this only applies if the total length is not the
+                % subtracted one. We wanted to include feature for this as
+                % well, but this isn't it.
+%                 length(dnaIndex,1) = curr.length{2}+curr.length{3};
+                length(dnaIndex,1) = curr.length{1};
            else
                short_arm(dnaIndex,1) = 0;
                long_arm(dnaIndex,1) = curr.length{1};
+               %shouldn't long arm be 0?
+%                long_arm(dnaIndex,1) = 0;
                length(dnaIndex,1) = curr.length{1};
            end 
         end
