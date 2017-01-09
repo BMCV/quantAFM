@@ -241,8 +241,8 @@ for index = 1:imageCount
             % Currently, each DNA object has an isValid flag. This is set
             % if after length determination the DNA backbone does not fit
             % the generally specified DNA length criteria
-  %          imageList{index}.dnaList{dnaIndex} = getDNALength(imageList{index}.dnaList{dnaIndex}, true);
-              imageList{index}.dnaList{dnaIndex} = determineDnaLength2(imageList{index}.dnaList{dnaIndex}, true);
+           imageList{index}.dnaList{dnaIndex} = getDNALength(imageList{index}.dnaList{dnaIndex}, true);
+%               imageList{index}.dnaList{dnaIndex} = determineDnaLength2(imageList{index}.dnaList{dnaIndex}, true);
             %          Calculate angle between the Nukleii and the arms(the DNA Arms
             [ imageList{index}.dnaList{dnaIndex}.angle1, ...
                 imageList{index}.dnaList{dnaIndex}.angle2] = ...
@@ -254,8 +254,8 @@ for index = 1:imageCount
                 imageList{index}.connectedThickDna.PixelIdxList{dnaIndex}, ...
                 detail_thickDna,...
                 imageList{index}.region(dnaIndex,:));
-%             imageList{index}.dnaList{dnaIndex} = getDNALength(imageList{index}.dnaList{dnaIndex}, false);
-              imageList{index}.dnaList{dnaIndex} = determineDnaLength2(imageList{index}.dnaList{dnaIndex}, false);
+            imageList{index}.dnaList{dnaIndex} = getDNALength(imageList{index}.dnaList{dnaIndex}, false);
+%             imageList{index}.dnaList{dnaIndex} = determineDnaLength2(imageList{index}.dnaList{dnaIndex}, false);
 
         end
         %         Set the dnaIndex as Number for the DNA strand object
@@ -274,7 +274,7 @@ for index = 1:imageCount
         %     imwrite(imageList{index}.bwImgDen , ['..\pictures\bwImgDen\' 'bwImgDen' imageFolderObj(index).name ]);
 %         imwrite(imageList{index}.bwImgThinnedDna , ['..\pictures\bwImgThinnedDna\' 'thinnedDna' imageFolderObj(index).name ]);
         imwrite(imfuse(imageList{index}.rawImage , imageList{index}.bwImgThickDna), ['..\pictures\overlays_thick\' 'overlay__' imageFolderObj(index).name ]);
-        showImage(imageList{index}, ['..\pictures\overlays_thick\' 'overlays__' imageFolderObj(index).name ]);
+%         showImage(imageList{index}, ['..\pictures\overlays_thick\' 'overlays__' imageFolderObj(index).name ]);
         
     else
          imwrite(imageList{index}.preprocImg , ['../pictures/preprocImg/' 'me_preproc' imageFolderObj(index).name ]);

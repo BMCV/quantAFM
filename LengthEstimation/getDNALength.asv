@@ -243,8 +243,7 @@ dnaObj.bwImageThinnedRemoved = picture;
 cc = bwconncomp(picture);
 dnaObj.connectedThinnedRemoved = cc.PixelIdxList{1};
 
-% elongation process. Using elongateDnaBackbone function from other length
-% determination function
+% elongation process. Using elongateDna
 if (RECOVERBACKBONE && dnaObj.isValid)
     
 %     imshow(picture)
@@ -274,12 +273,8 @@ dnaObj.bwImageThinnedRemoved = picture;
 cc = bwconncomp(picture);
 dnaObj.connectedThinnedRemoved = cc.PixelIdxList{1};
 
-% no or multiple nucleosome(s), so calculate entire fragment's length
-fragmentLen{1} = calcKulpaLength(dnaObj.connectedThinnedRemoved, dnaObj.bwImageThinnedRemoved);
-%  fragmentLen{1}
-if fragmentLen{1}> MAXLENGTH_FREE || fragmentLen{1} < MINLENGTH_FREE
-    dnaObj.isValid = 0;
-end
+
+
 % calculate the fragment lengths, if there is exactly 1 nucleo bound to it
 if(dnaHasNucleos && numel(dnaObj.attachedNukleo) >= 1) % dna has 1 nucleosome, so calc length for both arms
     arms = getArmsNucleoIntersection(dnaObj);
@@ -290,22 +285,25 @@ if(dnaHasNucleos && numel(dnaObj.attachedNukleo) >= 1) % dna has 1 nucleosome, s
  
     fragmentLen_ = sum([fragmentLen{:}]);
 
-    if (fragmentLen_> MAXLENGTH_BOUND || fragmentLen_ < MINLENGTH_BOUND)
+    if fragmentLen_> MAXLENGTH_BOUND || fragmentLen_ < MINLENGTH_BOUND
+        dnaObj.isValid = 0;
+    end
+    
+% no or multiple nucleosome(s), so calculate entire fragment's length
+
+    fragmentLen{1} = calcKulpaLength(dnaObj.connectedThinnedRemoved, dnaObj.bwImageThinnedRemoved);
+    if fragmentLen{1}> MAXLENGTH_FREE || fragmentLen{1} < MINLENGTH_FREE
         dnaObj.isValid = 0;
     end
 end
 
 % hack because of order of function calls
-% ADDED 09-01-17: should we even reset the length for invalid ones?
-% if dnaObj.isValid == 0
-%     fragmentLen{1} = 0;
-% end
+if dnaObj.isValid == 0
+    fragmentLen{1} = 0;
+end
 
 % set the struct
 dnaObj.length = fragmentLen;
-% if (dnaObj.isValid == 1)
-%     fragmentLen
-% end
 
 
 end
