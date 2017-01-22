@@ -13,7 +13,7 @@ workingDirWindows = '..\denoised_imgs';
 workingDirLinux = '../denoised_imgs';
 % Respective subfolder whose pictures are to be analyzed with regard to the
 % current operating system
-currentImageDirWindows = '..\denoised_imgs\test\*.tif';
+currentImageDirWindows = '..\denoised_imgs\p_Wildtyp\*.tif';
 currentImageDirLinux = '../denoised_imgs/p_Wildtyp/';
 
 % Set to 1 if the main DNA backbone should be reconstructed after thinning 
