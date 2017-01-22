@@ -18,14 +18,24 @@ function done = showImage(imgObj, imgName)
      text(imgObj.region(:,1), imgObj.region(:,2), ...
          num2str ([1: size(imgObj.region,1)]'), 'FontSize', 6);
      %text(imgObj.centers(:,1), imgObj.centers(:,2), num2str(imgObj.attachedDNA));
+    for dnaIndex=1:size(imgObj.dnaList,2)
+        curr = imgObj.dnaList{dnaIndex};
+        if curr.isValid == 1
+            thisBB = curr.bBox.BoundingBox;
+            rectangle('Position', thisBB,...
+                'EdgeColor','yellow', 'LineWidth', 1)
+        end
+    end
      hold off;
      %imgName = ['../dokumentation/Ergebnisse/alleBilder_auswertungen/' imgName '_detectedObjects.ps'];
-     imgName = [imgName '_detectedObjects.ps'];
+      imgName1 = [imgName '_detectedObjects.ps'];
      %print(imgName, '-deps', '-tiff', '-loose', 'driver', '-dpsc');
      if( strcmp(getenv('OS'),'Windows_NT'))
-        print(imgName, '-dwinc', '-r300');
+        print(imgName1, '-dwinc', '-r300');
      else
-        print(imgName, '-dpsc', '-r300');
+        print(imgName1, '-dpsc', '-r300');
      end
+     imgName2 = [imgName '_detectedObjects.png'];
+     saveas(gcf,imgName2);
      close;
 end
