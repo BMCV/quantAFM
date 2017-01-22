@@ -42,9 +42,8 @@ function done = writeToCsvFile(filename, imageObj)
                     short_arm(dnaIndex,1) = curr.length{2};
                     long_arm(dnaIndex,1) = curr.length{3};
                 end
-                % this only applies if the total length is not the
-                % subtracted one. We wanted to include feature for this as
-                % well, but this isn't it.
+                % now differ between total length and added length.
+                length_botharms(dnaIndex,1) = curr.length{2} + curr.length{3};
 %                 length(dnaIndex,1) = curr.length{2}+curr.length{3};
                 length(dnaIndex,1) = curr.length{1};
            else
@@ -56,7 +55,7 @@ function done = writeToCsvFile(filename, imageObj)
            end 
         end
     end
-    T = table(number, xm, ym, length, hasNucleus, short_arm, long_arm ,...
+    T = table(number, xm, ym, length, hasNucleus, length_botharms, short_arm, long_arm ,...
         radius, isValid, angle1, angle2, numNucleosomes);
     writetable(T, filename);
     done = 'done';

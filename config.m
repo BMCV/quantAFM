@@ -68,4 +68,9 @@ threshAlgorithm2 = 'otsu'; % Default: 'otsu'
 % Upper bound for background noise, every value that is <=
 % backgroundThreshold is considered background
 backgroundThreshold = 95; % Default: 95
+
+
+% Additionally, you can specify the used algorithm for length determination
+% lengthAlgo = 'C'; % default is D
+lengthAlgo = 'D';
 %----------------------------------------------
