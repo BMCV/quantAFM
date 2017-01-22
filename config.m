@@ -13,7 +13,7 @@ workingDirWindows = '..\denoised_imgs';
 workingDirLinux = '../denoised_imgs';
 % Respective subfolder whose pictures are to be analyzed with regard to the
 % current operating system
-currentImageDirWindows = '..\denoised_imgs\p_Wildtyp\*.tif';
+currentImageDirWindows = '..\denoised_imgs\test\*.tif';
 currentImageDirLinux = '../denoised_imgs/p_Wildtyp/';
 
 % Set to 1 if the main DNA backbone should be reconstructed after thinning 
@@ -68,4 +68,9 @@ threshAlgorithm2 = 'otsu'; % Default: 'otsu'
 % Upper bound for background noise, every value that is <=
 % backgroundThreshold is considered background
 backgroundThreshold = 95; % Default: 95
+
+
+% Additionally, you can specify the used algorithm for length determination
+% lengthAlgo = 'C'; % default is D
+lengthAlgo = 'D';
 %----------------------------------------------
