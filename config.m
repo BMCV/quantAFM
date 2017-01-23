@@ -73,4 +73,9 @@ backgroundThreshold = 95; % Default: 95
 % Additionally, you can specify the used algorithm for length determination
 % lengthAlgo = 'C'; % default is D
 lengthAlgo = 'D';
+
+
+% determine whether the output is "real-valued" (in nm), or "pixel-valued"
+realValue = 1; % default is 1 = real value
+% realValue = 0; % this is pixel values
 %----------------------------------------------

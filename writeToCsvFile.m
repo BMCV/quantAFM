@@ -1,4 +1,6 @@
 function done = writeToCsvFile(filename, imageObj)
+
+    global PIXELLENGTH REALVALUE;
     dnaCount = size(imageObj.dnaList,2);
     number = zeros(dnaCount,1) -1;
     xm = zeros(dnaCount,1) -1;
@@ -55,6 +57,15 @@ function done = writeToCsvFile(filename, imageObj)
            end 
         end
     end
+    
+    if (REALVALUE == 1)
+       length = length * PIXELLENGTH;
+       length_botharms = length_botharms * PIXELLENGTH;
+       short_arm = short_arm * PIXELLENGTH;
+       long_arm = long_arm * PIXELLENGTH;
+       radius = radius * PIXELLENGTH;
+    end
+    
     T = table(number, xm, ym, length, hasNucleus, length_botharms, short_arm, long_arm ,...
         radius, isValid, angle1, angle2, numNucleosomes);
     writetable(T, filename);
