@@ -279,8 +279,8 @@ for index = 1:imageCount
         imwrite(imageList{index}.bwImgThickDna , ['..\pictures\bwImgThickDna\' 'bwThickDna' imageFolderObj(index).name ]);
         %     imwrite(imageList{index}.bwImgDen , ['..\pictures\bwImgDen\' 'bwImgDen' imageFolderObj(index).name ]);
 %         imwrite(imageList{index}.bwImgThinnedDna , ['..\pictures\bwImgThinnedDna\' 'thinnedDna' imageFolderObj(index).name ]);
-%         imwrite(imfuse(imageList{index}.rawImage , imageList{index}.bwImgThickDna), ['..\pictures\overlays_thick\' 'overlay__' imageFolderObj(index).name ]);
-%         showImage(imageList{index}, ['..\pictures\overlays_thick\' 'overlays__' imageFolderObj(index).name ]);
+        imwrite(imfuse(imageList{index}.rawImage , imageList{index}.bwImgThickDna), ['..\pictures\overlays_thick\' 'overlay__' imageFolderObj(index).name ]);
+        showImage(imageList{index}, ['..\pictures\overlays_thick\' 'overlays__' imageFolderObj(index).name ]);
         
     else
          imwrite(imageList{index}.preprocImg , ['../pictures/preprocImg/' 'me_preproc' imageFolderObj(index).name ]);
