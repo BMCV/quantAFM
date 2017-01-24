@@ -9,8 +9,8 @@ MAXLENGTH_FREE = maxLength_free * PIXELPERNM;
 MINLENGTH_BOUND = minLength_bound * PIXELPERNM;
 MAXLENGTH_BOUND = maxLength_bound * PIXELPERNM;
 
-MINRADIUS = minRadius*PIXELPERNM;
-MAXRADIUS = maxRadius*PIXELPERNM;
+MINRADIUS = floor(minRadius*PIXELPERNM);
+MAXRADIUS = ceil(maxRadius*PIXELPERNM);
 
 RECOVERBACKBONE = recoverBackbone;
 
