@@ -15,7 +15,10 @@ function [dnaObj] = determineDnaLength2(dnaObj, dnaHasNucleos)
     end
     fragmentLen = {};
     % if fragment too small or too large don't compute the rest
-    if( ~(size(currPxlList,1) < 3)  && ~(size(currPxlList,1) > 210)) 
+    % EDIT 26-01-17: This should probably be relative to
+    % MINLENGTH/MAXLENGTH?
+%     if( ~(size(currPxlList,1) < 3)  && ~(size(currPxlList,1) > 210)) 
+    if( ~(size(currPxlList,1) < 3) && ~(size(currPxlList,1) > (MAXLENGTH_FREE + 200)))
         % create graph from its PixelIdxList and, from that, get the
         % fragment backbone
         [gr, singlePath, isValid] = getDnaBackbone(currPxlList, bwImgThin);
@@ -25,15 +28,15 @@ function [dnaObj] = determineDnaLength2(dnaObj, dnaHasNucleos)
         % both end parts of the fragment were lost during the
         % thinning step, so get them back from the thickDNA fragment
 	% if config param is set
-	if (RECOVERBACKBONE)
+        if (RECOVERBACKBONE)
             [newBeginning, newEnd] = ... 
                 elongateDnaBackbone(currPxlList(singlePath), bwImgThick);
             % ... and add the respective pixels to the DNA backbone
             singlePath = [newBeginning; currPxlList(singlePath); newEnd];
         else
-	    % TODO: CHECK WHETHER THIS WORKS...
-	    singlePath = currPxlList(singlePath);
-	end
+            % TODO: CHECK WHETHER THIS WORKS...
+            singlePath = currPxlList(singlePath);
+        end
 	% create bw image of elongated DNA backbone
         bwImgThinnedRemoved(singlePath) = 1;
         dnaObj.bwImageThinnedRemoved = bwImgThinnedRemoved;

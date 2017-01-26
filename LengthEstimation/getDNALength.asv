@@ -10,11 +10,7 @@ function [ dnaObj ] = getDNALength( dnaObj, dnaHasNucleos )
 % bwImageThinnedRemoved is set to an image that was pruned and has its
 % L-points removed.
 % Have fun using this function!
-% EDIT 26-01-17: Further distinction between errors:
-% -1: PixelList was empty
-% -2: Constraint not fulfilled (cross-section, or loops)
-% -3: Total length smaller/larger than unbound length consraints
-% -4: Sum of both arms is smaller/larger than bound length constraints
+% EDIT 26-01-17: Further distinction between errors
 
 % Around the picture a quad of 0s is inserted so we dont have to check if
 % a point is at the edge of the picture
