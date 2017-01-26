@@ -1,5 +1,5 @@
 function [dnaObj] = determineDnaLength2(dnaObj, dnaHasNucleos)
-    global MINLENGTH_FREE MAXLENGTH_FREE MINLENGTH_BOUND MAXLENGTH_BOUND;
+    global MINLENGTH_FREE MAXLENGTH_FREE MINLENGTH_BOUND MAXLENGTH_BOUND RECOVERBACKBONE;
     currPxlList = dnaObj.connectedThinned;
     bwImgThin = dnaObj.bwImageThinned;
     bwImgThick = dnaObj.bwImage;
@@ -24,11 +24,17 @@ function [dnaObj] = determineDnaLength2(dnaObj, dnaHasNucleos)
         end
         % both end parts of the fragment were lost during the
         % thinning step, so get them back from the thickDNA fragment
-        [newBeginning, newEnd] = ... 
-            elongateDnaBackbone(currPxlList(singlePath), bwImgThick);
-        % ... and add the respective pixels to the DNA backbone
-        singlePath = [newBeginning; currPxlList(singlePath); newEnd];
-        % create bw image of elongated DNA backbone
+	% if config param is set
+	if (RECOVERBACKBONE)
+            [newBeginning, newEnd] = ... 
+                elongateDnaBackbone(currPxlList(singlePath), bwImgThick);
+            % ... and add the respective pixels to the DNA backbone
+            singlePath = [newBeginning; currPxlList(singlePath); newEnd];
+        else
+	    % TODO: CHECK WHETHER THIS WORKS...
+	    singlePath = currPxlList(singlePath);
+	end
+	% create bw image of elongated DNA backbone
         bwImgThinnedRemoved(singlePath) = 1;
         dnaObj.bwImageThinnedRemoved = bwImgThinnedRemoved;
         dnaObj.connectedThinnedRemoved = singlePath;
