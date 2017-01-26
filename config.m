@@ -18,7 +18,7 @@ currentImageDirLinux = '../denoised_imgs/p_Wildtyp/';
 
 % Set to 1 if the main DNA backbone should be reconstructed after thinning 
 % (i.e. recovery of 'lost' pixels ,0 else
-recoverBackbone = 0; %Default: 1
+recoverBackbone = 1; %Default: 1
 
 % set min and max length for recognized DNA length without histones in nm
 minLength_free = 170; % Default: 180
