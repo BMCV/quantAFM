@@ -28,6 +28,8 @@ classdef (Abstract) DNA
         connectedThinned;
 %        Array of linear indices of the DNA backbone in the bwDnaThinImg
         connectedThinnedRemoved;
+%         Added February 17: original image to recalculate threshold
+        image;
 %         BW Image
         bwImage;
 %         BWimage Thin DNA

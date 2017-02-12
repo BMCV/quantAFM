@@ -12,11 +12,11 @@ classdef DnaBound < DNA
 %     If attached Nukleo are provided(More than 4 inout arguments), Set them.
     methods
          function dnaObj = DnaBound(connectedThick,detail_thickDna, ...
-                 position, hasNucleus, nukleo)
+                 image, position, hasNucleus, nukleo)
             if nargin > 0
                 dnaObj.connectedThick = connectedThick;
                 dnaObj.bwImage = detail_thickDna;
-
+                dnaObj.image = image;
                 dnaObj.position = position;
                 dnaObj.hasNucleus = hasNucleus;
 %                 delete all other objects on the subImage besides the Dna
@@ -43,7 +43,7 @@ classdef DnaBound < DNA
                
             end
 %             set Reference to attached Nukeo
-            if nargin > 4
+            if nargin > 5
                 dnaObj.attachedNukleo = nukleo;
 %                 nukleo.attachedTo = dnaObj;
             end
