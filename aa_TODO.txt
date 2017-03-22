@@ -1,0 +1,18 @@
+TODO-Liste:
+
+- Erkennung/Trennung von Objekten mit kleinem Öffnungswinkel, kleinem Abstand
+
+- Output der Pixellisten (inkl. x/y-Koordinaten) für Biegesteifigkeit
+
+- Erkennungsrate von Objekten bei hoher Scansize (? ->Martin)
+
+- Figures (ggf. Farbschema ändern)
+	(ohne Box, ohne Kreis, ohne Nummer [also nur rosa-grün])
+	
+- gethinnte Bilder rot-grün (?)
+
+- Pixel-Nm-Ratio (wegen Längenskala)
+	
+- Übersichtsfigure (von Oskar und Martin)
+
+- scientific reports Vorgaben (nature guidelines author)

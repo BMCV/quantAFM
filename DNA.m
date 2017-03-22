@@ -3,6 +3,8 @@ classdef (Abstract) DNA
     %   Detailed explanation goes here
     
     properties
+        % update this to global properties, but isn't currently used
+        % anyways
 %         Upper boundary for DNA length
         MAX_LENGTH = 200;
 %         Lower boundary for DNA length

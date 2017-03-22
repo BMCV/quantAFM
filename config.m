@@ -4,7 +4,8 @@
 % Care that only images with 'quadratic' pixels are supported, i.e. they
 % have the same length in x- and y- direction
 % All pictures processed in one run have to have the same x-resolution and
-% scansize
+% scansize. Otherwise alter the file for each batch of images that have the
+% same scansize and resolution.
 %----------------------------------------------
 
 % Main picture directory, all pictures should be in the respective
@@ -33,11 +34,11 @@ minRadius = 9.375; % Default: 9.375
 maxRadius = 14.0625; % Default: 14.0625
 
 % set length of the picture scanline in x-Direction, i.e. from left to
-% right in �m
-scansize = 3;
+% right in mikrometers
+scansize = 4;
 
 % give the x-resolution of the images
-xResolution = 1280;
+xResolution = 2048;
 
 % only output objects for which all calculations ended successfully if 1, 0
 % else
@@ -58,7 +59,7 @@ parallel = 0; % Default: 0
 gpu = 0; % Default: 0
 
 %----------------------------------------------
-% WARNING: All of the following is only for experienced users/developers
+% WARNING: All of the following settings are only for the experienced user
 
 % The threshold algorithms used in the three step thresholding algorithm,
 % more information in the project report, commonly used are 'otsu' and
@@ -71,8 +72,13 @@ backgroundThreshold = 95; % Default: 95
 
 
 % Additionally, you can specify the used algorithm for length determination
-% lengthAlgo = 'C'; % default arbitrary
-lengthAlgo = 'D';
+lengthAlgo = 'C'; 
+% lengthAlgo = 'D';
+% Method C works with less variance on the test data, and is generally a
+% bit more robust,
+% while method D has a more restrictive policy for self-intersections and
+% objects that would possibly be valid with method C (advisable for dirty
+% and noisy datasets)
 
 
 % determine whether the output is "real-valued" (in nm), or "pixel-valued"
