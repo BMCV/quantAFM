@@ -1,9 +1,0 @@
-Hallo Dennis, 
-1. Bei Fragen: Bitte immer kurz schreiben oder besser anrufen
-2. Bilder haben 10x10µm mit 1024x1024 Pixeln. Für die Auswertung habe ich die Bilder auf 4096x4096 Pixel geändert. 
-Ich hätte sonst etwa 10µm pro pixel und etwa 2.5 nm / Pixel ist besser. Vor allem, da ich kurze Filamente später glätte und sonst zu wenig Pixel habe.
-
-nm07032017f6_.001AFM_and_Skeleton-NMdrawn.tif ist ein Beispiel, wie das Bild hinterher aussieht. Hier kann man auch schön sehen, wo ich von Hand dann korrigiert habe.
-Grüße
-und Dankeschön
-Norbert
