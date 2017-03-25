@@ -35,14 +35,14 @@ maxRadius = 14.0625; % Default: 14.0625
 
 % set length of the picture scanline in x-Direction, i.e. from left to
 % right in mikrometers
-scansize = 4;
+scansize = 10;
 
 % give the x-resolution of the images
-xResolution = 2048;
+xResolution = 4096;
 
 % only output objects for which all calculations ended successfully if 1, 0
 % else
-onlyValid = 1; % Default: 1
+onlyValid = 0; % Default: 1
 
 % 1 if you want to recalculate the global threshold presets, 0 else
 % Set this only to 0 if you already processed your dataset
