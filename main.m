@@ -1,5 +1,5 @@
 config;
-global PIXELLENGTH PIXELPERNM MINLENGTH_FREE MAXLENGTH_FREE MINLENGTH_BOUND MAXLENGTH_BOUND MINRADIUS MAXRADIUS RECOVERBACKBONE REALVALUE;
+global PIXELLENGTH PIXELPERNM MINLENGTH_FREE MAXLENGTH_FREE MINLENGTH_BOUND MAXLENGTH_BOUND MINRADIUS MAXRADIUS RECOVERBACKBONE REALVALUE EXPORTREAL EXPORTONLYVALID;
 PIXELLENGTH = (scansize * 1000) / xResolution;
 PIXELPERNM = 1 / PIXELLENGTH;
 
@@ -16,10 +16,12 @@ RECOVERBACKBONE = recoverBackbone;
 
 REALVALUE = realValue;
 
+EXPORTREAL = exportReal;
+EXPORTONLYVALID = exportOnlyValid;
+
 if( strcmp(getenv('OS'),'Windows_NT'))
     addpath(genpath(workingDirWindows));
     currentImageDir = currentImageDirWindows;
-    
 else
     addpath(genpath(workingDirLinux));
     currentImageDir = currentImageDirLinux;
@@ -306,8 +308,23 @@ for index = 1:imageCount
          showImage(imageList{index}, ['../pictures/overlays_thick/' 'overlays__' imageFolderObj(index).name ]);
     end
     %% write output: image with detected objects, csv file with results for each object
-
-    writeToCsvFile([imageFolderObj(index).name '_fast_ChrLen.csv'], imageList{index});
+    if( strcmp(getenv('OS'),'Windows_NT'))
+        output_filename = [outputDirWin imageFolderObj(index).name '.csv'];
+    else
+       output_filename = [outputDirLinux imageFolderObj(index).name '.csv'];
+    end
+    writeToCsvFile(output_filename, imageList{index});
+    
+    
+    %% if enabled, write the exported pixel values of each DNA strand
+    if (exportPixels == 1)
+        if( strcmp(getenv('OS'),'Windows_NT'))
+            export_filename = [exportDirWin imageFolderObj(index).name];
+        else
+            export_filename = [exportDirLinux imageFolderObj(index).name];
+        end
+        export_pixels(export_filename, imageList{index});
+    end
     
 end
 

@@ -35,10 +35,10 @@ maxRadius = 14.0625; % Default: 14.0625
 
 % set length of the picture scanline in x-Direction, i.e. from left to
 % right in mikrometers
-scansize = 10;
+scansize = 3;
 
 % give the x-resolution of the images
-xResolution = 4096;
+xResolution = 1920;
 
 % only output objects for which all calculations ended successfully if 1, 0
 % else
@@ -57,6 +57,13 @@ parallel = 0; % Default: 0
 % use with caution and disable if it does not work, there was no test which
 % CUDA versions are supported
 gpu = 0; % Default: 0
+
+% output folder
+% the output csv files will be placed in the appropriate subfolder. This
+% serves the compact view of files, and avoids file cluttering
+% default value is "output"
+outputDirWin = 'output\';
+outputDirLinux = 'output/';
 
 %----------------------------------------------
 % WARNING: All of the following settings are only for the experienced user
@@ -84,4 +91,29 @@ lengthAlgo = 'C';
 % determine whether the output is "real-valued" (in nm), or "pixel-valued"
 realValue = 1; % default is 1 = real value
 % realValue = 0; % this is pixel values
+
+
+% export the pixel positions of each DNA object to calculate bending
+% stiffness from it. This feature was specifically implemented for the
+% Langowski group, DKFZ (German Cancer Research Center).
+% The output is of the following format:
+% x-position y-position
+% for each pixel in the connected (thinned) component of each individual
+% DNA strand
+exportPixels = 1; % either 0 or 1
+exportOnlyValid = 0; % either 0 or 1
+exportReal = 1; % either 0 r 1
+% exportPixels defines whether or not the bending stiffness is of interest
+% at all, and whether the respective files should be output or not.
+% exportOnlyValid allows the user to control the output for invalid DNA
+% objects. For some cases, even the output of these could be interesting
+% exportReal defines the measure of the values. If the provided value is 1,
+% the measures will be converted to nanometers/mikrometeres, otherwise
+% pixel values.
+
+% the default subfolder is "export".
+exportDirWin = 'export\';
+exportDirLinux = 'export/';
+
+
 %----------------------------------------------
