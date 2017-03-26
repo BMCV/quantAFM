@@ -13,8 +13,8 @@ function done = export_pixels(filename, imageObj)
         if ((EXPORTONLYVALID == 1 && imageObj.dnaList{i}.isValid ==1) || (EXPORTONLYVALID == 0))
             [x,y] = ind2sub(imageObj.dnaList{i}.sizeImg, imageObj.dnaList{i}.connectedThinnedRemoved);
             if (EXPORTREAL==1)
-                x = x*PIXELLENGTH;
-                y = y*PIXELLENGTH;
+                x = round(x*PIXELLENGTH, 6);
+                y = round(y*PIXELLENGTH, 6);
             end
             output = table(x,y);
             
@@ -29,5 +29,6 @@ function done = export_pixels(filename, imageObj)
         end
     end
 
+    done = 'done';
 end
 

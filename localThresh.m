@@ -1,5 +1,7 @@
 function [dnaList, average, average_skeleton] = localThresh(dnaList)
-
+% currently not in use. Test for a local (second) thresholding mechanism
+% that prevents objects with small angles (i.e. probable
+% self-intersections) to touch in the binarized image.
 average = zeros(length(dnaList),1);
 average_skeleton = zeros(length(dnaList),1);
 

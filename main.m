@@ -46,7 +46,7 @@ medianTheshold = 0.4353;
 sigmaThreshold = 0.0124;
 
 if (minSize == -1)
-    minSize = 0.05*xResolution;
+    minSize = 0.03*xResolution;
 end
 if (maxSize == -1)
     maxSize = 0.85*xResolution;
@@ -132,7 +132,7 @@ for index = 1:imageCount
         continue
     end
     imageList{index}.bwImage = im2bw(imageList{index}.preprocImg, imageList{index}.thresh);
-%     imageList{index}.bwImage = bwareafilt(imageList{index}.bwImage, [minSize,0.9*width]);
+%     imageList{index}.bwImage = bwareafilt(imageList{index}.bwImage, [minSize,maxSize]);
 
     % remove objects from bwImage with pixelsize in [0, maxSize]
     % this is only the filtering step, so the lower boundary may be
@@ -171,11 +171,9 @@ for index = 1:imageCount
     
     % finally, remove any objects that might not be in the expected size
     % range of [minSize, maxSize]
-    % TODO Feb 17: This is critical with the new length. For a individual fit, we
-    % could adapt this to a flexible size.
     imageList{index}.bwImgThickDna = bwareafilt(imageList{index}.bwImgThickDna, [minSize,maxSize]);
     
-    %find circles, nuklei, centers, and radi
+    %find circles, nuklei, centers, and radii
     [ imageList{index}.centers,imageList{index}.radii] = ...
         findNukleii(imageList{index}.bwImgThickDna, imageList{index}.preprocImg);
     
@@ -293,6 +291,28 @@ for index = 1:imageCount
         imageList{index}.dnaList{dnaIndex}.bBox = bBox;
     end
     
+    % create bwImgThinnedDna from all DnaObjects
+    % this can be critical for overlapping sections, since the local image
+    % is blacked out in said overlapping area, so it might overwrite later
+    % additions. Thus, a simple addition is performed, instead of an
+    % assignment to this area. Still, some risk is involved, since the
+    % value may increase beyond one (renormalized in the end).
+    imageList{index}.bwImgThinnedRemoved = zeros(imageList{index}.imgSize);
+    for dna = 1:length(imageList{index}.dnaList)
+        % this also only continues for DNAs that have a single (valid)
+        % strand. It is shown regardless of the processing results
+        % afterwards, yet it has to yield some result for the de-branching
+        % process (after the thinning already occured).
+        if (~isempty(imageList{index}.dnaList{dna}.bwImageThinnedRemoved))
+            thisBB = imageList{index}.dnaList{dna}.bBox.BoundingBox;
+            imageList{index}.bwImgThinnedRemoved(thisBB(2):thisBB(2)+thisBB(4)-1,thisBB(1):thisBB(1)+thisBB(3)-1) = ...
+                imageList{index}.bwImgThinnedRemoved(thisBB(2):thisBB(2)+thisBB(4)-1,thisBB(1):thisBB(1)+thisBB(3)-1) + ...
+                imageList{index}.dnaList{dna}.bwImageThinnedRemoved;
+        end
+    end
+    imageList{index}.bwImgThinnedRemoved = logical(imageList{index}.bwImgThinnedRemoved);
+    
+    
     if( strcmp(getenv('OS'),'Windows_NT'))
         
         imwrite(imageList{index}.preprocImg , ['..\pictures\preprocImg\' 'preproc' imageFolderObj(index).name ]);
@@ -301,10 +321,10 @@ for index = 1:imageCount
         imwrite(imageList{index}.bwFilteredImage , ['..\pictures\bwFilteredImage\' 'bwFiltered' imageFolderObj(index).name ]);
         imwrite(imageList{index}.filteredImage , ['..\pictures\filteredImage\' 'filtered' imageFolderObj(index).name ]);
         imwrite(imageList{index}.bwImgThickDna , ['..\pictures\bwImgThickDna\' 'bwThickDna' imageFolderObj(index).name ]);
-%         imwrite(imageList{index}.bwImgThinnedDna , ['..\pictures\bwImgThinnedDna\' 'thinnedDna' imageFolderObj(index).name ]);
+        imwrite(imageList{index}.bwImgThinnedRemoved , ['..\pictures\bwImgThinnedDna\' 'thinnedDnaRemoved' imageFolderObj(index).name ]);
         imwrite(imfuse(imageList{index}.rawImage , imageList{index}.bwImgThickDna), ['..\pictures\overlays_thick\' 'overlay__' imageFolderObj(index).name ]);
         showImage(imageList{index}, ['..\pictures\overlays_thick\' 'overlays__' imageFolderObj(index).name ]);
-        
+        fusedImages(imageList{index}, imageFolderObj(index).name);
     else
          imwrite(imageList{index}.preprocImg , ['../pictures/preprocImg/' 'me_preproc' imageFolderObj(index).name ]);
          imwrite(imageList{index}.background , ['../pictures/background/' 'me_bckground' imageFolderObj(index).name ]);
@@ -312,10 +332,11 @@ for index = 1:imageCount
          imwrite(imageList{index}.bwFilteredImage , ['../pictures/bwFilteredImage/' 'me_bwFiltered' imageFolderObj(index).name ]);
          imwrite(imageList{index}.filteredImage , ['../pictures/filteredImage/' 'me_filtered' imageFolderObj(index).name ]);
          imwrite(imageList{index}.bwImgThickDna , ['../pictures/bwImgThickDna/' 'me_bwThickDna' imageFolderObj(index).name ]);
-%          imwrite(imageList{index}.bwImgThinnedDna , ['../pictures/bwImgThinnedDna/' 'me_thinnedDna' imageFolderObj(index).name ]);
+         imwrite(imageList{index}.bwImgThinnedDnaRemoved , ['../pictures/bwImgThinnedDna/' 'me_thinnedDnaRemoved' imageFolderObj(index).name ]);
 %          imwrite(imfuse(imageList{index}.rawImage , imageList{index}.bwImgThinnedDna), ['../pictures/overlays_thin/' 'overlay_' imageFolderObj(index).name ]);
          imwrite(imfuse(imageList{index}.rawImage , imageList{index}.bwImgThickDna), ['../pictures/overlays_thick/' 'overlay__' imageFolderObj(index).name ]);
          showImage(imageList{index}, ['../pictures/overlays_thick/' 'overlays__' imageFolderObj(index).name ]);
+         fusedImages(imageList{index},imageFolderObj(index).name);
     end
     %% write output: image with detected objects, csv file with results for each object
     if( strcmp(getenv('OS'),'Windows_NT'))
