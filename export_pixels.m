@@ -18,7 +18,7 @@ function done = export_pixels(filename, imageObj)
             end
             output = table(x,y);
             
-            temp = filename
+            temp = filename;
             if( strcmp(getenv('OS'),'Windows_NT'))
                 
                 temp = [temp '_' num2str(i, '%02i') '.csv'];

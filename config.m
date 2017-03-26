@@ -22,12 +22,12 @@ currentImageDirLinux = '../denoised_imgs/p_Wildtyp/';
 recoverBackbone = 1; %Default: 1
 
 % set min and max length for recognized DNA length without histones in nm
-minLength_free = 170; % Default: 180
-maxLength_free = 230; % Default: 250
+minLength_free = 100; % Default: 180
+maxLength_free = 530; % Default: 250
 
 % set min and max length for recognized DNA length with attached histones in nm
 minLength_bound = 90; % Default: 100
-maxLength_bound = 210; % Default: 200
+maxLength_bound = 510; % Default: 200
 
 % set min and max bounds for radius of nuclei in nm
 minRadius = 9.375; % Default: 9.375
@@ -35,10 +35,25 @@ maxRadius = 14.0625; % Default: 14.0625
 
 % set length of the picture scanline in x-Direction, i.e. from left to
 % right in mikrometers
-scansize = 3;
+scansize = 10;
 
 % give the x-resolution of the images
-xResolution = 1920;
+xResolution = 4096;
+
+% If the images are known to contain dirt of a certain size, they can be
+% excluded via the following min/max values.
+% This is also relevant if the size of the DNA is already given, since this
+% actively affects the preprocessing steps, while the DNA length does not
+% (it will only come into play once the length of the objects is
+% determined).
+% If the values are set to the default of -1, the size will be determined
+% by the factors 0.05/0.85 * xResolution
+minSize = -1; % -1 default, else positive integer
+% minSize = 100;
+maxSize = -1; % -1 default, else positive integer
+% maxSize = 900;
+% As some advice: The values for 660 bp DNA strands have been 100/900 (see
+% report)
 
 % only output objects for which all calculations ended successfully if 1, 0
 % else
@@ -75,7 +90,7 @@ threshAlgorithm1 = 'otsu'; % Default: 'otsu'
 threshAlgorithm2 = 'otsu'; % Default: 'otsu'
 % Upper bound for background noise, every value that is <=
 % backgroundThreshold is considered background
-backgroundThreshold = 95; % Default: 95
+backgroundThreshold = 25; % Default: 95
 
 
 % Additionally, you can specify the used algorithm for length determination
@@ -115,5 +130,7 @@ exportReal = 1; % either 0 r 1
 exportDirWin = 'export\';
 exportDirLinux = 'export/';
 
+% Attention! The following value is only experimental!
+dkfz = 1;
 
 %----------------------------------------------

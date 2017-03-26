@@ -45,6 +45,13 @@ thresh2 =  zeros(1,imageCount);
 medianTheshold = 0.4353;
 sigmaThreshold = 0.0124;
 
+if (minSize == -1)
+    minSize = 0.05*xResolution;
+end
+if (maxSize == -1)
+    maxSize = 0.85*xResolution;
+end
+    
 
 par = parallel; %bool wether to use multiple cores or not
 % gpu = gpu; %bool wether to use gpu or not
@@ -107,7 +114,7 @@ for index = 1:imageCount
     % accuracy is not so important. The primary goal is to identify
     % image artifacts that
     % -  have a too high intensity and
-    % -  are smaller than 150 px or larger than 900 px
+    % -  are smaller than minSize px or larger than maxSize px
     % and replace their pixel values with a value that is below an optimal
     % threshold so that they will be filtered out later on.
     
@@ -125,15 +132,16 @@ for index = 1:imageCount
         continue
     end
     imageList{index}.bwImage = im2bw(imageList{index}.preprocImg, imageList{index}.thresh);
-%     imageList{index}.bwImage = bwareafilt(imageList{index}.bwImage, [100,900]);
+%     imageList{index}.bwImage = bwareafilt(imageList{index}.bwImage, [minSize,0.9*width]);
 
-    % remove objects from bwImage with pixelsize in [150, 900]
-    
+    % remove objects from bwImage with pixelsize in [0, maxSize]
+    % this is only the filtering step, so the lower boundary may be
+    % optional. For different results, this could be enabled, too.
     imageList{index}.bwFilteredImage = ...
-        imageList{index}.bwImage - bwareafilt(imageList{index}.bwImage, [0,900]);
-    % generate complement image that is 1 where there are NO artifacts and
-    % 0 otherwise
+        imageList{index}.bwImage - bwareafilt(imageList{index}.bwImage, [0,maxSize]);
     
+    % generate complement image that is 1 where there are NO artifacts and
+    % 0 otherwise.
     complementImage = imcomplement(imageList{index}.bwFilteredImage);
     
     % generate new uint8 image by
@@ -155,13 +163,17 @@ for index = 1:imageCount
         t = medianTheshold;
         
     end
-    imageList{index}.bwImgThickDna = im2bw(imageList{index}.filteredImage, t);
+    if (dkfz ==1)
+        imageList{index}.bwImgThickDna = imbinarize(imageList{index}.filteredImage);
+    else
+        imageList{index}.bwImgThickDna = im2bw(imageList{index}.filteredImage, t);
+    end
     
     % finally, remove any objects that might not be in the expected size
-    % range of [100, 900]
+    % range of [minSize, maxSize]
     % TODO Feb 17: This is critical with the new length. For a individual fit, we
     % could adapt this to a flexible size.
-    imageList{index}.bwImgThickDna = bwareafilt(imageList{index}.bwImgThickDna, [150,900]);
+    imageList{index}.bwImgThickDna = bwareafilt(imageList{index}.bwImgThickDna, [minSize,maxSize]);
     
     %find circles, nuklei, centers, and radi
     [ imageList{index}.centers,imageList{index}.radii] = ...
@@ -289,7 +301,6 @@ for index = 1:imageCount
         imwrite(imageList{index}.bwFilteredImage , ['..\pictures\bwFilteredImage\' 'bwFiltered' imageFolderObj(index).name ]);
         imwrite(imageList{index}.filteredImage , ['..\pictures\filteredImage\' 'filtered' imageFolderObj(index).name ]);
         imwrite(imageList{index}.bwImgThickDna , ['..\pictures\bwImgThickDna\' 'bwThickDna' imageFolderObj(index).name ]);
-        %     imwrite(imageList{index}.bwImgDen , ['..\pictures\bwImgDen\' 'bwImgDen' imageFolderObj(index).name ]);
 %         imwrite(imageList{index}.bwImgThinnedDna , ['..\pictures\bwImgThinnedDna\' 'thinnedDna' imageFolderObj(index).name ]);
         imwrite(imfuse(imageList{index}.rawImage , imageList{index}.bwImgThickDna), ['..\pictures\overlays_thick\' 'overlay__' imageFolderObj(index).name ]);
         showImage(imageList{index}, ['..\pictures\overlays_thick\' 'overlays__' imageFolderObj(index).name ]);
@@ -301,7 +312,6 @@ for index = 1:imageCount
          imwrite(imageList{index}.bwFilteredImage , ['../pictures/bwFilteredImage/' 'me_bwFiltered' imageFolderObj(index).name ]);
          imwrite(imageList{index}.filteredImage , ['../pictures/filteredImage/' 'me_filtered' imageFolderObj(index).name ]);
          imwrite(imageList{index}.bwImgThickDna , ['../pictures/bwImgThickDna/' 'me_bwThickDna' imageFolderObj(index).name ]);
-%         imwrite(imageList{index}.bwImgDen , ['..\pictures\bwImgDen\' 'bwImgDen' imageFolderObj(index).name ]);
 %          imwrite(imageList{index}.bwImgThinnedDna , ['../pictures/bwImgThinnedDna/' 'me_thinnedDna' imageFolderObj(index).name ]);
 %          imwrite(imfuse(imageList{index}.rawImage , imageList{index}.bwImgThinnedDna), ['../pictures/overlays_thin/' 'overlay_' imageFolderObj(index).name ]);
          imwrite(imfuse(imageList{index}.rawImage , imageList{index}.bwImgThickDna), ['../pictures/overlays_thick/' 'overlay__' imageFolderObj(index).name ]);
