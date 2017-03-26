@@ -350,9 +350,9 @@ for index = 1:imageCount
     %% if enabled, write the exported pixel values of each DNA strand
     if (exportPixels == 1)
         if( strcmp(getenv('OS'),'Windows_NT'))
-            export_filename = [exportDirWin imageFolderObj(index).name];
+            export_filename = [exportDirWin num2str(index, '%03i') '\'];
         else
-            export_filename = [exportDirLinux imageFolderObj(index).name];
+            export_filename = [exportDirLinux num2str(index, '%03i') '\'];
         end
         export_pixels(export_filename, imageList{index});
     end

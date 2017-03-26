@@ -1,4 +1,4 @@
-function done = export_pixels(filename, imageObj)
+function done = export_pixels(folder, imageObj)
 %EXPORT_PIXELS Outputs the position of pixels to csv/tsv files
 %   To calculate the stiffness of the DNA molecules, specific data formats
 %   are required by the appropriate program.
@@ -18,13 +18,7 @@ function done = export_pixels(filename, imageObj)
             end
             output = table(x,y);
             
-            temp = filename;
-            if( strcmp(getenv('OS'),'Windows_NT'))
-                
-                temp = [temp '_' num2str(i, '%02i') '.csv'];
-            else
-                temp = [temp '_' num2str(i, '%02i') '.csv'];
-            end
+            temp = [folder 'file' num2str(i, '%03i') '.txt'];
             writetable(output, temp, 'delimiter', ' ', 'WriteVariableNames', 0)
         end
     end
