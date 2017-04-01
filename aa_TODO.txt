@@ -17,6 +17,6 @@ TODO-Liste:
 
 - scientific reports Vorgaben (nature guidelines author)
 
-
+- generate synthetic images.
 
 - try moments for DKFZ images

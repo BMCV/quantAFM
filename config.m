@@ -40,6 +40,11 @@ scansize = 10;
 % give the x-resolution of the images
 xResolution = 4096;
 
+% enable to print pixel-to-nm ratio at the beginning.
+% Will be output only once, since the ratio is the same for all images of
+% this specific configuration.
+px2nm_output = 1; % 0 or 1
+
 % If the images are known to contain dirt of a certain size, they can be
 % excluded via the following min/max values.
 % This is also relevant if the size of the DNA is already given, since this

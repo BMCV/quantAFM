@@ -27,6 +27,10 @@ else
     currentImageDir = currentImageDirLinux;
 end
 
+if (px2nm_output == 1)
+    disp(['A single pixel has length ' num2str(PIXELLENGTH) ' nm.']);
+end
+
 addpath(genpath('LengthEstimation'));
 imageFolderObj = dir(currentImageDir);
 imageCount = size(dir(currentImageDir),1);
