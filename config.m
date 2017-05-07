@@ -14,12 +14,12 @@ workingDirWindows = '..\denoised_imgs';
 workingDirLinux = '../denoised_imgs';
 % Respective subfolder whose pictures are to be analyzed with regard to the
 % current operating system
-currentImageDirWindows = '..\denoised_imgs\test\*.tif';
+currentImageDirWindows = '..\denoised_imgs\test_raw\*.tif';
 currentImageDirLinux = '../denoised_imgs/p_Wildtyp/';
 
 % Set to 1 if the main DNA backbone should be reconstructed after thinning 
 % (i.e. recovery of 'lost' pixels ,0 else
-recoverBackbone = 1; %Default: 1
+recoverBackbone = 0; %Default: 1
 
 % set min and max length for recognized DNA length without histones in nm
 minLength_free = 100; % Default: 180
@@ -70,6 +70,8 @@ setMeanThreshold = 1; % Default: 1
 
 % Use multiple CPU cores, recommended for big datasets
 % 1 for multiple cores, 0 for single core
+% Not implemented in the current version, but has been there in previous
+% iterations.
 parallel = 0; % Default: 0
 
 % 1 when using GPU, 0 else
@@ -97,6 +99,11 @@ threshAlgorithm2 = 'otsu'; % Default: 'otsu'
 % backgroundThreshold is considered background
 backgroundThreshold = 25; % Default: 95
 
+% Specify the used preprocessing steps, i.e. the filter operations to be
+% performed on the images. 1 means enabled, 0 means disabled.
+% Median filtering:
+medfilter = 1;   % default 1
+lowpass = 0;        % default 1
 
 % Additionally, you can specify the used algorithm for length determination
 lengthAlgo = 'C'; 

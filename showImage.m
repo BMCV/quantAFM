@@ -37,6 +37,6 @@ function done = showImage(imgObj, imgName)
      end
      imgName2 = [imgName '_detectedObjects.png'];
      saveas(gcf,imgName2);
-     k = waitforbuttonpress();
+     %k = waitforbuttonpress();
      close;
 end

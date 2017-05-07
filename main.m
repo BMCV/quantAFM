@@ -101,15 +101,23 @@ for index = 1:imageCount
     % filtered. Afterwards, its background is auto-calculated and
     % substracted. This image will be the basis for further processing.
     
-    if(gpu)
-    gpuRawImage = gpuArray(imageList{index}.rawImage);
-    gpuRawImage = medfilt2(gpuRawImage, [3,3]);
-    imageList{index}.preprocImg = gather(gpuRawImage);
-    else
-    imageList{index}.preprocImg = medfilt2(imageList{index}.rawImage,[3 3]);
+    if(gpu && medfilter)
+        gpuRawImage = gpuArray(imageList{index}.rawImage);
+        gpuRawImage = medfilt2(gpuRawImage, [3,3]);
+        imageList{index}.preprocImg = gather(gpuRawImage);
+    elseif(medfilter)
+        imageList{index}.preprocImg = medfilt2(imageList{index}.rawImage,[3 3]);
     end
-    imageList{index}.preprocImg = lowPassFilter(imageList{index}.preprocImg);
-
+    if(medfilter && lowpass)
+        imageList{index}.preprocImg = lowPassFilter(imageList{index}.preprocImg);
+    elseif(lowpass)
+        imageList{index}.preprocImg = lowPassFilter(imageList{index}.rawImage);
+    end
+    
+    if (~(medfilter && lowpass))
+        imageList{index}.preprocImg = imageList{index}.rawImage;
+    end
+    
     imageList{index}.background = imopen(imageList{index}.preprocImg, strel('disk',15));
     imageList{index}.preprocImg(imageList{index}.preprocImg< manThresh) = manThresh;
     %% Replace image artifacts
@@ -167,7 +175,7 @@ for index = 1:imageCount
         t = medianTheshold;
         
     end
-    if (dkfz ==1)
+    if (dkfz)
         imageList{index}.bwImgThickDna = imbinarize(imageList{index}.filteredImage);
     else
         imageList{index}.bwImgThickDna = im2bw(imageList{index}.filteredImage, t);

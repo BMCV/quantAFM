@@ -18,7 +18,9 @@ function done = export_pixels(folder, imageObj)
             end
             output = table(x,y);
             
-            temp = [folder 'file' num2str(i, '%03i') '.txt'];
+            % enable the upper line for format 001,002,..., lower for 1,2,...
+            %temp = [folder 'file' num2str(i, '%03i') '.txt'];
+            temp = [folder 'file' num2str(i) '.txt'];
             writetable(output, temp, 'delimiter', ' ', 'WriteVariableNames', 0)
         end
     end
