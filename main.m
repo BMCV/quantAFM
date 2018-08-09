@@ -336,7 +336,7 @@ for index = 1:imageCount
         imwrite(imageList{index}.bwImgThinnedRemoved , ['..\pictures\bwImgThinnedDna\' 'thinnedDnaRemoved' imageFolderObj(index).name ]);
         imwrite(imfuse(imageList{index}.rawImage , imageList{index}.bwImgThickDna), ['..\pictures\overlays_thick\' 'overlay__' imageFolderObj(index).name ]);
         showImage(imageList{index}, ['..\pictures\overlays_thick\' 'overlays__' imageFolderObj(index).name ]);
-        fusedImages(imageList{index}, imageFolderObj(index).name);
+        fusedImages(imageList{index}, imageFolderObj(index).name, 0);
     else
          imwrite(imageList{index}.preprocImg , ['../pictures/preprocImg/' 'me_preproc' imageFolderObj(index).name ]);
          imwrite(imageList{index}.background , ['../pictures/background/' 'me_bckground' imageFolderObj(index).name ]);
@@ -348,7 +348,7 @@ for index = 1:imageCount
 %          imwrite(imfuse(imageList{index}.rawImage , imageList{index}.bwImgThinnedDna), ['../pictures/overlays_thin/' 'overlay_' imageFolderObj(index).name ]);
          imwrite(imfuse(imageList{index}.rawImage , imageList{index}.bwImgThickDna), ['../pictures/overlays_thick/' 'overlay__' imageFolderObj(index).name ]);
          showImage(imageList{index}, ['../pictures/overlays_thick/' 'overlays__' imageFolderObj(index).name ]);
-         fusedImages(imageList{index},imageFolderObj(index).name);
+         fusedImages(imageList{index},imageFolderObj(index).name, 1);
     end
     %% write output: image with detected objects, csv file with results for each object
     if( strcmp(getenv('OS'),'Windows_NT'))

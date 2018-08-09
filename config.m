@@ -103,7 +103,7 @@ backgroundThreshold = 25; % Default: 95
 % performed on the images. 1 means enabled, 0 means disabled.
 % Median filtering:
 medfilter = 1;   % default 1
-lowpass = 0;        % default 1
+lowpass = 1;s        % default 1
 
 % Additionally, you can specify the used algorithm for length determination
 lengthAlgo = 'C'; 
@@ -127,7 +127,7 @@ realValue = 1; % default is 1 = real value
 % x-position y-position
 % for each pixel in the connected (thinned) component of each individual
 % DNA strand
-exportPixels = 1; % either 0 or 1
+exportPixels = 0; % either 0 or 1
 exportOnlyValid = 0; % either 0 or 1
 exportReal = 1; % either 0 r 1
 % exportPixels defines whether or not the bending stiffness is of interest
