@@ -23,8 +23,8 @@ char srcName[20] = "original";
 
 int main(int argc, char** argv) 
 {
-  //src = cv::imread(argv[1]);
-	src = cv::imread("102.tif");
+  src = cv::imread(argv[1]);
+	//src = cv::imread("102.tif");
   if( !src.data )
   {
     std::cout << "no img could be read" << std::endl;
