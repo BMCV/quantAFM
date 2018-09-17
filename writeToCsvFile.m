@@ -1,7 +1,13 @@
-function done = writeToCsvFile(filename, imageObj)
+function done = writeToCsvFile(filename, imageObj, purgeInvalid)
 
     global PIXELLENGTH REALVALUE;
-    dnaCount = size(imageObj.dnaList,2);
+    if (purgeInvalid)
+        dnaCount = size(imageObj.purged, 2);
+        purged_iterator = imageObj.purged;
+    else
+        dnaCount = size(imageObj.dnaList,2);
+
+    end
     number = zeros(dnaCount,1) -1;
     xm = zeros(dnaCount,1) -1;
     ym = zeros(dnaCount,1) -1;
@@ -15,8 +21,13 @@ function done = writeToCsvFile(filename, imageObj)
     angle1 = zeros(dnaCount,1) -1;
     angle2 = zeros(dnaCount,1) -1;
     numNucleosomes = zeros(dnaCount,1) -1;
-    for dnaIndex = 1:dnaCount
-        curr = imageObj.dnaList{dnaIndex};
+    
+    for dnaIndex =1:dnaCount
+        if (purgeInvalid)
+            curr = imageObj.dnaList{purged_iterator(dnaIndex)};
+        else
+            curr = immageObj.dnaList{dnaIndex};
+        end
         number(dnaIndex,1) = curr.number;
         xm(dnaIndex,1) = curr.position(2);
         ym(dnaIndex,1) = curr.position(1);

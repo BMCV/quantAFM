@@ -53,6 +53,8 @@ classdef Image
 %         Array of Radi of the Nukleii
         radii;
         
+%         Elements that have an isValid flag.
+        purged;
 %         array of bool values if the Nukleo I is inside the I's
 %         ConnectedComponent
         contains;

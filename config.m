@@ -14,7 +14,7 @@ workingDirWindows = '..\denoised_imgs';
 workingDirLinux = '../denoised_imgs';
 % Respective subfolder whose pictures are to be analyzed with regard to the
 % current operating system
-currentImageDirWindows = '..\denoised_imgs\test_raw\*.tif';
+currentImageDirWindows = '..\denoised_imgs\p_Wildtyp/';
 currentImageDirLinux = '../denoised_imgs/p_Wildtyp/';
 
 % Set to 1 if the main DNA backbone should be reconstructed after thinning 
@@ -38,7 +38,7 @@ maxRadius = 14.0625; % Default: 14.0625
 scansize = 10;
 
 % give the x-resolution of the images
-xResolution = 2048;
+xResolution = 1280;
 
 % enable to print pixel-to-nm ratio at the beginning.
 % Will be output only once, since the ratio is the same for all images of
@@ -63,6 +63,9 @@ maxSize = -1; % -1 default, else positive integer
 % only output objects for which all calculations ended successfully if 1, 0
 % else
 onlyValid = 0; % Default: 1
+
+% Unlike onlyValid, will completely remove invalid pixels from output
+purgeInvalid = 1;
 
 % 1 if you want to recalculate the global threshold presets, 0 else
 % Set this only to 0 if you already processed your dataset

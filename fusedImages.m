@@ -5,14 +5,14 @@ function done = fusedImages( imgObj, imgName, os )
     thinfuse = imfuse(imgObj.rawImage, imgObj.bwImgThinnedRemoved);
     bothfuse = imfuse(thickfuse, imgObj.bwImgThinnedRemoved);
     if (os == 0)
-		imwrite(thickfuse, ['..\pictures\fused_images\' '_thickfuse' imgName ]);
-		imwrite(thinfuse, ['..\pictures\fused_images\' '_thinfuse' imgName ]);
-		imwrite(bothfuse, ['..\pictures\fused_images\' '_bothfuse' imgName ]);    
+		imwrite(thickfuse, ['..\pictures\fused_images\' 'thickfuse_' imgName ]);
+		imwrite(thinfuse, ['..\pictures\fused_images\' 'thinfuse_' imgName ]);
+		imwrite(bothfuse, ['..\pictures\fused_images\' 'bothfuse_' imgName ]);    
     else
-		imwrite(thickfuse, ['../pictures/fused_images/' '_thickfuse' imgName ]);
-		imwrite(thinfuse, ['../pictures/fused_images/' '_thinfuse' imgName ]);
-		imwrite(bothfuse, ['../pictures/fused_images/' '_bothfuse' imgName ]); 
-	
+		imwrite(thickfuse, ['../pictures/fused_images/' 'thickfuse_' imgName ]);
+		imwrite(thinfuse, ['../pictures/fused_images/' 'thinfuse_' imgName ]);
+		imwrite(bothfuse, ['../pictures/fused_images/' 'bothfuse_' imgName ]); 
+    end
     done = 'done';
 end
 

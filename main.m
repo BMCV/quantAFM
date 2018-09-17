@@ -312,6 +312,15 @@ for index = 1:imageCount
     end
     imageList{index}.bwImgThinnedRemoved = logical(imageList{index}.bwImgThinnedRemoved);
     
+    % select the subset that consists only of the valid ones
+    if (purgeInvalid)
+        imageList{index}.purged = [];
+        for i=1:length(imageList{index}.dnaList)
+            if (imageList{index}.dnaList{i}.isValid)
+               imageList{index}.purged = [imageList{index}.purged, i]; 
+            end
+        end
+    end
     
     if( strcmp(getenv('OS'),'Windows_NT'))
         
@@ -322,8 +331,8 @@ for index = 1:imageCount
         imwrite(imageList{index}.filteredImage , ['..\pictures\filteredImage\' 'filtered' imageFolderObj(index).name ]);
         imwrite(imageList{index}.bwImgThickDna , ['..\pictures\bwImgThickDna\' 'bwThickDna' imageFolderObj(index).name ]);
         imwrite(imageList{index}.bwImgThinnedRemoved , ['..\pictures\bwImgThinnedDna\' 'thinnedDnaRemoved' imageFolderObj(index).name ]);
-        imwrite(imfuse(imageList{index}.rawImage , imageList{index}.bwImgThickDna), ['..\pictures\overlays_thick\' 'overlay__' imageFolderObj(index).name ]);
-        showImage(imageList{index}, ['..\pictures\overlays_thick\' 'overlays__' imageFolderObj(index).name ]);
+        imwrite(imfuse(imageList{index}.rawImage , imageList{index}.bwImgThickDna), ['..\pictures\overlays_thick\' 'overlay_' imageFolderObj(index).name ]);
+        showImage(imageList{index}, ['..\pictures\overlays_thick\' 'overlays_' imageFolderObj(index).name ], false, true, purgeInvalid);
         fusedImages(imageList{index}, imageFolderObj(index).name, 0);
     else
          imwrite(imageList{index}.preprocImg , ['../pictures/preprocImg/' 'me_preproc' imageFolderObj(index).name ]);
@@ -334,8 +343,8 @@ for index = 1:imageCount
          imwrite(imageList{index}.bwImgThickDna , ['../pictures/bwImgThickDna/' 'me_bwThickDna' imageFolderObj(index).name ]);
          imwrite(imageList{index}.bwImgThinnedDnaRemoved , ['../pictures/bwImgThinnedDna/' 'me_thinnedDnaRemoved' imageFolderObj(index).name ]);
 %          imwrite(imfuse(imageList{index}.rawImage , imageList{index}.bwImgThinnedDna), ['../pictures/overlays_thin/' 'overlay_' imageFolderObj(index).name ]);
-         imwrite(imfuse(imageList{index}.rawImage , imageList{index}.bwImgThickDna), ['../pictures/overlays_thick/' 'overlay__' imageFolderObj(index).name ]);
-         showImage(imageList{index}, ['../pictures/overlays_thick/' 'overlays__' imageFolderObj(index).name ]);
+         imwrite(imfuse(imageList{index}.rawImage , imageList{index}.bwImgThickDna), ['../pictures/overlays_thick/' 'overlay_' imageFolderObj(index).name ]);
+         showImage(imageList{index}, ['../pictures/overlays_thick/' 'overlays_' imageFolderObj(index).name ], false, true, purgeInvalid);
          fusedImages(imageList{index},imageFolderObj(index).name, 1);
     end
     %% write output: image with detected objects, csv file with results for each object
@@ -344,7 +353,7 @@ for index = 1:imageCount
     else
        output_filename = [outputDirLinux imageFolderObj(index).name '.csv'];
     end
-    writeToCsvFile(output_filename, imageList{index});
+    writeToCsvFile(output_filename, imageList{index}, purgeInvalid);
     
     
     %% if enabled, write the exported pixel values of each DNA strand
