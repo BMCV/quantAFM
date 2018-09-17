@@ -1,6 +1,7 @@
 classdef Image
-    %IMAGE Summary of this class goes here
-    %   Detailed explanation goes here
+    %IMAGE Superclass, containing all images
+    %   A list of images is represented by individual images, each of which
+    %   contains several edited images of itself.
     
     properties
         freeDnaCount int32;

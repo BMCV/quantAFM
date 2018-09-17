@@ -161,7 +161,7 @@ for index = 1:imageCount
     
 
     if (binarizer == 1)
-        % directly calculate new images. Doesn't require threshold at all.
+        % directly calculate new images
         imageList{index}.bwImgThickDna = imbinarize(imageList{index}.filteredImage); 
         
     else

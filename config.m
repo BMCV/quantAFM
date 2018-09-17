@@ -38,7 +38,7 @@ maxRadius = 14.0625; % Default: 14.0625
 scansize = 10;
 
 % give the x-resolution of the images
-xResolution = 4096;
+xResolution = 2048;
 
 % enable to print pixel-to-nm ratio at the beginning.
 % Will be output only once, since the ratio is the same for all images of
@@ -97,16 +97,16 @@ threshAlgorithm1 = 'otsu'; % Default: 'otsu'
 threshAlgorithm2 = 'otsu'; % Default: 'otsu'
 % Upper bound for background noise, every value that is <=
 % backgroundThreshold is considered background
-backgroundThreshold = 25; % Default: 95
+backgroundThreshold = 75; % Default: 95
 
 % Specify the used preprocessing steps, i.e. the filter operations to be
 % performed on the images. 1 means enabled, 0 means disabled.
 % Median filtering:
 medfilter = 1;   % default 1
-lowpass = 1;s        % default 1
+lowpass = 1;        % default 1
 
 % Additionally, you can specify the used algorithm for length determination
-lengthAlgo = 'C'; 
+% lengthAlgo = 'C'; 
 % lengthAlgo = 'D';
 % Method C works with less variance on the test data, and is generally a
 % bit more robust,
@@ -142,7 +142,8 @@ exportReal = 1; % either 0 r 1
 exportDirWin = 'export\';
 exportDirLinux = 'export/';
 
-% Attention! The following value is only experimental!
-dkfz = 1;
+% Uses the more modern (and generally better-performing) function
+% 'imbinarize' if enabled. Else uses "manual" Otsu's method.
+binarizer = 1;
 
 %----------------------------------------------
