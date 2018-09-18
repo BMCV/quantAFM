@@ -337,12 +337,11 @@ for index = 1:imageCount
     else
          imwrite(imageList{index}.preprocImg , ['../pictures/preprocImg/' 'me_preproc' imageFolderObj(index).name ]);
          imwrite(imageList{index}.background , ['../pictures/background/' 'me_bckground' imageFolderObj(index).name ]);
-         imwrite(imageList{index}.bwImage , ['../pictures/bwImage/' 'me_bw' imageFolderObj(index).name ]);
+         imwrite(imageList{index}.bwImage , ['../pictures/bwImage/' 'bw' imageFolderObj(index).name ]);
          imwrite(imageList{index}.bwFilteredImage , ['../pictures/bwFilteredImage/' 'me_bwFiltered' imageFolderObj(index).name ]);
-         imwrite(imageList{index}.filteredImage , ['../pictures/filteredImage/' 'me_filtered' imageFolderObj(index).name ]);
-         imwrite(imageList{index}.bwImgThickDna , ['../pictures/bwImgThickDna/' 'me_bwThickDna' imageFolderObj(index).name ]);
+         imwrite(imageList{index}.filteredImage , ['../pictures/filteredImage/' 'filtered' imageFolderObj(index).name ]);
+         imwrite(imageList{index}.bwImgThickDna , ['../pictures/bwImgThickDna/' 'bwThickDna' imageFolderObj(index).name ]);
          imwrite(imageList{index}.bwImgThinnedRemoved , ['../pictures/bwImgThinnedDna/' 'thinnedDnaRemoved' imageFolderObj(index).name ]);
-%          imwrite(imfuse(imageList{index}.rawImage , imageList{index}.bwImgThinnedDna), ['../pictures/overlays_thin/' 'overlay_' imageFolderObj(index).name ]);
          imwrite(imfuse(imageList{index}.rawImage , imageList{index}.bwImgThickDna), ['../pictures/overlays_thick/' 'overlay_' imageFolderObj(index).name ]);
          showImage(imageList{index}, ['../pictures/overlays_thick/' 'overlays_' imageFolderObj(index).name ], showBB, showThin, purgeInvalid);
          fusedImages(imageList{index},imageFolderObj(index).name, 1);
@@ -353,7 +352,7 @@ for index = 1:imageCount
     else
        output_filename = [outputDirLinux imageFolderObj(index).name '.csv'];
     end
-    writeToCsvFile(output_filename, imageList{index}, purgeInvalid);
+    writeToCsvFile(output_filename, imageList{index}, purgeInvalid, verbose);
     
     
     %% if enabled, write the exported pixel values of each DNA strand

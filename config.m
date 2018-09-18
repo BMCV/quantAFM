@@ -70,6 +70,7 @@ purgeInvalid = 1;
 % Options for bounding box and thinned Images in the "imgFuse" folder:
 showBB = false; % Default: false
 showThin = true; % Default: true
+verbose = 1; % Default: 1
 
 % 1 if you want to recalculate the global threshold presets, 0 else
 % Set this only to 0 if you already processed your dataset

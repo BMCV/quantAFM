@@ -18,7 +18,7 @@ function done = showImage(imgObj, imgName, showBB, showThin, purgeInvalid )
 
     if (purgeInvalid)
         text(imgObj.region(imgObj.purged,1), imgObj.region(imgObj.purged,2), ...
-         num2str ((imgObj.purged)'), 'FontSize', 6);
+         num2str ((1: size(imgObj.purged))'), 'FontSize', 6);
     else
         text(imgObj.region(:,1), imgObj.region(:,2), ...
          num2str ((1: size(imgObj.region,1))'), 'FontSize', 6);
