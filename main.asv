@@ -332,7 +332,7 @@ for index = 1:imageCount
         imwrite(imageList{index}.bwImgThickDna , ['..\pictures\bwImgThickDna\' 'bwThickDna' imageFolderObj(index).name ]);
         imwrite(imageList{index}.bwImgThinnedRemoved , ['..\pictures\bwImgThinnedDna\' 'thinnedDnaRemoved' imageFolderObj(index).name ]);
         imwrite(imfuse(imageList{index}.rawImage , imageList{index}.bwImgThickDna), ['..\pictures\overlays_thick\' 'overlay_' imageFolderObj(index).name ]);
-        showImage(imageList{index}, ['..\pictures\overlays_thick\' 'overlays_' imageFolderObj(index).name ], showBB, showThin, purgeInvalid);
+        showImage(imageList{index}, ['..\pictures\overlays_thick\' 'overlays_' imageFolderObj(index).name ], false, true, purgeInvalid);
         fusedImages(imageList{index}, imageFolderObj(index).name, 0);
     else
          imwrite(imageList{index}.preprocImg , ['../pictures/preprocImg/' 'me_preproc' imageFolderObj(index).name ]);
@@ -341,10 +341,10 @@ for index = 1:imageCount
          imwrite(imageList{index}.bwFilteredImage , ['../pictures/bwFilteredImage/' 'me_bwFiltered' imageFolderObj(index).name ]);
          imwrite(imageList{index}.filteredImage , ['../pictures/filteredImage/' 'me_filtered' imageFolderObj(index).name ]);
          imwrite(imageList{index}.bwImgThickDna , ['../pictures/bwImgThickDna/' 'me_bwThickDna' imageFolderObj(index).name ]);
-         imwrite(imageList{index}.bwImgThinnedRemoved , ['../pictures/bwImgThinnedDna/' 'thinnedDnaRemoved' imageFolderObj(index).name ]);
+         imwrite(imageList{index}.bwImgThinnedDnaRemoved , ['../pictures/bwImgThinnedDna/' 'me_thinnedDnaRemoved' imageFolderObj(index).name ]);
 %          imwrite(imfuse(imageList{index}.rawImage , imageList{index}.bwImgThinnedDna), ['../pictures/overlays_thin/' 'overlay_' imageFolderObj(index).name ]);
          imwrite(imfuse(imageList{index}.rawImage , imageList{index}.bwImgThickDna), ['../pictures/overlays_thick/' 'overlay_' imageFolderObj(index).name ]);
-         showImage(imageList{index}, ['../pictures/overlays_thick/' 'overlays_' imageFolderObj(index).name ], showBB, showThin, purgeInvalid);
+         showImage(imageList{index}, ['../pictures/overlays_thick/' 'overlays_' imageFolderObj(index).name ], showBB, true, purgeInvalid);
          fusedImages(imageList{index},imageFolderObj(index).name, 1);
     end
     %% write output: image with detected objects, csv file with results for each object

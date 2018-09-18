@@ -67,6 +67,10 @@ onlyValid = 0; % Default: 1
 % Unlike onlyValid, will completely remove invalid pixels from output
 purgeInvalid = 1;
 
+% Options for bounding box and thinned Images in the "imgFuse" folder:
+showBB = false; % Default: false
+showThin = true; % Default: true
+
 % 1 if you want to recalculate the global threshold presets, 0 else
 % Set this only to 0 if you already processed your dataset
 setMeanThreshold = 1; % Default: 1
