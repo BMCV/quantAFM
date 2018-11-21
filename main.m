@@ -69,7 +69,7 @@ for index = 1:imageCount
     % the Dropbox folder store .DStore). Regexp returns index of first
     % occurrence, so in this case we want to exclude everything that starts
     % with it (i.e. index 1).
-    if regexp(imageFodlerObj(index).name, regexptranslate('wildcard', '.*')) == 1
+    if regexp(imageFolderObj(index).name, regexptranslate('wildcard', '.*')) == 1
         continue
     end
     

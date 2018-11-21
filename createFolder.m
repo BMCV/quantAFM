@@ -5,6 +5,7 @@ function [success] = createFolder(folderName)
     if ~ exist(fullfile(folderName), 'dir')
             mkdir(folderName)
     end
+    addpath(fullfile(folderName))
     success = 1;
 end
 
