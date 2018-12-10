@@ -332,15 +332,16 @@ for index = 1:imageCount
     
     if( strcmp(getenv('OS'),'Windows_NT'))
         % Check whether folder structure already exists:
-        createFolder('..\images\')
-        createFolder('..\images\preprocImg')
-        createFolder('..\images\background')
-        createFolder('..\images\bwImage')
-        createFolder('..\images\bwFilteredImage')
-        createFolder('..\images\filteredImage')
-        createFolder('..\images\bwImgThickDna')
-        createFolder('..\images\bwImgThinnedDna')
-        createFolder('..\images\overlays_thick')
+        createFolder('..\pictures\');
+        createFolder('..\pictures\preprocImg');
+        createFolder('..\pictures\background');
+        createFolder('..\pictures\bwImage');
+        createFolder('..\pictures\bwFilteredImage');
+        createFolder('..\pictures\filteredImage');
+        createFolder('..\pictures\bwImgThickDna');
+        createFolder('..\pictures\bwImgThinnedDna');
+        createFolder('..\pictures\overlays_thick');
+        createFolder('..\pictures\fused_images');
         
         % Write respective images to files
         imwrite(imageList{index}.preprocImg , ['..\pictures\preprocImg\' 'preproc' imageFolderObj(index).name ]);
@@ -355,15 +356,16 @@ for index = 1:imageCount
         fusedImages(imageList{index}, imageFolderObj(index).name, 0);
     else
         % Check whether folders already exist
-        createFolder('../images/')
-        createFolder('../images/preprocImg')
-        createFolder('../images/background')
-        createFolder('../images/bwImage')
-        createFolder('../images/bwFilteredImage')
-        createFolder('../images/filteredImage')
-        createFolder('../images/bwImgThickDna')
-        createFolder('../images/bwImgThinnedDna')
-        createFolder('../images/overlays_thick')
+        createFolder('../pictures/');
+        createFolder('../pictures/preprocImg');
+        createFolder('../pictures/background');
+        createFolder('../pictures/bwImage');
+        createFolder('../pictures/bwFilteredImage');
+        createFolder('../pictures/filteredImage');
+        createFolder('../pictures/bwImgThickDna');
+        createFolder('../pictures/bwImgThinnedDna');
+        createFolder('../pictures/overlays_thick');
+        createFolder('../pictures/fused_images');
         
         % Write respective images to files
         imwrite(imageList{index}.preprocImg , ['../pictures/preprocImg/' 'preproc' imageFolderObj(index).name ]);

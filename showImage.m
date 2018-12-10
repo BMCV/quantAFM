@@ -16,9 +16,11 @@ function done = showImage(imgObj, imgName, showBB, showThin, purgeInvalid )
     viscircles(imgObj.region, rad,...
         'LineWidth', 0.5, 'EnhanceVisibility', false);
 
+    % for purged files, the purge object is transposed, so take another
+    % dimension.
     if (purgeInvalid)
         text(imgObj.region(imgObj.purged,1), imgObj.region(imgObj.purged,2), ...
-         num2str ((1: size(imgObj.purged))'), 'FontSize', 6);
+         num2str ((1: size(imgObj.purged,2))'), 'FontSize', 6);
     else
         text(imgObj.region(:,1), imgObj.region(:,2), ...
          num2str ((1: size(imgObj.region,1))'), 'FontSize', 6);
