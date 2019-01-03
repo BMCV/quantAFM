@@ -14,7 +14,7 @@ workingDirWindows = '..\denoised_imgs';
 workingDirLinux = '../denoised_imgs';
 % Respective subfolder whose pictures are to be analyzed with regard to the
 % current operating system
-currentImageDirWindows = '..\denoised_imgs\p_Wildtyp/';
+currentImageDirWindows = '..\denoised_imgs\p_Wildtyp\';
 currentImageDirLinux = '../denoised_imgs/p_Wildtyp/';
 
 % Set to 1 if the main DNA backbone should be reconstructed after thinning 
@@ -32,6 +32,15 @@ maxLength_bound = 510; % Default: 200
 % set min and max bounds for radius of nuclei in nm
 minRadius = 9.375; % Default: 9.375
 maxRadius = 14.0625; % Default: 14.0625
+
+% parameters for the circle detection for findNucleii(). Uses
+% imfindcircles internall. See
+% https://de.mathworks.com/help/images/ref/imfindcircles.html?s_tid=doc_ta#bta7gun-1-Sensitivity
+% and
+% https://de.mathworks.com/help/images/ref/imfindcircles.html?s_tid=doc_ta#bta7gun-1-EdgeThreshold
+% for detailed description of the respective parameters.
+sensitivity = 0.96; % default: 0.96
+edgeThreshold = 0.3; % default: 0.3
 
 % set length of the picture scanline in x-Direction, i.e. from left to
 % right in mikrometers

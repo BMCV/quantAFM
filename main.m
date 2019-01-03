@@ -1,5 +1,7 @@
 config;
-global PIXELLENGTH PIXELPERNM MINLENGTH_FREE MAXLENGTH_FREE MINLENGTH_BOUND MAXLENGTH_BOUND MINRADIUS MAXRADIUS RECOVERBACKBONE REALVALUE EXPORTREAL EXPORTONLYVALID;
+global PIXELLENGTH PIXELPERNM MINLENGTH_FREE MAXLENGTH_FREE MINLENGTH_BOUND ...
+        MAXLENGTH_BOUND MINRADIUS MAXRADIUS RECOVERBACKBONE REALVALUE ...
+        EXPORTREAL EXPORTONLYVALID SENSITIVITY EDGETHRESHOLD;
 PIXELLENGTH = (scansize * 1000) / xResolution;
 PIXELPERNM = 1 / PIXELLENGTH;
 
@@ -11,6 +13,10 @@ MAXLENGTH_BOUND = maxLength_bound * PIXELPERNM;
 
 MINRADIUS = floor(minRadius*PIXELPERNM);
 MAXRADIUS = ceil(maxRadius*PIXELPERNM);
+
+SENSITIVITY = sensitivity;
+
+EDGETHRESHOLD = edgeThreshold;
 
 RECOVERBACKBONE = recoverBackbone;
 
@@ -35,7 +41,7 @@ addpath(genpath('LengthEstimation'));
 imageFolderObj = dir(currentImageDir);
 % exclude potentially hazardous files from the current folder.
 imageFolderObj = imageFolderObj(~ismember({imageFolderObj.name}, {'.', '..', '.DS_Store'}));
-imageCount = size(dir(imageFolderObj),1);
+imageCount = size(imageFolderObj,1);
 imageList = cell(1,imageCount);
 
 manThresh = backgroundThreshold;
