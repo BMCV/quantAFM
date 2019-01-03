@@ -7,7 +7,6 @@ warning on
 if numel(centers)~=0
     centers1 = round(centers);
 
-    % img_bin(diag(img_bin(centers(:,1),centers(:,2)))==0)=0;
     for i=1:size(centers,1)
         if img_bin(centers1(i,2),centers1(i,1)) == 0
             centers(i,:) = 0;

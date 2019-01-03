@@ -17,7 +17,9 @@ end
 
 % cut out nucleo
 dnaImgThinned = dna.bwImageThinnedRemoved;
-mask = bsxfun(@plus, ((1:dna.sizeImg(2)) - dna.attachedNukleo{1}.localCenter(1)).^2, ((transpose(1:dna.sizeImg(1)) - dna.attachedNukleo{1}.localCenter(2)).^2)) < dna.attachedNukleo{1}.rad^2;
+mask = bsxfun(@plus, ((1:dna.sizeImg(2)) - dna.attachedNukleo{1}.localCenter(1)).^2, ...
+             ((transpose(1:dna.sizeImg(1)) - dna.attachedNukleo{1}.localCenter(2)).^2)) ...
+             < dna.attachedNukleo{1}.rad^2;
 dnaImgThinned(mask) = 0;
 
 % Get the two branches
@@ -46,7 +48,9 @@ angle1 = real(acosd(a*b'/(norm(a)*norm(b))));
 
 %% case 2: angle between lines fitted on arms
 % Delete everything outside of "outside circle"
-mask = bsxfun(@plus, ((1:dna.sizeImg(2)) - dna.attachedNukleo{1}.localCenter(1)).^2, ((transpose(1:dna.sizeImg(1)) - dna.attachedNukleo{1}.localCenter(2)).^2)) < (dna.attachedNukleo{1}.rad+5)^2;
+mask = bsxfun(@plus, ((1:dna.sizeImg(2)) - dna.attachedNukleo{1}.localCenter(1)).^2, ...
+            ((transpose(1:dna.sizeImg(1)) - dna.attachedNukleo{1}.localCenter(2)).^2)) ...
+            <(dna.attachedNukleo{1}.rad+5)^2;
 dnaImgThinned = dnaImgThinned.*mask;
 
 % Get the two branch stumps

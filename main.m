@@ -51,13 +51,10 @@ end
 if (maxSize == -1)
     maxSize = 0.85*xResolution;
 end
-    
 
 par = parallel; %bool wether to use multiple cores or not
 % gpu = gpu; %bool wether to use gpu or not
 
-    
-    
 for index = 1:imageCount
     %% this is required for Archlinux
      if or( strcmp(imageFolderObj(index).name , '.'), strcmp(imageFolderObj(index).name, '..') )
@@ -395,5 +392,4 @@ for index = 1:imageCount
     
 end
 
-%end
 

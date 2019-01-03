@@ -3,12 +3,6 @@ classdef (Abstract) DNA
     %   Detailed explanation goes here
     
     properties
-        % update this to global properties, but isn't currently used
-        % anyways
-%         Upper boundary for DNA length
-        MAX_LENGTH = 200;
-%         Lower boundary for DNA length
-        MIN_LENGTH = 20;
 %  Number of DNA strand
         number;
 %  Length of Dna strand
@@ -20,7 +14,7 @@ classdef (Abstract) DNA
 %           - too long (> 200 pixel)
 %           - ... (more criteria?)
         isValid;
-%         center of mass of DNA strand, respect to upper left corner
+%        center of mass of DNA strand, respect to upper left corner
         position = zeros(1,2) ; %center of mass
 %        Boolean, is 1 if DNA has nucleus, else 0
         hasNucleus;
