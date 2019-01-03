@@ -1,1 +1,1 @@
-FOR /F "delims=|" %%i IN ('dir /b *.tif *.bmp *.pgm *.png') DO NonLocalFiltering.exe %%i
+FOR /F "delims=|" %%i IN ('dir /b *.tif *.bmp *.pgm *.png') DO NonLocalFiltering.exe %%i 2.0 17 21

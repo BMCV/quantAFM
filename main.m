@@ -33,7 +33,9 @@ end
 
 addpath(genpath('LengthEstimation'));
 imageFolderObj = dir(currentImageDir);
-imageCount = size(dir(currentImageDir),1);
+% exclude potentially hazardous files from the current folder.
+imageFolderObj = imageFolderObj(~ismember({imageFolderObj.name}, {'.', '..', '.DS_Store'}));
+imageCount = size(dir(imageFolderObj),1);
 imageList = cell(1,imageCount);
 
 manThresh = backgroundThreshold;
@@ -64,14 +66,7 @@ for index = 1:imageCount
     
     %[image,colorMap] = imread(strcat(currentImageDir, imageFolderObj(index).name));
     %% until here
-    
-    % The following should fix any folder names that start with a . (like
-    % the Dropbox folder store .DStore). Regexp returns index of first
-    % occurrence, so in this case we want to exclude everything that starts
-    % with it (i.e. index 1).
-    if regexp(imageFolderObj(index).name, regexptranslate('wildcard', '.*')) == 1
-        continue
-    end
+
     
     [image,colorMap] = imread(imageFolderObj(index).name);
     imageList{index} = Image(image, colorMap);
@@ -214,22 +209,22 @@ for index = 1:imageCount
     if ~isempty(centers)
         imageList{index}.indexcenters = (centers(:,1)-1)*m + centers(:,2) ;
     end
-    %     Go through all objects within the connected Components and create DNA
-    %     Objects for them. DNABound if it is connected to a Nukleii and
-    %     DNAFree if not
+    % Go through all objects within the connected Components and create DNA
+    % Objects for them. DNABound if it is connected to a Nukleii and
+    % DNAFree if not
     for dnaIndex = 1:dnaCount
-        %         Check if there are any Nukleii detected on the bwThinnedDNAImg
+        % Check if there are any Nukleii detected on the bwThinnedDNAImg
         if ~isempty(centers)
-            %             Check whether any of the Nukleii are attached to the current
-            %             DNA strand(connected Component)
+            % Check whether any of the Nukleii are attached to the current
+            % DNA strand(connected Component)
             imageList{index}.contains = uint8(ismember(imageList{index}.indexcenters,...
                 imageList{index}.connectedThickDna.PixelIdxList{dnaIndex}));     
         end
-%         Calculate Bounding Box for DNA strand.
+        % Calculate Bounding Box for DNA strand.
         bBox = imageList{index}.boundingBoxDna(dnaIndex);
 
-%       create small detail image of current DNA fragment using the
-%       calculated bounding box
+        % create small detail image of current DNA fragment using the
+        % calculated bounding box
         detail_thickDna = imageList{index}.bwImgThickDna(...
             round(bBox.BoundingBox(2)): floor(bBox.BoundingBox(2)+bBox.BoundingBox(4)),...
             round(bBox.BoundingBox(1)): floor(bBox.BoundingBox(1)+bBox.BoundingBox(3)));
@@ -239,34 +234,34 @@ for index = 1:imageCount
             round(bBox.BoundingBox(1)): floor(bBox.BoundingBox(1)+bBox.BoundingBox(3)));
         bBox.BoundingBox(1) = round(bBox.BoundingBox(1));
         bBox.BoundingBox(2) = round(bBox.BoundingBox(2));
-        %         Check if there was a Nukleii found that is attached to this
-        %         connectedComponent
+        % Check if there was a Nukleii found that is attached to this
+        % connectedComponent
         if sum(imageList{index}.contains)~= 0
-            %             find all Nukleii that are attached to this connected
-            %             Component
+            % find all Nukleii that are attached to this connected
+            % Component
             nukleoIndecies = find(imageList{index}.contains);
-            %             create a Nukleii Object for all Nukleii found
+            % create a Nukleii Object for all Nukleii found
             nukleos = cell(1,numel(nukleoIndecies));
             
-            %             Set all numbers of current DNA to all nukleos attached
+            % Set all numbers of current DNA to all nukleos attached
             imageList{index}.attachedDNA(nukleoIndecies) = dnaIndex;
             for i=1:numel(nukleoIndecies)
-                %                 Save all Nukleii found in a Cell
+                % Save all Nukleii found in a Cell
                 nukleos{i} = nukleo(imageList{index}.centers(nukleoIndecies(i),:), ...
                     imageList{index}.radii(nukleoIndecies(i),:), dnaIndex, ...
                     imageList{index}.centers(nukleoIndecies(i),:) - bBox.BoundingBox(1:2));
             end
             
-%             create DNABound Object for every Object detected in the Image
-%             Set Type,ConnectedComponents, position and subImage from
-%             Bounding box
-             imageList{index}.dnaList{dnaIndex} = DnaBound(...
-                 imageList{index}.connectedThickDna.PixelIdxList{dnaIndex}, ...
-                 detail_thickDna, ...
-                 detail_rawDna, ...
-                 imageList{index}.region(dnaIndex,:),...
-                 1,...
-                 nukleos);
+            % create DNABound Object for every Object detected in the Image
+            % Set Type,ConnectedComponents, position and subImage from
+            % Bounding box
+            imageList{index}.dnaList{dnaIndex} = DnaBound(...
+                imageList{index}.connectedThickDna.PixelIdxList{dnaIndex}, ...
+                detail_thickDna, ...
+                detail_rawDna, ...
+                imageList{index}.region(dnaIndex,:),...
+                1,...
+                nukleos);
             %%%%TODO%%%%
             % Here, we could check the length of the dnaObject's
             % pixelIdxList' length. If it is below a certain value or
@@ -277,14 +272,14 @@ for index = 1:imageCount
             % if after length determination the DNA backbone does not fit
             % the generally specified DNA length criteria
             imageList{index}.dnaList{dnaIndex} = determineDnaLength2(imageList{index}.dnaList{dnaIndex}, true);
-            %          Calculate angle between the Nukleii and the arms
-            %          (the DNA Arms)
+            % Calculate angle between the Nukleii and the arms
+            % (the DNA Arms)
             [ imageList{index}.dnaList{dnaIndex}.angle1, ...
                 imageList{index}.dnaList{dnaIndex}.angle2] = ...
             measure_angle(imageList{index}.dnaList{dnaIndex});
         else
-            %             When no Nukleii is attached, Create DNAFree Object and set
-            %             Type, ConnectedComponents and position 
+            % When no Nukleii is attached, Create DNAFree Object and set
+            % Type, ConnectedComponents and position 
             imageList{index}.dnaList{dnaIndex} = DnaFree(...
                 imageList{index}.connectedThickDna.PixelIdxList{dnaIndex}, ...
                 detail_thickDna,...
@@ -294,7 +289,7 @@ for index = 1:imageCount
             imageList{index}.dnaList{dnaIndex} = determineDnaLength2(imageList{index}.dnaList{dnaIndex}, false);
 
         end
-        %         Set the dnaIndex as Number for the DNA strand object
+        % Set the dnaIndex as Number for the DNA strand object
         imageList{index}.dnaList{dnaIndex}.number = dnaIndex;
         imageList{index}.dnaList{dnaIndex}.bBox = bBox;
     end

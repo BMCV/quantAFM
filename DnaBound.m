@@ -29,11 +29,7 @@ classdef DnaBound < DNA
                 dnaObj.bwImage(CC.PixelIdxList{idx}) = true;
 %%               Thin the subImage with Matlab function
                 dnaObj.bwImageThinned = bwmorph(dnaObj.bwImage,'thin',Inf);
-%%               ... using user-written implementation
-%                dnaObj.bwImageThinned = thinningZhangSuen(dnaObj.bwImage);
-                % visualize
-                % dna1 = bwmorph(dnaObj.bwImage,'thin',Inf);dna2 = thinningZhangSuen(dnaObj.bwImage);figure; subplot(3,1,1); imshow(dna1); subplot(3,1,2); imshow(dna2); subplot(3,1,3); imshow(dnaObj.bwImage);
-
+                
 %               Calculate connected Components PixelIdxList
                 connectedThinned = bwconncomp(dnaObj.bwImageThinned);
                 if(~isempty(connectedThinned.PixelIdxList))
