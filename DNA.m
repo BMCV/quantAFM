@@ -32,6 +32,8 @@ classdef (Abstract) DNA
         bwImageThinned;
 %         bwImage with removes arms
         bwImageThinnedRemoved
+%         for the short filament structure when using averaging
+        bwImageThinnedRemovedShort
 %         size of the subImage/bwImage
         sizeImg
 %         Bounding Box struct

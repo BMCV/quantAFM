@@ -19,7 +19,12 @@ currentImageDirLinux = '../denoised_imgs/p_Wildtyp/';
 
 % Set to 1 if the main DNA backbone should be reconstructed after thinning 
 % (i.e. recovery of 'lost' pixels ,0 else
-recoverBackbone = 0; %Default: 1
+recoverBackbone = 1; % Default: 1
+
+% Whether or not to average the length of the re-estimated parameter,
+% and the long parameter. Should only be 1 if recoverBackbone is also
+% enabled!
+averageLength = 1; % Default: 0
 
 % set min and max length for recognized DNA length without histones in nm
 minLength_free = 100; % Default: 180
@@ -42,12 +47,21 @@ maxRadius = 14.0625; % Default: 14.0625
 sensitivity = 0.96; % default: 0.96
 edgeThreshold = 0.3; % default: 0.3
 
+% Number of pixels to increase the radius when looking for the secondary
+% angle measurement. This is rather hard to explain, but in certain
+% instances, the intersection of two lines that are computed can be "on the
+% wrong side", which means that 180°-x is returned instead.
+angleRadius = 5; % default: 5 (value in px!)
+
+% Threshold for which to check small angles for "correctness".
+angleThreshold = 45; % default: 45
+
 % set length of the picture scanline in x-Direction, i.e. from left to
 % right in mikrometers
-scansize = 10;
+scansize = 4; % in mikrometers
 
 % give the x-resolution of the images
-xResolution = 1280;
+xResolution = 1920; % in pixel
 
 % enable to print pixel-to-nm ratio at the beginning.
 % Will be output only once, since the ratio is the same for all images of

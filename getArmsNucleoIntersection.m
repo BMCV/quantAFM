@@ -1,7 +1,11 @@
-function arms = getArmsNucleoIntersection(dnaObj)
+function arms = getArmsNucleoIntersection(dnaObj, short)
     arms = 0;
     % cut out nucleo
-    dnaImgThinned = dnaObj.bwImageThinnedRemoved;
+    if short == 0
+        dnaImgThinned = dnaObj.bwImageThinnedRemoved;
+    else
+        dnaImgThinned = dnaObj.bwImageThinnedRemovedShort;
+    end
     mask = bsxfun(@plus, ((1:dnaObj.sizeImg(2)) - ...
         dnaObj.attachedNukleo{1}.localCenter(1)).^2, ...
         ((transpose(1:dnaObj.sizeImg(1)) - ...

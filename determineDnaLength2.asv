@@ -75,17 +75,16 @@ function [dnaObj] = determineDnaLength2(dnaObj, dnaHasNucleos)
             if (AVERAGELENGTH)
                 arms_short = getArmsNucleoIntersection(dnaObj, 1);
             end
-            if(arms.NumObjects == 0 || arms.NumObjects ~= arms_short.NumObjects)
+            if(arms.NumObjects == 0)
+                fragmentLen{1} = 0;
                 dnaObj.isValid = 0;
             else
                 for armIdx = 1:arms.NumObjects % for each arm, ...
                     currArm = arms.PixelIdxList{armIdx}; % ... get PixelIdxList ...
                     fragmentLen{armIdx+1} = calcKulpaLength(currArm, bwImgThinnedRemoved); % ... and calc its length
-                    if (AVERAGELENGTH) % ... and average, if wanted
-                        currArm_short = arms_short.PixelIdxList{armIdx};
-                        fragmentLen{armIdx+1} = (fragmentLen{armIdx+1}+...
-                            calcKulpaLength(currArm_short, bwImgThinnedRemoved))/2;
-                    end
+                    if (AVERAGELENGTH)
+                        fragmentLen{armIdx+1} = (fragmentLen{armIdx+1}+ calcKulpaLength(
+                    end                    
                 end
             end
 

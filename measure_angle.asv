@@ -5,7 +5,7 @@ warning off;
 angle1 = 0;
 angle2 = 0;
 
-global ANGLERADIUS ANGLETHRESHOLD;
+global ANGLERADIUS;
 
     % more than one center or no center 
 if numel(dna.attachedNukleo) ~= 1    
@@ -92,12 +92,8 @@ if  size(arms.PixelIdxList{1},1)>1 && size(arms.PixelIdxList{2},1)>1
         b = centers-p(2,:);
         % get angle
         angle2 = acosd(a*b'/(norm(a)*norm(b)));
-        % Under certain circumstances, small angles can be "inverted", i.e.
-        % just 180-X the degree we actually want. In that case, we simply
-        % invert it again. A rule of thumb is that we can process it in a
-        % way were the polyfit is pointing towards a direction that is
-        % "somewhat similar" (i.e. dotproduct > 0).
-        if angle2 < ANGLETHRESHOLD
+        % Under certain circumstances, the angle can be "inverted", i.e.
+        if angle2 < 45
             % show Angle
             angle_dot = dot(p1/sum(p1), p2/sum(p2));
             if angle_dot < 0

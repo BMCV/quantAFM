@@ -1,1 +1,14 @@
 Lina Gundelwein, Philip Hausner, Philipp Jung, Dennis Aumiller, Christian Schütz
+
+For future work, there are some things to explore:
+- imfindcircles() lists a cryptic line in their description:
+  "imfindcircles preprocesses binary (logical) images to improve the accuracy of the result. 
+   converts truecolor images to grayscale using the function rgb2gray before processing them."
+  This could mean that we could get potentially better results if we preprocess the images
+  by overlaying the grayscale image with the binary mask, and then run it on that image.
+
+- The re-estimation of the length is currently done based on a very crude method,
+  and could potentially be improved by using a kind of "point mirror" approach
+  on the last pixel. Then again, there are probably other ways to do this, too.
+
+- Only export a certain value range of lengths for different filaments.
