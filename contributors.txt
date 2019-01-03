@@ -12,3 +12,7 @@ For future work, there are some things to explore:
   on the last pixel. Then again, there are probably other ways to do this, too.
 
 - Only export a certain value range of lengths for different filaments.
+
+- Angles of the second method (fitting a line) have a problem in cases where there
+  is only a minor change in the x axis. The fit would be better if fit to the
+  y axis in that case, but that makes estimating a real pain.
