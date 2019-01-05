@@ -52,6 +52,10 @@ edgeThreshold = 0.3; % default: 0.3
 % instances, the intersection of two lines that are computed can be "on the
 % wrong side", which means that 180°-x is returned instead.
 angleRadius = 5; % default: 5 (value in px!)
+% Below means that the angleRadius will be increased until there is an
+% intersection between the radius and the object.
+growing = 1; % default: 0
+
 
 % Threshold for which to check small angles for "correctness".
 angleThreshold = 45; % default: 45

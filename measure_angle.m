@@ -5,7 +5,7 @@ warning off;
 angle1 = 0;
 angle2 = 0;
 
-global ANGLERADIUS ANGLETHRESHOLD;
+global ANGLERADIUS ANGLETHRESHOLD GROWING;
 
     % more than one center or no center 
 if numel(dna.attachedNukleo) ~= 1    
@@ -50,14 +50,37 @@ angle1 = real(acosd(a*b'/(norm(a)*norm(b))));
 
 %% case 2: angle between lines fitted on arms
 % Delete everything outside of "outside circle"
+
+
+% need this for "growing"
+if (GROWING)
+    dnaImgThinned_org = dnaImgThinned;
+end
+
+radius = dna.attachedNukleo{1}.rad + ANGLERADIUS;
 mask = bsxfun(@plus, ((1:dna.sizeImg(2)) - dna.attachedNukleo{1}.localCenter(1)).^2, ...
             ((transpose(1:dna.sizeImg(1)) - dna.attachedNukleo{1}.localCenter(2)).^2)) ...
-            <(dna.attachedNukleo{1}.rad+ANGLERADIUS)^2;
+            <radius^2;
 dnaImgThinned = dnaImgThinned.*mask;
-
-% Get the two branch stumps
 arms = bwconncomp(dnaImgThinned);
 
+% When "growing" is set, increase the radius of the circle until we
+% intersect the object.
+if (GROWING)
+    i = 1;
+    while numel(arms.PixelIdxList) < 2
+        radius = i*ANGLERADIUS/2 + dna.attachedNukleo{1}.rad + ANGLERADIUS;
+        mask = bsxfun(@plus, ((1:dna.sizeImg(2)) - dna.attachedNukleo{1}.localCenter(1)).^2, ...
+                ((transpose(1:dna.sizeImg(1)) - dna.attachedNukleo{1}.localCenter(2)).^2)) ...
+                <radius^2;
+        dnaImgThinned = dnaImgThinned_org.*mask;
+        
+        arms = bwconncomp(dnaImgThinned);
+        i = i+1;
+    end
+end
+
+% Return in both cases if we still have a wrong number of elements.
 if  numel(arms.PixelIdxList) ~= 2
     return
 end
