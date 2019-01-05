@@ -58,6 +58,9 @@ dnaImgThinned = dnaImgThinned.*mask;
 % Get the two branch stumps
 arms = bwconncomp(dnaImgThinned);
 
+if  numel(arms.PixelIdxList) ~= 2
+    return
+end
 
 if  size(arms.PixelIdxList{1},1)>1 && size(arms.PixelIdxList{2},1)>1
     % get coordinates of arms
