@@ -14,7 +14,7 @@ workingDirWindows = '..\denoised_imgs';
 workingDirLinux = '../denoised_imgs';
 % Respective subfolder whose pictures are to be analyzed with regard to the
 % current operating system
-currentImageDirWindows = '..\denoised_imgs\p_Wildtyp\';
+currentImageDirWindows = '..\denoised_imgs\test\';
 currentImageDirLinux = '../denoised_imgs/p_Wildtyp/';
 
 % Set to 1 if the main DNA backbone should be reconstructed after thinning 
@@ -27,12 +27,12 @@ recoverBackbone = 1; % Default: 1
 averageLength = 1; % Default: 0
 
 % set min and max length for recognized DNA length without histones in nm
-minLength_free = 100; % Default: 180
-maxLength_free = 530; % Default: 250
+minLength_free = 180; % Default: 180
+maxLength_free = 220; % Default: 250
 
 % set min and max length for recognized DNA length with attached histones in nm
 minLength_bound = 90; % Default: 100
-maxLength_bound = 510; % Default: 200
+maxLength_bound = 200; % Default: 200
 
 % set min and max bounds for radius of nuclei in nm
 minRadius = 9.375; % Default: 9.375
@@ -62,10 +62,10 @@ angleThreshold = 45; % default: 45
 
 % set length of the picture scanline in x-Direction, i.e. from left to
 % right in mikrometers
-scansize = 4; % in mikrometers
+scansize = 2; % in mikrometers
 
 % give the x-resolution of the images
-xResolution = 1920; % in pixel
+xResolution = 1024; % in pixel
 
 % enable to print pixel-to-nm ratio at the beginning.
 % Will be output only once, since the ratio is the same for all images of
@@ -89,10 +89,10 @@ maxSize = -1; % -1 default, else positive integer
 
 % only output objects for which all calculations ended successfully if 1, 0
 % else
-onlyValid = 0; % Default: 1
+onlyValid = 1; % Default: 1
 
 % Unlike onlyValid, will completely remove invalid pixels from output
-purgeInvalid = 1;
+purgeInvalid = 0;
 
 % Options for bounding box and thinned Images in the "imgFuse" folder:
 showBB = false; % Default: false
@@ -132,7 +132,7 @@ threshAlgorithm1 = 'otsu'; % Default: 'otsu'
 threshAlgorithm2 = 'otsu'; % Default: 'otsu'
 % Upper bound for background noise, every value that is <=
 % backgroundThreshold is considered background
-backgroundThreshold = 75; % Default: 95
+backgroundThreshold = 90; % Default: 95
 
 % Specify the used preprocessing steps, i.e. the filter operations to be
 % performed on the images. 1 means enabled, 0 means disabled.

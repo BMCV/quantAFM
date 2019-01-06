@@ -34,7 +34,7 @@ function done = writeToCsvFile(filename, imageObj, purgeInvalid, verbose)
         if (purgeInvalid)
             curr = imageObj.dnaList{purged_iterator(dnaIndex)};
         else
-            curr = immageObj.dnaList{dnaIndex};
+            curr = imageObj.dnaList{dnaIndex};
         end
         number(dnaIndex,1) = curr.number;
         xm(dnaIndex,1) = curr.position(2);

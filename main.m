@@ -282,6 +282,7 @@ for index = 1:imageCount
             imageList{index}.dnaList{dnaIndex} = determineDnaLength2(imageList{index}.dnaList{dnaIndex}, true);
             % Calculate angle between the Nukleii and the arms
             % (the DNA Arms)
+%             index
             [ imageList{index}.dnaList{dnaIndex}.angle1, ...
                 imageList{index}.dnaList{dnaIndex}.angle2] = ...
             measure_angle(imageList{index}.dnaList{dnaIndex});
