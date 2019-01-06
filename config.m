@@ -24,7 +24,7 @@ recoverBackbone = 1; % Default: 1
 % Whether or not to average the length of the re-estimated parameter,
 % and the long parameter. Should only be 1 if recoverBackbone is also
 % enabled!
-averageLength = 1; % Default: 0
+averageLength = 0; % Default: 0
 
 % set min and max length for recognized DNA length without histones in nm
 minLength_free = 180; % Default: 180

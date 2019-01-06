@@ -74,6 +74,8 @@ function [dnaObj] = determineDnaLength2(dnaObj, dnaHasNucleos)
             % no arms found => only big blob that resembles nucleus
             if (AVERAGELENGTH)
                 arms_short = getArmsNucleoIntersection(dnaObj, 1);
+            else
+                arms_short = arms;
             end
             if(arms.NumObjects == 0 || arms.NumObjects ~= arms_short.NumObjects)
                 dnaObj.isValid = 0;
