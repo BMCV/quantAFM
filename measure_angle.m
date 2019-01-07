@@ -53,26 +53,34 @@ angle1 = real(acosd(a*b'/(norm(a)*norm(b))));
 
 
 % need this for "growing"
-
-dnaImgThinned = dna.bwImageThinnedRemoved;
-radius = dna.attachedNukleo{1}.rad+ ANGLERADIUS/2;
+dnaImgThinned_org = dnaImgThinned;
+radius = dna.attachedNukleo{1}.rad+ ANGLERADIUS;
 mask = bsxfun(@plus, ((1:dna.sizeImg(2)) - dna.attachedNukleo{1}.localCenter(1)).^2, ...
             ((transpose(1:dna.sizeImg(1)) - dna.attachedNukleo{1}.localCenter(2)).^2)) ...
             <radius^2;
-dnaImgThinned(mask) = 0;
+dnaImgThinned = dnaImgThinned.*mask;
 arms = bwconncomp(dnaImgThinned);
 
 % When "growing" is set, increase the radius of the circle until we
 % intersect the object.
 if (GROWING)
-%     mask_org = mask;
-    i = 2;
-    while numel(arms.PixelIdxList) < 2 && i<6
+    % Start with 1.5x the original radius enlargement.
+    i = 1;
+    while numel(arms.PixelIdxList) < 2 && i<4
+        % We now have two separate masks. The inner one "grows" the
+        % nucleosome radius, whereas the outer one determines the elements
+        % to include when looking for the elements that are used to
+        % determine fitting.
         radius = i*ANGLERADIUS/2 + dna.attachedNukleo{1}.rad;
-        mask = bsxfun(@plus, ((1:dna.sizeImg(2)) - dna.attachedNukleo{1}.localCenter(1)).^2, ...
+        mask1 = bsxfun(@plus, ((1:dna.sizeImg(2)) - dna.attachedNukleo{1}.localCenter(1)).^2, ...
                 ((transpose(1:dna.sizeImg(1)) - dna.attachedNukleo{1}.localCenter(2)).^2)) ...
                 <radius^2;
-        dnaImgThinned(mask) = 0;
+        mask2 = bsxfun(@plus, ((1:dna.sizeImg(2)) - dna.attachedNukleo{1}.localCenter(1)).^2, ...
+                ((transpose(1:dna.sizeImg(1)) - dna.attachedNukleo{1}.localCenter(2)).^2)) ...
+                <(radius+ANGLERADIUS)^2;
+        dnaImgThinned = dnaImgThinned_org;
+        dnaImgThinned(mask1) = 0;
+        dnaImgThinned = dnaImgThinned.*mask2;
         
         arms = bwconncomp(dnaImgThinned);
         i = i+1;
