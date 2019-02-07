@@ -8,14 +8,27 @@
 % same scansize and resolution.
 %----------------------------------------------
 
+% The current file's path, to get the respective folder structure correctly
+% set up.
+[filepath, ~, ~] = fileparts(mfilename('fullpath'));
+
 % Main picture directory, all pictures should be in the respective
-% subfolders with regard to the current operating system
-workingDirWindows = '..\denoised_imgs';
-workingDirLinux = '../denoised_imgs';
+% subfolders with regard to the current file path (config.m)
+workingDir = fullfile(filepath, '..', 'denoised_imgs');
+
+% Output directory where all the intermediate pictures will be dumped.
+outputDir = fullfile(filepath, '..', 'pictures');
+
 % Respective subfolder whose pictures are to be analyzed with regard to the
-% current operating system
-currentImageDirWindows = '..\denoised_imgs\test\';
-currentImageDirLinux = '../denoised_imgs/p_Wildtyp/';
+% current operating system. Separate every folder by a comma, to make sure
+% that this feature works correctly cross-platform.
+currentImageDir = fullfile(filepath, '..', 'denoised_imgs', 'test');
+
+% Output folder for the numerical data.
+% The output csv files will be placed in the appropriate subfolder. This
+% serves the compact view of files, and avoids file cluttering
+% default value is "output", inside the execution folder!
+csvDir = fullfile(filepath, 'output');
 
 % Set to 1 if the main DNA backbone should be reconstructed after thinning 
 % (i.e. recovery of 'lost' pixels ,0 else
@@ -50,7 +63,7 @@ edgeThreshold = 0.3; % default: 0.3
 % Number of pixels to increase the radius when looking for the secondary
 % angle measurement. This is rather hard to explain, but in certain
 % instances, the intersection of two lines that are computed can be "on the
-% wrong side", which means that 180°-x is returned instead.
+% wrong side", which means that 180ï¿½-x is returned instead.
 angleRadius = 5; % default: 5 (value in px!)
 % Below means that the angleRadius will be increased until there is an
 % intersection between the radius and the object.
@@ -115,12 +128,6 @@ parallel = 0; % Default: 0
 % CUDA versions are supported
 gpu = 0; % Default: 0
 
-% output folder
-% the output csv files will be placed in the appropriate subfolder. This
-% serves the compact view of files, and avoids file cluttering
-% default value is "output"
-outputDirWin = 'output\';
-outputDirLinux = 'output/';
 
 %----------------------------------------------
 % WARNING: All of the following settings are only for the experienced user
@@ -174,8 +181,7 @@ exportReal = 1; % either 0 r 1
 % pixel values.
 
 % the default subfolder is "export".
-exportDirWin = 'export\';
-exportDirLinux = 'export/';
+exportDir = fullfile(filepath, 'export');
 
 % Uses the more modern (and generally better-performing) function
 % 'imbinarize' if enabled. Else uses "manual" Otsu's method.

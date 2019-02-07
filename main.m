@@ -30,19 +30,14 @@ REALVALUE = realValue;
 EXPORTREAL = exportReal;
 EXPORTONLYVALID = exportOnlyValid;
 
-if( strcmp(getenv('OS'),'Windows_NT'))
-    addpath(genpath(workingDirWindows));
-    currentImageDir = currentImageDirWindows;
-else
-    addpath(genpath(workingDirLinux));
-    currentImageDir = currentImageDirLinux;
-end
+addpath(genpath(workingDir));
+% Not sure what this is used for. Probably can be removed.
+addpath(genpath('LengthEstimation'));
 
 if (px2nm_output == 1)
     disp(['A single pixel has length ' num2str(PIXELLENGTH) ' nm.']);
 end
 
-addpath(genpath('LengthEstimation'));
 imageFolderObj = dir(currentImageDir);
 % exclude potentially hazardous files from the current folder.
 imageFolderObj = imageFolderObj(~ismember({imageFolderObj.name}, {'.', '..', '.DS_Store'}));
@@ -334,71 +329,48 @@ for index = 1:imageCount
         end
     end
     
-    if( strcmp(getenv('OS'),'Windows_NT'))
-        % Check whether folder structure already exists:
-        createFolder('..\pictures\');
-        createFolder('..\pictures\preprocImg');
-        createFolder('..\pictures\background');
-        createFolder('..\pictures\bwImage');
-        createFolder('..\pictures\bwFilteredImage');
-        createFolder('..\pictures\filteredImage');
-        createFolder('..\pictures\bwImgThickDna');
-        createFolder('..\pictures\bwImgThinnedDna');
-        createFolder('..\pictures\overlays_thick');
-        createFolder('..\pictures\fused_images');
+    % Check whether folder structure already exists:
+    createFolder(outputDir);
+    createFolder(fullfile(outputDir, 'preprocImg'));
+    createFolder(fullfile(outputDir, 'background'));
+    createFolder(fullfile(outputDir, 'bwImage'));
+    createFolder(fullfile(outputDir, 'bwFilteredImage'));
+    createFolder(fullfile(outputDir, 'filteredImage'));
+    createFolder(fullfile(outputDir, 'bwImgThickDna'));
+    createFolder(fullfile(outputDir, 'bwImgThinnedDna'));
+    createFolder(fullfile(outputDir, 'overlays_thick'));
+    createFolder(fullfile(outputDir, 'fused_images'));
         
-        % Write respective images to files
-        imwrite(imageList{index}.preprocImg , ['..\pictures\preprocImg\' 'preproc' imageFolderObj(index).name ]);
-        imwrite(imageList{index}.background , ['..\pictures\background\' 'background' imageFolderObj(index).name ]);
-        imwrite(imageList{index}.bwImage , ['..\pictures\bwImage\' 'bw' imageFolderObj(index).name ]);
-        imwrite(imageList{index}.bwFilteredImage , ['..\pictures\bwFilteredImage\' 'bwFiltered' imageFolderObj(index).name ]);
-        imwrite(imageList{index}.filteredImage , ['..\pictures\filteredImage\' 'filtered' imageFolderObj(index).name ]);
-        imwrite(imageList{index}.bwImgThickDna , ['..\pictures\bwImgThickDna\' 'bwThickDna' imageFolderObj(index).name ]);
-        imwrite(imageList{index}.bwImgThinnedRemoved , ['..\pictures\bwImgThinnedDna\' 'thinnedDnaRemoved' imageFolderObj(index).name ]);
-        imwrite(imfuse(imageList{index}.rawImage , imageList{index}.bwImgThickDna), ['..\pictures\overlays_thick\' 'overlay_' imageFolderObj(index).name ]);
-        showImage(imageList{index}, ['..\pictures\overlays_thick\' 'overlays_' imageFolderObj(index).name ], showBB, showThin, purgeInvalid);
-        fusedImages(imageList{index}, imageFolderObj(index).name, 0);
-    else
-        % Check whether folders already exist
-        createFolder('../pictures/');
-        createFolder('../pictures/preprocImg');
-        createFolder('../pictures/background');
-        createFolder('../pictures/bwImage');
-        createFolder('../pictures/bwFilteredImage');
-        createFolder('../pictures/filteredImage');
-        createFolder('../pictures/bwImgThickDna');
-        createFolder('../pictures/bwImgThinnedDna');
-        createFolder('../pictures/overlays_thick');
-        createFolder('../pictures/fused_images');
-        
-        % Write respective images to files
-        imwrite(imageList{index}.preprocImg , ['../pictures/preprocImg/' 'preproc' imageFolderObj(index).name ]);
-        imwrite(imageList{index}.background , ['../pictures/background/' 'background' imageFolderObj(index).name ]);
-        imwrite(imageList{index}.bwImage , ['../pictures/bwImage/' 'bw' imageFolderObj(index).name ]);
-        imwrite(imageList{index}.bwFilteredImage , ['../pictures/bwFilteredImage/' 'bwFiltered' imageFolderObj(index).name ]);
-        imwrite(imageList{index}.filteredImage , ['../pictures/filteredImage/' 'filtered' imageFolderObj(index).name ]);
-        imwrite(imageList{index}.bwImgThickDna , ['../pictures/bwImgThickDna/' 'bwThickDna' imageFolderObj(index).name ]);
-        imwrite(imageList{index}.bwImgThinnedRemoved , ['../pictures/bwImgThinnedDna/' 'thinnedDnaRemoved' imageFolderObj(index).name ]);
-        imwrite(imfuse(imageList{index}.rawImage , imageList{index}.bwImgThickDna), ['../pictures/overlays_thick/' 'overlay_' imageFolderObj(index).name ]);
-        showImage(imageList{index}, ['../pictures/overlays_thick/' 'overlays_' imageFolderObj(index).name ], showBB, showThin, purgeInvalid);
-        fusedImages(imageList{index},imageFolderObj(index).name, 1);
-    end
+    % Write respective images to files
+    imwrite(imageList{index}.preprocImg , ...
+            fullfile(outputDir, 'preprocImg', ['preproc' imageFolderObj(index).name ]));
+    imwrite(imageList{index}.background , ...
+            fullfile(outputDir, 'background', ['background' imageFolderObj(index).name ]));
+    imwrite(imageList{index}.bwImage , ...
+            fullfile(outputDir, 'bwImage', ['bw' imageFolderObj(index).name ]));
+    imwrite(imageList{index}.bwFilteredImage , ...
+            fullfile(outputDir, 'bwFilteredImage', ['bwFiltered' imageFolderObj(index).name ]));
+    imwrite(imageList{index}.filteredImage , ...
+            fullfile(outputDir, 'filteredImage', ['filtered' imageFolderObj(index).name ]));
+    imwrite(imageList{index}.bwImgThickDna , ...
+            fullfile(outputDir, 'bwImgThickDna', ['bwThickDna' imageFolderObj(index).name ]));
+    imwrite(imageList{index}.bwImgThinnedRemoved , ...
+            fullfile(outputDir, 'bwImgThinnedDna', ['thinnedDnaRemoved' imageFolderObj(index).name ]));
+    imwrite(imfuse(imageList{index}.rawImage , imageList{index}.bwImgThickDna), ...
+            fullfile(outputDir, 'overlays_thick', ['overlay_' imageFolderObj(index).name ]));
+    showImage(imageList{index}, ...
+              fullfile(outputDir, 'overlays_thick', ['overlays_' imageFolderObj(index).name ]), ...
+              showBB, showThin, purgeInvalid);
+    fusedImages(imageList{index}, imageFolderObj(index).name, outputDir);
+    
     %% write output: image with detected objects, csv file with results for each object
-    if( strcmp(getenv('OS'),'Windows_NT'))
-       output_filename = [outputDirWin imageFolderObj(index).name '.csv'];
-    else
-       output_filename = [outputDirLinux imageFolderObj(index).name '.csv'];
-    end
+   output_filename = fullfile(csvDir, [imageFolderObj(index).name '.csv']);
     writeToCsvFile(output_filename, imageList{index}, purgeInvalid, verbose);
     
     
     %% if enabled, write the exported pixel values of each DNA strand
     if (exportPixels == 1)
-        if( strcmp(getenv('OS'),'Windows_NT'))
-            export_filename = [exportDirWin num2str(index, '%03i') '\'];
-        else
-            export_filename = [exportDirLinux num2str(index, '%03i') '\'];
-        end
+        export_filename = fullfile(exportDirLinux, num2str(index, '%03i'));
         export_pixels(export_filename, imageList{index});
     end
     
