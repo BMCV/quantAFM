@@ -28,9 +28,8 @@ dnaImgThinned(mask) = 0;
 arms = bwconncomp(dnaImgThinned);
 
 % If there are more or less than 2 arms, return
-if  numel(arms.PixelIdxList) ~= 2
-    return
-end
+if  numel(arms.PixelIdxList) == 2
+
     
 %% case 1: angle between intersecting pixel and centerpoint
 % get intersecting points
@@ -47,6 +46,7 @@ angle1 = real(acosd(a*b'/(norm(a)*norm(b))));
 % show angle
 % showAngle
 
+end
 
 %% case 2: angle between lines fitted on arms
 % Delete everything outside of "outside circle"
@@ -81,11 +81,11 @@ if (GROWING)
         dnaImgThinned = dnaImgThinned_org;
         dnaImgThinned(mask1) = 0;
         dnaImgThinned = dnaImgThinned.*mask2;
-        
         arms = bwconncomp(dnaImgThinned);
         i = i+1;
+        
+%         showAngle3(dna, mask1, mask2, radius);
     end
-%     showAngle3(dna, mask_org, mask, radius);
 end
 
 % Return in both cases if we still have a wrong number of elements.

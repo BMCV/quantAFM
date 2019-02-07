@@ -385,7 +385,7 @@ for index = 1:imageCount
     end
     %% write output: image with detected objects, csv file with results for each object
     if( strcmp(getenv('OS'),'Windows_NT'))
-        output_filename = [outputDirWin imageFolderObj(index).name '.csv'];
+       output_filename = [outputDirWin imageFolderObj(index).name '.csv'];
     else
        output_filename = [outputDirLinux imageFolderObj(index).name '.csv'];
     end
